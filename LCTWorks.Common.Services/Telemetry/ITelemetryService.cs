@@ -1,22 +1,34 @@
-﻿namespace LCTWorks.Common.Services.Telemetry;
+﻿using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
+
+namespace LCTWorks.Common.Services.Telemetry;
 
 public interface ITelemetryService
 {
-    void AppentToTrace(string id, IEnumerable<(string, string)> data);
+    void AppentToTrace(string id, IEnumerable<(string Key, string Value)> data);
 
-    void Configure(string? userId = null, IEnumerable<(string, string)>? data = null);
+    void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null);
 
-    void FinishTrace(string id, string? status = null, Exception? exception = null, IEnumerable<(string, string)>? data = null);
+    void FinishTrace(string id, string? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null);
 
     void Flush();
 
-    void Initialize(string serviceKey, string? environment, bool? debug, TelemetryEnvironmentContextData? contextData = null);
+    void Initialize(string serviceKey, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
 
-    Guid ReportUnhandledException(Exception exception, string? message = null);
+    void Log(string? message = null,
+            LogLevel level = LogLevel.Information,
+            Exception? exception = null,
+            string category = "",
+            string type = "",
+            Type? callerType = null,
+            IEnumerable<(string Key, string Value)>? tags = null,
+            [CallerMemberName] string callerMember = "",
+            [CallerFilePath] string callerPath = "",
+            [CallerLineNumber] int lineNumber = 0);
 
-    void StartTrace(string id, string? parentId = null, IEnumerable<(string, string)>? data = null, bool finish = false);
+    Guid ReportUnhandledException(Exception exception);
 
-    void TrackError(Exception exception, IEnumerable<(string, string)>? data = null, string? message = null);
+    void StartTrace(string id, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false);
 
-    void Trail(string message, TrailLevel level = TrailLevel.Information, Exception? exception = null, string category = "", string type = "", IEnumerable<(string, string)>? data = null);
+    void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null);
 }

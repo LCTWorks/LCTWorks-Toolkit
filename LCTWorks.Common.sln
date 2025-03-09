@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCTWorks.Common.Services", "LCTWorks.Common.Services\LCTWorks.Common.Services.csproj", "{C72C329A-6F19-CB36-4B99-FDE556E425F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCTWorks.Common", "LCTWorks.Common\LCTWorks.Common.csproj", "{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +17,15 @@ Global
 		{C72C329A-6F19-CB36-4B99-FDE556E425F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C72C329A-6F19-CB36-4B99-FDE556E425F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C72C329A-6F19-CB36-4B99-FDE556E425F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60D3D2AC-70D6-458C-9533-50F686CF8661}
 	EndGlobalSection
 EndGlobal
