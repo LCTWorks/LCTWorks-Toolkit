@@ -49,14 +49,14 @@ namespace LCTWorks.Common.Services.Telemetry
         }
 
         public void Initialize(
-            string sentryDns,
+            string sentryDsn,
             string? environment,
             bool isDebug,
             TelemetryEnvironmentContextData? contextData = null)
         {
             SentrySdk.Init(options =>
             {
-                options.Dsn = sentryDns;
+                options.Dsn = sentryDsn;
                 options.Environment = environment;
                 options.Debug = isDebug;
                 options.TracesSampleRate = 1.0;

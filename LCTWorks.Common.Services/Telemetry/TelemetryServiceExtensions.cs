@@ -13,4 +13,11 @@ public static class TelemetryServiceExtensions
     {
         return services.AddSingleton<ITelemetryService, SentryTelemetryServiceInternal>();
     }
+
+    public static IServiceCollection AddSentry(this IServiceCollection services, string sentryDsn, string environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null)
+    {
+        var sentryService = new SentryTelemetryServiceInternal();
+        sentryService.Initialize(sentryDsn, environment, isDebug, contextData);
+        return services.AddSingleton<ITelemetryService>(sentryService);
+    }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCTWorks.Common.Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCTWorks.Common", "LCTWorks.Common\LCTWorks.Common.csproj", "{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCTWorks.Common.WinUI", "LCTWorks.Common.WinUI\LCTWorks.Common.WinUI.csproj", "{0921F086-29EF-4A22-BB7D-59F57DAC9C0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F9BC258-7DD5-449B-AEDA-1C8FE36E471B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0921F086-29EF-4A22-BB7D-59F57DAC9C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0921F086-29EF-4A22-BB7D-59F57DAC9C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0921F086-29EF-4A22-BB7D-59F57DAC9C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0921F086-29EF-4A22-BB7D-59F57DAC9C0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
