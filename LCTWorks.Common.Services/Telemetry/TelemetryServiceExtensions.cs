@@ -27,6 +27,16 @@ public static class TelemetryServiceExtensions
 
     #endregion ServiceCollection
 
+    #region Tracing
+
+    public static DisposableTrace StartDisposableTrace(this ITelemetryService service, string id, string name, string operation, string? parentId = null, IEnumerable<(string, string)>? data = null, bool finish = false)
+    {
+        service.StartTrace(id, name, operation, parentId, data, finish);
+        return new DisposableTrace(id, (e) => service.FinishTrace(id, TelemetryTraceStatus.Ok, e));
+    }
+
+    #endregion Tracing
+
     public static void LogAndTrackError(this ITelemetryService service,
         Type callerType,
         Exception exception,

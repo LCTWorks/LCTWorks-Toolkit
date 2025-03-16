@@ -3,6 +3,7 @@ using Sentry.Protocol;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Xml.Linq;
 
 namespace LCTWorks.Common.Services.Telemetry
 {
@@ -101,11 +102,6 @@ namespace LCTWorks.Common.Services.Telemetry
             [CallerFilePath] string callerPath = "",
             [CallerLineNumber] int lineNumber = 0)
         {
-            //Log:
-            //string path = callerType?.Name ?? Path.GetFileName(callerPath);
-            //string logMessage = $"[{path} / {callerMember ?? string.Empty}: {lineNumber}] {message ?? string.Empty}";
-            //_logger.Log(level, exception, logMessage);
-
             //Breadcrumb:
             if (string.IsNullOrWhiteSpace(message) && exception != null)
             {
@@ -127,10 +123,6 @@ namespace LCTWorks.Common.Services.Telemetry
         public Guid ReportUnhandledException(Exception exception)
         {
             var serializedException = SerializeException(exception);
-
-            //Log:
-            //_logger.LogCritical(message);
-            //_logger.LogCritical(serializedException);
 
             //Set breadcrumb with extra info:
             SentrySdk.AddBreadcrumb(
@@ -182,19 +174,126 @@ namespace LCTWorks.Common.Services.Telemetry
 
         public void AppentToTrace(string id, IEnumerable<(string Key, string Value)> data)
         {
+            if (_spansPool.TryGetValue(id, out var span))
+            {
+                span.SetTags(data.Select(x => new KeyValuePair<string, string>(x.Item1, x.Item2)));
+            }
         }
 
-        public void FinishTrace(string id, string? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null)
+        public void FinishTrace(string id, TelemetryTraceStatus? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null)
         {
+            if (_spansPool.TryRemove(id, out var span))
+            {
+                if (data != null)
+                {
+                    span.SetTags(data.ToValidStringKeyValuePair());
+                }
+
+                var activeChildren = _spansPool.Where(pair => pair.Value.ParentSpanId == span.SpanId).ToList();
+                foreach (var item in activeChildren)
+                {
+                    _spansPool.TryRemove(item.Key, out var child);
+                    child?.Finish();
+                }
+
+                var finishStatus = status != null ? ConvertStatus(status.Value) : span.Status;
+
+                if (finishStatus != null)
+                {
+                    var transaction = span.GetTransaction();
+                    if (PropagateStatus(transaction, finishStatus))
+                    {
+                        transaction.Status = finishStatus;
+                    }
+                    if (exception != null)
+                    {
+                        span.Finish(exception, finishStatus.Value);
+                    }
+                    else
+                    {
+                        span.Finish(finishStatus.Value);
+                    }
+                }
+                else
+                {
+                    span.Finish();
+                }
+            }
         }
 
-        public void StartTrace(string id, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false)
+        public void StartTrace(string id, string name, string operation, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false)
         {
+            if (parentId == null)
+            {
+                var transaction = SentrySdk.StartTransaction(name, operation);
+                if (data != null)
+                {
+                    transaction.SetTags(data.ToValidStringKeyValuePair());
+                }
+                _spansPool.TryAdd(id, transaction);
+            }
+            else
+            {
+                if (_spansPool.TryGetValue(parentId, out var parent))
+                {
+                    var child = parent.StartChild(operation, name);
+                    if (data != null)
+                    {
+                        child.SetTags(data.ToValidStringKeyValuePair());
+                    }
+                    if (finish)
+                    {
+                        child.Finish();
+                    }
+                    else
+                    {
+                        _spansPool.TryAdd(id, child);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// This status values are not considered errors.
+        /// </summary>
+        private static bool IsSuccessStatus(SpanStatus? status)
+            => status == null
+            || status == SpanStatus.Ok
+            || status == SpanStatus.UnknownError
+            || status == SpanStatus.Cancelled;
+
+        private static bool PropagateStatus(ITransactionTracer transaction, SpanStatus? spanStatus)
+        {
+            if (transaction == null || spanStatus == null)
+            {
+                return false;
+            }
+            if (spanStatus == SpanStatus.Ok)
+            {
+                return false;
+            }
+            if (IsSuccessStatus(spanStatus))
+            {
+                return false;
+            }
+            return IsSuccessStatus(transaction.Status);
         }
 
         #endregion Traces
 
         #region Private
+
+        private static SpanStatus ConvertStatus(TelemetryTraceStatus traceState)
+            => traceState switch
+            {
+                TelemetryTraceStatus.Ok => SpanStatus.Ok,
+                TelemetryTraceStatus.AuthorizationError => SpanStatus.PermissionDenied,
+                TelemetryTraceStatus.InvalidArgument => SpanStatus.InvalidArgument,
+                TelemetryTraceStatus.OutOfRange => SpanStatus.OutOfRange,
+                TelemetryTraceStatus.Cancelled => SpanStatus.Cancelled,
+                TelemetryTraceStatus.UnknownError => SpanStatus.UnknownError,
+                _ => SpanStatus.UnknownError,
+            };
 
         private static string SerializeException(Exception exception)
         {

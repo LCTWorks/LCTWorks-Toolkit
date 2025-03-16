@@ -9,7 +9,7 @@ public interface ITelemetryService
 
     void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null);
 
-    void FinishTrace(string id, string? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null);
+    void FinishTrace(string id, TelemetryTraceStatus? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null);
 
     void Flush();
 
@@ -28,7 +28,7 @@ public interface ITelemetryService
 
     Guid ReportUnhandledException(Exception exception);
 
-    void StartTrace(string id, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false);
+    void StartTrace(string id, string name, string operation, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false);
 
     void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null);
 }
