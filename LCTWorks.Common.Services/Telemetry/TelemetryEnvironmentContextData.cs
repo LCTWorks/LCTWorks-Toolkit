@@ -5,7 +5,6 @@ namespace LCTWorks.Common.Services.Telemetry;
 public record TelemetryEnvironmentContextData(
     string? AppDisplayName,
     string? AppLocalCachePath = null,
-    string? AppTheme = null,
     string? AppVersion = null,
     CultureInfo? Culture = null,
     string? DeviceFamily = null,

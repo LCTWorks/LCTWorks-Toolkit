@@ -1,15 +1,8 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using Microsoft.Extensions.Logging;
+using Sentry.Protocol;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using LCTWorks.Common;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using Sentry.Protocol;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LCTWorks.Common.Services.Telemetry
 {
@@ -100,8 +93,8 @@ namespace LCTWorks.Common.Services.Telemetry
             string? message = null,
             LogLevel level = LogLevel.Information,
             Exception? exception = null,
-            string category = "",
-            string type = "",
+            string? category = "",
+            string? type = "",
             Type? callerType = null,
             IEnumerable<(string Key, string Value)>? tags = null,
             [CallerMemberName] string callerMember = "",
@@ -109,8 +102,8 @@ namespace LCTWorks.Common.Services.Telemetry
             [CallerLineNumber] int lineNumber = 0)
         {
             //Log:
-            string path = callerType?.Name ?? Path.GetFileName(callerPath);
-            string logMessage = $"[{path} / {callerMember ?? string.Empty}: {lineNumber}] {message ?? string.Empty}";
+            //string path = callerType?.Name ?? Path.GetFileName(callerPath);
+            //string logMessage = $"[{path} / {callerMember ?? string.Empty}: {lineNumber}] {message ?? string.Empty}";
             //_logger.Log(level, exception, logMessage);
 
             //Breadcrumb:
@@ -122,6 +115,7 @@ namespace LCTWorks.Common.Services.Telemetry
             message ??= "Unknown";
 
             var breadcrumbCategory = category ?? $"{callerType?.Name ?? string.Empty}.{callerMember}";
+
             SentrySdk.AddBreadcrumb(
                 message,
                 breadcrumbCategory,
@@ -192,12 +186,10 @@ namespace LCTWorks.Common.Services.Telemetry
 
         public void FinishTrace(string id, string? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null)
         {
-            throw new NotImplementedException();
         }
 
         public void StartTrace(string id, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false)
         {
-            throw new NotImplementedException();
         }
 
         #endregion Traces

@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Windows.System.Profile;
 using Windows.Security.ExchangeActiveSyncProvisioning;
+using LCTWorks.Common.Services.Telemetry;
+using System.Globalization;
 
 namespace LCTWorks.Common.WinUI;
 
@@ -90,4 +92,7 @@ public static class EnvironmentHelper
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int GetCurrentPackageFullName(ref int packageFullNameLength, StringBuilder? packageFullName);
+
+    public static TelemetryEnvironmentContextData GetTelemetryContextData()
+        => new(PackageName, LocalCachePath, PackageVersion, CultureInfo.CurrentCulture, DeviceFamily, DeviceManufacturer, DeviceModel, OsArchitecture, OSVersion);
 }
