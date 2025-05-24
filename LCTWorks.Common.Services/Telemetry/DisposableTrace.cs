@@ -1,12 +1,13 @@
 ﻿namespace LCTWorks.Common.Services.Telemetry
 {
-    public class DisposableTrace(string key, Action<Exception?> disposeAction)
+    public sealed class DisposableTrace(string key, Action<Exception?> disposeAction) : IDisposable
     {
         public Action<Exception?>? DisposeAction { get; private set; } = disposeAction;
 
         public string Key { get; } = key;
 
-        public void Dispose() => Finish(null);
+        public void Dispose()
+            => Finish(null);
 
         public void Finish(Exception? e)
         {
