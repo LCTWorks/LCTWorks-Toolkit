@@ -56,6 +56,7 @@ namespace LCTWorks.Common.Helpers
                 WriteIndented = writeIndented,
                 PropertyNameCaseInsensitive = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PreferredObjectCreationHandling = JsonObjectCreationHandling.Replace,
             };
             options.Converters.Add(new ExtendedDateTimeOffsetConverter());
             return options;
@@ -65,7 +66,8 @@ namespace LCTWorks.Common.Helpers
         {
             try
             {
-                return JsonSerializer.Deserialize<T>(value, DefaultJsonSerializerOptions);
+                var result = JsonSerializer.Deserialize<T>(value, DefaultJsonSerializerOptions);
+                return result;
             }
             catch
             {
