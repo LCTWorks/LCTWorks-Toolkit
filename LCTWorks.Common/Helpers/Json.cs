@@ -30,7 +30,7 @@ namespace LCTWorks.Common.Helpers
             });
         }
 
-        public static T? ToObject<T>(string value)
+        public static T? ToObject<T>(string? value)
             => TryDeserialize<T>(value);
 
         public static async Task<T?> ToObjectAsync<T>(string value)
@@ -62,8 +62,12 @@ namespace LCTWorks.Common.Helpers
             return options;
         }
 
-        private static T? TryDeserialize<T>(string value)
+        private static T? TryDeserialize<T>(string? value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return default;
+            }
             try
             {
                 var result = JsonSerializer.Deserialize<T>(value, DefaultJsonSerializerOptions);
