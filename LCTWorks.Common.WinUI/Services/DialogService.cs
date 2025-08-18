@@ -23,8 +23,8 @@ namespace LCTWorks.Common.WinUI.Services
             _currentContentDialog?.Hide();
         }
 
-        public Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog)
-            => RegisterAndShowAsync(dialog);
+        public Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog, bool supressEscKey = false, XamlRoot? xamlRoot = null)
+            => RegisterAndShowAsync(dialog, supressEscKey, xamlRoot);
 
         private void OnCurrentContentDialogClosing(ContentDialog sender, ContentDialogClosingEventArgs args)
         {
@@ -40,18 +40,19 @@ namespace LCTWorks.Common.WinUI.Services
             }
         }
 
-        private async Task<ContentDialogResult> RegisterAndShowAsync(ContentDialog dialog, bool suppressEscKey = false)
+        private async Task<ContentDialogResult> RegisterAndShowAsync(ContentDialog dialog, bool suppressEscKey = false, XamlRoot? xamlRoot = null)
         {
             HideCurrentContentDialog();
 
-            if (XamlRoot == null)
+            var xamlRootToUse = xamlRoot ?? XamlRoot;
+            if (xamlRootToUse == null)
             {
                 return ContentDialogResult.None;
             }
 
             _suppressEscKey = suppressEscKey;
             _currentContentDialog = dialog;
-            _currentContentDialog.XamlRoot = XamlRoot;
+            _currentContentDialog.XamlRoot = xamlRootToUse;
             _currentContentDialog.Closing += OnCurrentContentDialogClosing;
             _currentContentDialog.RequestedTheme = Theme;
 
