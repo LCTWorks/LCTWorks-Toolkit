@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Sentry.Protocol;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
+using Sentry.Protocol;
 
 namespace LCTWorks.Common.Services.Telemetry;
 
