@@ -17,6 +17,8 @@
     <Color x:Key="ThemedRedAccentColor">#CE2732</Color>
     <Color x:Key="ThemedYellowAccentColor">#EFEA5A</Color>
     <Color x:Key="ThemedGreenAccentColor">#06DBA2</Color>
+    <Color x:Key="ThemedGrayAccentColor">#2E2E2E</Color>
+    <Color x:Key="ThemedWhiteAccentColor">#F0F0F0</Color>
 
     <Thickness x:Key="ThemedButtonPadding">11,5,11,6</Thickness>
     <SolidColorBrush x:Key="ThemedWhiteForegroundBrush"
@@ -56,6 +58,25 @@
     <SolidColorBrush x:Key="ThemedGreenButtonBackgroundPressedBrush"
                      Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
                      Color="{StaticResource ThemedGreenAccentColor}" />
+    <!--  Dark Gray theme brushes  -->
+    <SolidColorBrush x:Key="ThemedDarkGrayButtonBackgroundBrush"
+                     Color="{StaticResource ThemedGrayAccentColor}" />
+    <SolidColorBrush x:Key="ThemedDarkGrayButtonBackgroundPointerOverBrush"
+                     Opacity="{StaticResource ThemedPointerOverBackgroundOpacity}"
+                     Color="{StaticResource ThemedGrayAccentColor}" />
+    <SolidColorBrush x:Key="ThemedDarkGrayButtonBackgroundPressedBrush"
+                     Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
+                     Color="{StaticResource ThemedGrayAccentColor}" />
+    <!--  White theme brushes  -->
+    <SolidColorBrush x:Key="ThemedWhiteButtonBackgroundBrush"
+                     Color="{StaticResource ThemedWhiteAccentColor}" />
+    <SolidColorBrush x:Key="ThemedWhiteButtonBackgroundPointerOverBrush"
+                     Opacity="{StaticResource ThemedPointerOverBackgroundOpacity}"
+                     Color="{StaticResource ThemedWhiteAccentColor}" />
+    <SolidColorBrush x:Key="ThemedWhiteButtonBackgroundPressedBrush"
+                     Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
+                     Color="{StaticResource ThemedWhiteAccentColor}" />
+
     <Style BasedOn="{StaticResource DefaultButtonStyle}"
            TargetType="local:ThemedButton">
         <Setter Property="FontFamily"
@@ -276,5 +297,35 @@
                 Value="{ThemeResource AccentButtonForegroundPressed}" />
         <Setter Property="BorderBrushPressed"
                 Value="{ThemeResource AccentButtonBorderBrushPressed}" />
+    </Style>
+    <Style x:Key="DarkGrayThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource ThemedDarkGrayButtonBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource ThemedWhiteForegroundBrush}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ThemedDarkGrayButtonBackgroundPointerOverBrush}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource ThemedWhiteForegroundBrush}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource ThemedDarkGrayButtonBackgroundPressedBrush}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource ThemedWhiteForegroundBrush}" />
+    </Style>
+    <Style x:Key="WhiteThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource ThemedWhiteButtonBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ThemedWhiteButtonBackgroundPointerOverBrush}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource ThemedWhiteButtonBackgroundPressedBrush}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
     </Style>
 </ResourceDictionary>
