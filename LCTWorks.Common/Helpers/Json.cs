@@ -22,8 +22,12 @@ namespace LCTWorks.Common.Helpers
         public static string Stringify(object? value)
             => TrySerialize(value);
 
-        public static async Task<string> StringifyAsync(object value)
+        public static async Task<string> StringifyAsync(object? value)
         {
+            if (value == null)
+            {
+                return string.Empty;
+            }
             return await Task.Run(() =>
             {
                 return TrySerialize(value);

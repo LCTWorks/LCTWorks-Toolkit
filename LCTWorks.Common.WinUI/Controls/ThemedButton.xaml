@@ -1,0 +1,232 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+                    xmlns:local="using:LCTWorks.Common.WinUI.Controls">
+
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    <Thickness x:Key="ThemedButtonGlyphTextBlockMargin">0,0,8,0</Thickness>
+    <x:Double x:Key="ThemedButtonGlyphFontSize">20</x:Double>
+    <VerticalAlignment x:Key="ThemedButtonGlyphVerticalAlignment">Center</VerticalAlignment>
+    <TextLineBounds x:Key="ThemedButtonTextLineBounds">TrimToCapHeight</TextLineBounds>
+
+    <x:Double x:Key="ThemedPressedForegroundOpacity">0.7</x:Double>
+    <x:Double x:Key="ThemedPointerOverBackgroundOpacity">0.9</x:Double>
+    <x:Double x:Key="ThemedPressedBackgroundOpacity">0.7</x:Double>
+    <Color x:Key="ThemedLightForegroundColor">#EEEEEE</Color>
+    <Color x:Key="ThemedDarkForegroundColor">#111111</Color>
+    <Color x:Key="ThemedRedAccentColor">#CE2732</Color>
+    <Color x:Key="ThemedYellowAccentColor">#EFEA5A</Color>
+
+    <Thickness x:Key="ThemedButtonPadding">11,5,11,6</Thickness>
+    <SolidColorBrush x:Key="ThemedWhiteForegroundBrush"
+                     Color="{StaticResource ThemedLightForegroundColor}" />
+    <SolidColorBrush x:Key="ThemedWhiteForegroundPressedBrush"
+                     Opacity="{ThemeResource ThemedPressedForegroundOpacity}"
+                     Color="{StaticResource ThemedLightForegroundColor}" />
+    <SolidColorBrush x:Key="ThemedBlackForegroundBrush"
+                     Color="{StaticResource ThemedDarkForegroundColor}" />
+    <SolidColorBrush x:Key="ThemedBlackForegroundPressedBrush"
+                     Opacity="{ThemeResource ThemedPressedForegroundOpacity}"
+                     Color="{StaticResource ThemedDarkForegroundColor}" />
+    <SolidColorBrush x:Key="ThemedRedButtonBackgroundBrush"
+                     Color="{StaticResource ThemedRedAccentColor}" />
+    <SolidColorBrush x:Key="ThemedRedButtonBackgroundPointerOverBrush"
+                     Opacity="{StaticResource ThemedPointerOverBackgroundOpacity}"
+                     Color="{StaticResource ThemedRedAccentColor}" />
+    <SolidColorBrush x:Key="ThemedRedButtonBackgroundPressedBrush"
+                     Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
+                     Color="{StaticResource ThemedRedAccentColor}" />
+
+    <SolidColorBrush x:Key="ThemedYellowButtonBackgroundBrush"
+                     Color="{StaticResource ThemedYellowAccentColor}" />
+    <SolidColorBrush x:Key="ThemedYellowButtonBackgroundPointerOverBrush"
+                     Opacity="{StaticResource ThemedPointerOverBackgroundOpacity}"
+                     Color="{StaticResource ThemedYellowAccentColor}" />
+    <SolidColorBrush x:Key="ThemedYellowButtonBackgroundPressedBrush"
+                     Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
+                     Color="{StaticResource ThemedYellowAccentColor}" />
+
+    <Style BasedOn="{StaticResource AccentButtonStyle}"
+           TargetType="local:ThemedButton">
+        <Setter Property="FontFamily"
+                Value="{StaticResource ContentControlThemeFontFamily}" />
+        <Setter Property="GlyphFontSize"
+                Value="{ThemeResource ThemedButtonGlyphFontSize}" />
+        <Setter Property="Padding"
+                Value="{StaticResource ThemedButtonPadding}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource AccentButtonBackgroundPointerOver}" />
+        <Setter Property="GlyphFontFamily"
+                Value="{ThemeResource SymbolThemeFontFamily}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource AccentButtonForegroundPointerOver}" />
+        <Setter Property="BorderBrushPointerOver"
+                Value="{ThemeResource AccentButtonBorderBrushPointerOver}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource AccentButtonBackgroundPressed}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource AccentButtonForegroundPressed}" />
+        <Setter Property="BorderBrushPressed"
+                Value="{ThemeResource AccentButtonBorderBrushPressed}" />
+        <Setter Property="BackgroundDisabled"
+                Value="{ThemeResource AccentButtonBackgroundDisabled}" />
+        <Setter Property="ForegroundDisabled"
+                Value="{ThemeResource AccentButtonForegroundDisabled}" />
+        <Setter Property="BorderBrushDisabled"
+                Value="{ThemeResource AccentButtonBorderBrushDisabled}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ThemedButton">
+                    <Border x:Name="BackgroundElement"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border.BackgroundTransition>
+                            <BrushTransition Duration="0:0:0.083" />
+                        </Border.BackgroundTransition>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="GlyphTextBlock"
+                                       Margin="{StaticResource ThemedButtonGlyphTextBlockMargin}"
+                                       VerticalAlignment="{StaticResource ThemedButtonGlyphVerticalAlignment}"
+                                       FontFamily="{TemplateBinding GlyphFontFamily}"
+                                       FontSize="{TemplateBinding GlyphFontSize}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Text="{TemplateBinding Glyph}"
+                                       TextLineBounds="{StaticResource ThemedButtonTextLineBounds}"
+                                       Visibility="{Binding ShowGlyph, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
+
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              Grid.Column="1"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              AutomationProperties.AccessibilityView="Raw"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              Foreground="{TemplateBinding Foreground}" />
+                        </Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BackgroundPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BorderBrushPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphTextBlock"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BackgroundPressed, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BorderBrushPressed, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPressed, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphTextBlock"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPressed, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BackgroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                                       Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding BorderBrushDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphTextBlock"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DangerThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource ThemedRedButtonBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource ThemedWhiteForegroundBrush}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ThemedRedButtonBackgroundPointerOverBrush}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource ThemedWhiteForegroundBrush}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource ThemedRedButtonBackgroundPressedBrush}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource ThemedWhiteForegroundPressedBrush}" />
+    </Style>
+    <Style x:Key="WarningThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource ThemedYellowButtonBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ThemedYellowButtonBackgroundPointerOverBrush}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource ThemedYellowButtonBackgroundPressedBrush}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource ThemedBlackForegroundPressedBrush}" />
+    </Style>
+</ResourceDictionary>

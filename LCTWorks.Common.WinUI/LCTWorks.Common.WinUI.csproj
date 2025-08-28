@@ -8,7 +8,12 @@
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\ChipControl.xaml" />
+    <None Remove="Controls\ThemedButton.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
@@ -17,6 +22,16 @@
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Common.Services\LCTWorks.Common.Services.csproj" />
     <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\ChipControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\ThemedButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   
 </Project>
