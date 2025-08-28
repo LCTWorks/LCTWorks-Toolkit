@@ -16,6 +16,7 @@
     <Color x:Key="ThemedDarkForegroundColor">#111111</Color>
     <Color x:Key="ThemedRedAccentColor">#CE2732</Color>
     <Color x:Key="ThemedYellowAccentColor">#EFEA5A</Color>
+    <Color x:Key="ThemedGreenAccentColor">#06DBA2</Color>
 
     <Thickness x:Key="ThemedButtonPadding">11,5,11,6</Thickness>
     <SolidColorBrush x:Key="ThemedWhiteForegroundBrush"
@@ -28,6 +29,7 @@
     <SolidColorBrush x:Key="ThemedBlackForegroundPressedBrush"
                      Opacity="{ThemeResource ThemedPressedForegroundOpacity}"
                      Color="{StaticResource ThemedDarkForegroundColor}" />
+    <!--  Danger theme brushes  -->
     <SolidColorBrush x:Key="ThemedRedButtonBackgroundBrush"
                      Color="{StaticResource ThemedRedAccentColor}" />
     <SolidColorBrush x:Key="ThemedRedButtonBackgroundPointerOverBrush"
@@ -36,7 +38,7 @@
     <SolidColorBrush x:Key="ThemedRedButtonBackgroundPressedBrush"
                      Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
                      Color="{StaticResource ThemedRedAccentColor}" />
-
+    <!--  Warning theme brushes  -->
     <SolidColorBrush x:Key="ThemedYellowButtonBackgroundBrush"
                      Color="{StaticResource ThemedYellowAccentColor}" />
     <SolidColorBrush x:Key="ThemedYellowButtonBackgroundPointerOverBrush"
@@ -45,8 +47,16 @@
     <SolidColorBrush x:Key="ThemedYellowButtonBackgroundPressedBrush"
                      Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
                      Color="{StaticResource ThemedYellowAccentColor}" />
-
-    <Style BasedOn="{StaticResource AccentButtonStyle}"
+    <!--  Success theme brushes  -->
+    <SolidColorBrush x:Key="ThemedGreenButtonBackgroundBrush"
+                     Color="{StaticResource ThemedGreenAccentColor}" />
+    <SolidColorBrush x:Key="ThemedGreenButtonBackgroundPointerOverBrush"
+                     Opacity="{StaticResource ThemedPointerOverBackgroundOpacity}"
+                     Color="{StaticResource ThemedGreenAccentColor}" />
+    <SolidColorBrush x:Key="ThemedGreenButtonBackgroundPressedBrush"
+                     Opacity="{StaticResource ThemedPressedBackgroundOpacity}"
+                     Color="{StaticResource ThemedGreenAccentColor}" />
+    <Style BasedOn="{StaticResource DefaultButtonStyle}"
            TargetType="local:ThemedButton">
         <Setter Property="FontFamily"
                 Value="{StaticResource ContentControlThemeFontFamily}" />
@@ -54,26 +64,26 @@
                 Value="{ThemeResource ThemedButtonGlyphFontSize}" />
         <Setter Property="Padding"
                 Value="{StaticResource ThemedButtonPadding}" />
-        <Setter Property="BackgroundPointerOver"
-                Value="{ThemeResource AccentButtonBackgroundPointerOver}" />
         <Setter Property="GlyphFontFamily"
                 Value="{ThemeResource SymbolThemeFontFamily}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ButtonBackgroundPointerOver}" />
         <Setter Property="ForegroundPointerOver"
-                Value="{ThemeResource AccentButtonForegroundPointerOver}" />
+                Value="{ThemeResource ButtonForegroundPointerOver}" />
         <Setter Property="BorderBrushPointerOver"
-                Value="{ThemeResource AccentButtonBorderBrushPointerOver}" />
+                Value="{ThemeResource ButtonBorderBrushPointerOver}" />
         <Setter Property="BackgroundPressed"
-                Value="{ThemeResource AccentButtonBackgroundPressed}" />
+                Value="{ThemeResource ButtonBackgroundPressed}" />
         <Setter Property="ForegroundPressed"
-                Value="{ThemeResource AccentButtonForegroundPressed}" />
+                Value="{ThemeResource ButtonForegroundPressed}" />
         <Setter Property="BorderBrushPressed"
-                Value="{ThemeResource AccentButtonBorderBrushPressed}" />
+                Value="{ThemeResource ButtonBorderBrushPressed}" />
         <Setter Property="BackgroundDisabled"
-                Value="{ThemeResource AccentButtonBackgroundDisabled}" />
+                Value="{ThemeResource ButtonBackgroundDisabled}" />
         <Setter Property="ForegroundDisabled"
-                Value="{ThemeResource AccentButtonForegroundDisabled}" />
+                Value="{ThemeResource ButtonForegroundDisabled}" />
         <Setter Property="BorderBrushDisabled"
-                Value="{ThemeResource AccentButtonBorderBrushDisabled}" />
+                Value="{ThemeResource ButtonBorderBrushDisabled}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ThemedButton">
@@ -228,5 +238,43 @@
                 Value="{ThemeResource ThemedYellowButtonBackgroundPressedBrush}" />
         <Setter Property="ForegroundPressed"
                 Value="{ThemeResource ThemedBlackForegroundPressedBrush}" />
+    </Style>
+    <Style x:Key="SuccessThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource ThemedGreenButtonBackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource ThemedGreenButtonBackgroundPointerOverBrush}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource ThemedBlackForegroundBrush}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource ThemedGreenButtonBackgroundPressedBrush}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource ThemedBlackForegroundPressedBrush}" />
+    </Style>
+    <Style x:Key="AccentThemedButtonStyle"
+           TargetType="local:ThemedButton">
+        <Setter Property="Background"
+                Value="{ThemeResource AccentButtonBackground}" />
+        <Setter Property="Foreground"
+                Value="{ThemeResource AccentButtonForeground}" />
+        <Setter Property="BorderBrush"
+                Value="{ThemeResource AccentButtonBorderBrush}" />
+        <Setter Property="BackgroundSizing"
+                Value="OuterBorderEdge" />
+        <Setter Property="BackgroundPointerOver"
+                Value="{ThemeResource AccentButtonBackgroundPointerOver}" />
+        <Setter Property="ForegroundPointerOver"
+                Value="{ThemeResource AccentButtonForegroundPointerOver}" />
+        <Setter Property="BorderBrushPointerOver"
+                Value="{ThemeResource AccentButtonBorderBrushPointerOver}" />
+        <Setter Property="BackgroundPressed"
+                Value="{ThemeResource AccentButtonBackgroundPressed}" />
+        <Setter Property="ForegroundPressed"
+                Value="{ThemeResource AccentButtonForegroundPressed}" />
+        <Setter Property="BorderBrushPressed"
+                Value="{ThemeResource AccentButtonBorderBrushPressed}" />
     </Style>
 </ResourceDictionary>
