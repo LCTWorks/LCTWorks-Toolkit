@@ -2,13 +2,38 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="using:LCTWorks.Common.WinUI.Controls">
 
-    <Thickness x:Key="ChipPadding">12,6</Thickness>
-    <CornerRadius x:Key="ChipCornerRadius">8</CornerRadius>
+    <Thickness x:Key="ChipControlPadding">8,4</Thickness>
+    <TextAlignment x:Key="ChipControlTextAlignment">Center</TextAlignment>
+    <TextAlignment x:Key="ChipControlVerticalAlignment">Center</TextAlignment>
+    <TextAlignment x:Key="ChipControlHorizontalTextAlignment">Center</TextAlignment>
+    <SolidColorBrush x:Key="ChipControlBackgroundBrush" />
+    <CornerRadius x:Key="ChipControlCornerRadius">8</CornerRadius>
+
+    <Style x:Key="PreviewBadgeStyle"
+           TargetType="local:ChipControl">
+        <Setter Property="Background"
+                Value="{ThemeResource SystemFillColorCaution}" />
+        <Setter Property="Text"
+                Value="PREV" />
+        <Setter Property="Foreground"
+                Value="White" />
+    </Style>
+
     <Style TargetType="local:ChipControl">
         <Setter Property="Padding"
-                Value="{StaticResource ChipPadding}" />
+                Value="{StaticResource ChipControlPadding}" />
         <Setter Property="CornerRadius"
-                Value="{StaticResource ChipCornerRadius}" />
+                Value="{StaticResource ChipControlCornerRadius}" />
+
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="FontSize"
+                Value="{StaticResource CaptionTextBlockFontSize}" />
+
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ChipControl">
@@ -17,12 +42,15 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                        <TextBlock VerticalAlignment="Center"
+                        <TextBlock HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   FontSize="{TemplateBinding FontSize}"
                                    Foreground="{TemplateBinding Foreground}"
-                                   HorizontalTextAlignment="Center"
+                                   HorizontalTextAlignment="{StaticResource ChipControlHorizontalTextAlignment}"
                                    Text="{TemplateBinding Text}"
-                                   TextAlignment="Center"
-                                   TextLineBounds="TrimToCapHeight" />
+                                   TextAlignment="{StaticResource ChipControlTextAlignment}"
+                                   TextLineBounds="Tight" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
