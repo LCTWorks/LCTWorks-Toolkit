@@ -2,9 +2,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LCTWorks.Common.WinUI.Services;
@@ -15,7 +12,11 @@ public class DialogServiceBase
     private bool _suppressEscKey;
     private XamlRoot? _xamlRoot;
 
-    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+    public ElementTheme Theme
+    {
+        get;
+        set;
+    }
 
     public XamlRoot? XamlRoot
     {
