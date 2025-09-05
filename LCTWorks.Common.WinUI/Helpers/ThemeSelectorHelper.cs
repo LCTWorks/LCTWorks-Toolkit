@@ -1,24 +1,23 @@
-﻿using LCTWorks.Common.WinUI.Abstractions;
-using LCTWorks.Common.WinUI.Helpers;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
+using LCTWorks.Common.WinUI.Extensions;
 
-namespace LCTWorks.Common.WinUI.Services;
+namespace LCTWorks.Common.WinUI.Helpers;
 
-public class ThemeSelectorService
+public static class ThemeSelectorHelper
 {
-    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+    public static ElementTheme Theme { get; set; } = ElementTheme.Default;
 
-    public async Task InitializeAsync()
+    public static void Initialize()
     {
         Theme = LoadThemeFromSettings();
-        await Task.CompletedTask;
     }
 
-    public async Task SetRequestedThemeAsync()
+    public static async Task SetRequestedThemeAsync()
     {
-        if (Application.Current is IAppExtended appExtended && appExtended.MainWindow.Content is FrameworkElement rootElement)
+        var mainWindows = Application.Current.GetMainWindow();
+        if (mainWindows?.Content is FrameworkElement rootElement)
         {
             rootElement.RequestedTheme = Theme;
 
@@ -28,7 +27,7 @@ public class ThemeSelectorService
         await Task.CompletedTask;
     }
 
-    public async Task SetThemeAsync(ElementTheme theme)
+    public static async Task SetThemeAsync(ElementTheme theme)
     {
         Theme = theme;
 

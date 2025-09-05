@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LCTWorks.Common.WinUI.Abstractions;
+using LCTWorks.Common.WinUI.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,13 +17,16 @@ public static class TitleBarHelper
     private const int WAINACTIVE = 0x00;
     private const int WMACTIVATE = 0x0006;
 
-    private static IAppExtended ExtendedApp => (IAppExtended)Application.Current;
+    public static UIElement? AppTitleBar
+    {
+        get; private set;
+    }
 
     public static void ApplySystemThemeToCaptionButtons()
     {
         var res = Application.Current.Resources;
 
-        var frame = ExtendedApp.AppTitleBar as FrameworkElement;
+        var frame = AppTitleBar as FrameworkElement;
         if (frame != null)
         {
             if (frame.ActualTheme == ElementTheme.Dark)
@@ -45,7 +48,7 @@ public static class TitleBarHelper
         string appDisplayName,
         IAppExtended? app = null)
     {
-        app ??= ExtendedApp;
+        app ??= Application.Current.AsAppExtended();
         if (app == null)
         {
             return;
@@ -58,14 +61,14 @@ public static class TitleBarHelper
             var resource = args.WindowActivationState == WindowActivationState.Deactivated ? "WindowCaptionForegroundDisabled" : "WindowCaptionForeground";
 
             appTitleBarText.Foreground = (SolidColorBrush)Application.Current.Resources[resource];
-            app.AppTitleBar = appTitleBarText;
+            AppTitleBar = appTitleBarText;
         };
         appTitleBarText.Text = appDisplayName;
     }
 
     public static void UpdateTitleBar(ElementTheme theme, IAppExtended? app = null)
     {
-        app ??= ExtendedApp;
+        app ??= Application.Current.AsAppExtended();
         if (app == null)
         {
             return;

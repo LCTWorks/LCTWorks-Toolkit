@@ -1,12 +1,12 @@
-﻿using LCTWorks.Common.WinUI.Abstractions;
+﻿using LCTWorks.Common.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Services;
+namespace LCTWorks.Common.WinUI.Dialogs;
 
-public class DialogServiceBase
+public class DialogService
 {
     private ContentDialog? _currentContentDialog;
     private bool _suppressEscKey;
@@ -20,7 +20,7 @@ public class DialogServiceBase
 
     public XamlRoot? XamlRoot
     {
-        get => _xamlRoot ?? (Application.Current as IAppExtended)?.MainWindow?.Content?.XamlRoot;
+        get => _xamlRoot ?? Application.Current.GetXamlRoot();
         set => _xamlRoot = value;
     }
 
@@ -37,12 +37,7 @@ public class DialogServiceBase
     {
         HideCurrentContentDialog();
 
-        var xamlRootToUse = xamlRoot ?? XamlRoot;
-        if (xamlRootToUse == null)
-        {
-            return ContentDialogResult.None;
-        }
-
+        var xamlRootToUse = (xamlRoot ?? XamlRoot) ?? throw new Exception("No XamlRoot available to show the dialog.");
         _suppressEscKey = suppressEscKey;
         _currentContentDialog = dialog;
         _currentContentDialog.XamlRoot = xamlRootToUse;
