@@ -6,8 +6,8 @@ namespace LCTWorks.Common.Helpers
     {
         public static string ReadTextFile(string filePath)
         {
-            ThrowCheck.CheckString(filePath, "File path cannot be null or whitespace.", nameof(filePath));
-            ThrowCheck.CheckFilePath(filePath, paramName: nameof(filePath));
+            ThrowCheck.StringNullOrWhiteSpace(filePath, "File path cannot be null or whitespace.", nameof(filePath));
+            ThrowCheck.FilePath(filePath, paramName: nameof(filePath));
 
             try
             {
@@ -23,8 +23,8 @@ namespace LCTWorks.Common.Helpers
 
         public static async Task<string> ReadTextFileAsync(string filePath)
         {
-            ThrowCheck.CheckString(filePath, "File path cannot be null or whitespace.", nameof(filePath));
-            ThrowCheck.CheckFilePath(filePath, paramName: nameof(filePath));
+            ThrowCheck.StringNullOrWhiteSpace(filePath, "File path cannot be null or whitespace.", nameof(filePath));
+            ThrowCheck.FilePath(filePath, paramName: nameof(filePath));
 
             try
             {
@@ -54,7 +54,7 @@ namespace LCTWorks.Common.Helpers
 
         public static bool WriteTextFile(string filePath, string content)
         {
-            ThrowCheck.CheckString(filePath, "File path cannot be null or whitespace.", nameof(filePath));
+            ThrowCheck.StringNullOrWhiteSpace(filePath, "File path cannot be null or whitespace.", nameof(filePath));
             content ??= string.Empty;
             try
             {
@@ -71,7 +71,7 @@ namespace LCTWorks.Common.Helpers
 
         public static async Task<bool> WriteTextFileAsync(string filePath, string content)
         {
-            ThrowCheck.CheckString(filePath, "File path cannot be null or whitespace.", nameof(filePath));
+            ThrowCheck.StringNullOrWhiteSpace(filePath, "File path cannot be null or whitespace.", nameof(filePath));
             content ??= string.Empty;
             try
             {

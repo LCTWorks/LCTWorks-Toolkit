@@ -1,8 +1,9 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using LCTWorks.Common.Extensions;
 using Microsoft.Extensions.Logging;
 using Sentry.Protocol;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace LCTWorks.Common.Services.Telemetry;
 
@@ -162,7 +163,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
 
             if (tags != null)
             {
-                sentryEvent.SetTags(tags.ToValidStringKeyValuePair());
+                sentryEvent.SetTags(tags.ValidateStringKeyValuePair());
             }
 
             SentrySdk.CaptureEvent(sentryEvent);
@@ -185,7 +186,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         {
             if (data != null)
             {
-                span.SetTags(data.ToValidStringKeyValuePair());
+                span.SetTags(data.ValidateStringKeyValuePair());
             }
 
             var activeChildren = _spansPool.Where(pair => pair.Value.ParentSpanId == span.SpanId).ToList();
@@ -227,7 +228,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
             var transaction = SentrySdk.StartTransaction(name, operation);
             if (data != null)
             {
-                transaction.SetTags(data.ToValidStringKeyValuePair());
+                transaction.SetTags(data.ValidateStringKeyValuePair());
             }
             _spansPool.TryAdd(id, transaction);
         }
@@ -238,7 +239,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
                 var child = parent.StartChild(operation, name);
                 if (data != null)
                 {
-                    child.SetTags(data.ToValidStringKeyValuePair());
+                    child.SetTags(data.ValidateStringKeyValuePair());
                 }
                 if (finish)
                 {

@@ -3,9 +3,9 @@
 /// <summary>
 /// Checks and throw appropiate exceptions for method arguments.
 /// </summary>
-public static class ThrowCheck
+internal static class ThrowCheck
 {
-    public static void CheckFilePath(string filePath, string? argErrorMessage = "File not found", string? paramName = "filePath")
+    public static void FilePath(string filePath, string? argErrorMessage = "File not found", string? paramName = "filePath")
     {
         if (!File.Exists(filePath))
         {
@@ -13,7 +13,7 @@ public static class ThrowCheck
         }
     }
 
-    public static void CheckNull(object? value, string? paramName = null)
+    public static void Null(object? value, string? paramName = null)
     {
         if (value is null)
         {
@@ -22,7 +22,7 @@ public static class ThrowCheck
         }
     }
 
-    public static void CheckReadOnlyCollection<T>(ICollection<T> collection)
+    public static void ReadOnlyCollection<T>(ICollection<T> collection)
     {
         if (collection.IsReadOnly)
         {
@@ -30,7 +30,7 @@ public static class ThrowCheck
         }
     }
 
-    public static void CheckString(string str, string? argErrorMessage = "Invalid string", string? paramName = "str")
+    public static void StringNullOrWhiteSpace(string str, string? argErrorMessage = "Invalid string", string? paramName = "str")
     {
         if (string.IsNullOrWhiteSpace(str))
         {

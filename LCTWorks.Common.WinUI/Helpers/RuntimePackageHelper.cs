@@ -1,19 +1,19 @@
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using LCTWorks.Common.Services.Telemetry;
 using System;
-using Windows.ApplicationModel;
+using System.Globalization;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using Windows.System.Profile;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
-using LCTWorks.Common.Services.Telemetry;
-using System.Globalization;
+using Windows.System.Profile;
 
 namespace LCTWorks.Common.WinUI.Helpers;
 
-public static class EnvironmentHelper
+public static class RuntimePackageHelper
 {
-    static EnvironmentHelper()
+    static RuntimePackageHelper()
     {
         var dfVersion = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
         var osMajor = (ushort)((dfVersion & 0xFFFF000000000000L) >> 48);
@@ -44,6 +44,94 @@ public static class EnvironmentHelper
         OSVersion = $"{osMajor}.{osMinor}.{osBuild}.{osRevision}";
         OSDetails = $"WINDOWS {OSVersion}";
         PackageVersion = $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+    }
+
+    private static string? environment = null;
+
+    public static string Environment
+    {
+        get => environment ?? (IsDebug() ? "Debug" : "Release");
+        set => environment = value;
+    }
+
+    public static bool IsAppUpdated { get; private set; } = false;
+
+    public static bool IsFirstRun { get; private set; } = false;
+
+    public static void Check()
+    {
+        RuntimeCheck();
+    }
+
+    private static void RuntimeCheck()
+    {
+        var storedVersion = LocalSettingsHelper.LastOpenedVersion;
+        if (storedVersion == null)
+        {
+            IsFirstRun = true;
+        }
+        var currentAppVersion = Package.Current.Id.Version;
+        var lastOpenedVersion = ToPackageVersion(storedVersion);
+        if (lastOpenedVersion == null || ComparePackageVersions(currentAppVersion, lastOpenedVersion.Value) > 0) //new or first version
+        {
+            LocalSettingsHelper.LastOpenedVersion = ToStringVersion(currentAppVersion);
+            if (!IsFirstRun)
+            {
+                IsAppUpdated = true;
+            }
+        }
+    }
+
+    private static int ComparePackageVersions(PackageVersion v1, PackageVersion v2)
+    {
+        if (v1.Major != v2.Major)
+        {
+            return v1.Major - v2.Major;
+        }
+        if (v1.Minor != v2.Minor)
+        {
+            return v1.Minor - v2.Minor;
+        }
+        if (v1.Build != v2.Build)
+        {
+            return v1.Build - v2.Build;
+        }
+        return v1.Revision - v2.Revision;
+    }
+
+    private static string ToStringVersion(PackageVersion version)
+                    => $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+
+    public static string GetPackageVersion()
+    {
+        Version version;
+
+        if (IsMSIX)
+        {
+            var packageVersion = Package.Current.Id.Version;
+
+            version = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
+        }
+        else
+        {
+            version = Assembly.GetExecutingAssembly().GetName().Version!;
+        }
+
+        return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+    }
+
+    private static PackageVersion? ToPackageVersion(string? version)
+    {
+        if (string.IsNullOrEmpty(version))
+        {
+            return null;
+        }
+        var result = version.Split(".");
+        return new PackageVersion(
+            Convert.ToUInt16(result[0]),
+            Convert.ToUInt16(result[1]),
+            Convert.ToUInt16(result[2]),
+            Convert.ToUInt16(result[3]));
     }
 
     public static string DeviceManufacturer { get; }

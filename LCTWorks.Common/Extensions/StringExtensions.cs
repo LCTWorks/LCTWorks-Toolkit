@@ -2,7 +2,7 @@
 
 public static class StringExtensions
 {
-    private const string CommentPrefix = "#";
+    public const string DefaultCommentPrefix = "#";
 
     /// <summary>
     /// Reads a text and splits it into lines.
@@ -21,7 +21,7 @@ public static class StringExtensions
         if (string.IsNullOrEmpty(text))
             return [];
 
-        prefixToIgnore ??= CommentPrefix;
+        prefixToIgnore ??= DefaultCommentPrefix;
         ReadOnlySpan<char> span = text.AsSpan();
         int len = span.Length;
 
@@ -65,7 +65,7 @@ public static class StringExtensions
             if (pos < len && span[pos] == '\r') pos++;
             if (pos < len && span[pos] == '\n') pos++;
 
-            var line = span.Slice(lineStart, lineEnd - lineStart).Trim();
+            var line = span[lineStart..lineEnd].Trim();
             if (ignoreEmptyLines && line.Length == 0)
                 continue;
             if (ignorePrefix && line.StartsWith(prefixToIgnore, StringComparison.Ordinal))

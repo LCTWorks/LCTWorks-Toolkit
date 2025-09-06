@@ -23,8 +23,8 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException">Thrown when <paramref name="collection"/> is read-only.</exception>
     public static void AddIgnoringDuplicates<T>(this ICollection<T> collection, T item, IEqualityComparer<T>? equalityComparer = null)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckReadOnlyCollection(collection);
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.ReadOnlyCollection(collection);
 
         if (equalityComparer is null)
         {
@@ -89,9 +89,9 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException">Thrown when <paramref name="collection"/> is read-only.</exception>
     public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckNull(items, nameof(items));
-        ThrowCheck.CheckReadOnlyCollection(collection);
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.Null(items, nameof(items));
+        ThrowCheck.ReadOnlyCollection(collection);
 
         if (!items.Any())
         {
@@ -138,9 +138,9 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException">Thrown when <paramref name="collection"/> is read-only.</exception>
     public static void AddRange<T>(this ICollection<T> collection, params T[] items)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckNull(items, nameof(items));
-        ThrowCheck.CheckReadOnlyCollection(collection);
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.Null(items, nameof(items));
+        ThrowCheck.ReadOnlyCollection(collection);
         if (items.Length == 0) return;
 
         switch (collection)
@@ -175,8 +175,8 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException">Thrown when <paramref name="collection"/> is read-only.</exception>
     public static void AddRange<T>(this ICollection<T> collection, ReadOnlySpan<T> items)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckReadOnlyCollection(collection);
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.ReadOnlyCollection(collection);
         if (items.Length == 0)
         {
             return;
@@ -227,7 +227,7 @@ public static class CollectionExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> is <c>null</c>.</exception>
     public static IReadOnlyCollection<T> AsReadOnly<T>(this ICollection<T> collection)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
+        ThrowCheck.Null(collection, nameof(collection));
 
         if (collection is IReadOnlyCollection<T> ro)
         {
@@ -251,8 +251,8 @@ public static class CollectionExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> or <paramref name="action"/> is <c>null</c>.</exception>
     public static void ForEach<T>(this ICollection<T> collection, Action<T> action)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckNull(action, nameof(action));
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.Null(action, nameof(action));
 
         switch (collection)
         {
@@ -303,8 +303,8 @@ public static class CollectionExtensions
     /// </exception>
     public static void ForEach<T, TState>(this ICollection<T> collection, TState state, Action<T, TState> action)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckNull(action, nameof(action));
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.Null(action, nameof(action));
 
         switch (collection)
         {
@@ -358,7 +358,7 @@ public static class CollectionExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="list"/> is null.</exception>
     public static bool Replace<T>(this List<T> list, T oldItem, T newItem, IEqualityComparer<T>? equalityComparer = null)
     {
-        ThrowCheck.CheckNull(list, nameof(list));
+        ThrowCheck.Null(list, nameof(list));
 
         if (list.Count == 0)
         {
@@ -415,9 +415,9 @@ public static class CollectionExtensions
     /// <exception cref="NotSupportedException">Thrown when <paramref name="collection"/> is read-only.</exception>
     public static void ReplaceAll<T>(this ICollection<T> collection, IEnumerable<T> items)
     {
-        ThrowCheck.CheckNull(collection, nameof(collection));
-        ThrowCheck.CheckNull(items, nameof(items));
-        ThrowCheck.CheckReadOnlyCollection(collection);
+        ThrowCheck.Null(collection, nameof(collection));
+        ThrowCheck.Null(items, nameof(items));
+        ThrowCheck.ReadOnlyCollection(collection);
 
         // Self-assignment guard
         if (ReferenceEquals(collection, items))
@@ -503,8 +503,8 @@ public static class CollectionExtensions
     /// </exception>
     public static Dictionary<TKey, TSource> ToDictionaryIgnoreDuplicateKeys<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
     {
-        ThrowCheck.CheckNull(source, nameof(source));
-        ThrowCheck.CheckNull(keySelector, nameof(keySelector));
+        ThrowCheck.Null(source, nameof(source));
+        ThrowCheck.Null(keySelector, nameof(keySelector));
 
         var dict = new Dictionary<TKey, TSource>();
         foreach (var item in source)
