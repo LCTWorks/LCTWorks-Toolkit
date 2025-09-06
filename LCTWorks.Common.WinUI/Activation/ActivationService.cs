@@ -3,20 +3,16 @@ using LCTWorks.Common.WinUI.Extensions;
 using LCTWorks.Common.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Sentry.Protocol;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LCTWorks.Common.WinUI.Activation
 {
-    public class ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, ITelemetryService telemetryService)
+    public class ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers)
     {
         private readonly IEnumerable<IActivationHandler> _activationHandlers = activationHandlers;
         private readonly ActivationHandler<LaunchActivatedEventArgs> _defaultHandler = defaultHandler;
-        private readonly ITelemetryService _telemetryService = telemetryService;
         private UIElement? _shell = null;
 
         public async Task ActivateAsync(object activationArgs, UIElement? shellPage)

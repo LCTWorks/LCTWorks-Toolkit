@@ -31,7 +31,7 @@ public static class LocalSettingsHelper
 
     public static T? ReadSetting<T>(string key, T? defaultValue = default)
     {
-        if (RuntimeHelper.IsMSIX && ApplicationData.Current.LocalSettings.Values.TryGetValue(key, out var obj))
+        if (EnvironmentHelper.IsMSIX && ApplicationData.Current.LocalSettings.Values.TryGetValue(key, out var obj))
         {
             return Json.ToObject<T>((string)obj);
         }
@@ -41,7 +41,7 @@ public static class LocalSettingsHelper
 
     public static void SaveSetting<T>(string key, T? value)
     {
-        if (RuntimeHelper.IsMSIX)
+        if (EnvironmentHelper.IsMSIX)
         {
             ApplicationData.Current.LocalSettings.Values[key] = Json.Stringify(value);
         }

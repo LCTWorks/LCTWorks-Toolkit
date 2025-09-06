@@ -9,7 +9,7 @@ using Windows.Security.ExchangeActiveSyncProvisioning;
 using LCTWorks.Common.Services.Telemetry;
 using System.Globalization;
 
-namespace LCTWorks.Common.WinUI;
+namespace LCTWorks.Common.WinUI.Helpers;
 
 public static class EnvironmentHelper
 {
@@ -79,14 +79,7 @@ public static class EnvironmentHelper
 #endif
     }
 
-    public static string LocalCachePath
-    {
-        get
-        {
-            var localCache = Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
-            return localCache;
-        }
-    }
+    public static string LocalCachePath => Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
 
     public static string PackageVersion { get; }
 
