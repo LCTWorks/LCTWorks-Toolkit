@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\ChipControl.xaml" />
+    <None Remove="Controls\MenuFlyoutHeader.xaml" />
     <None Remove="Controls\ThemedButton.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +23,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Common.Services\LCTWorks.Common.Services.csproj" />
     <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\MenuFlyoutHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\ChipControl.xaml">
