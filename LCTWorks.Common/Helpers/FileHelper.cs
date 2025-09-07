@@ -4,6 +4,41 @@ namespace LCTWorks.Common.Helpers
 {
     public static class FileHelper
     {
+        /// <summary>
+        /// Determines whether the specified <paramref name="path"/> is located within the directory tree rooted at <paramref name="root"/>.
+        /// </summary>
+        /// <param name="path">An absolute or relative file or directory path to check.</param>
+        /// <param name="root">
+        /// The root directory path that defines the boundary. If null or whitespace, the method returns false
+        /// </param>
+        /// <returns>
+        /// true if the normalized <paramref name="path"/> starts with the normalized <paramref name="root"/> (i.e., it is under that root);
+        /// otherwise, false.
+        /// </returns>
+        public static bool IsPathUnderRoot(string path, string? root)
+        {
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return false;
+            }
+
+            try
+            {
+                var normalizedRoot = Path.GetFullPath(root);
+                if (!normalizedRoot.EndsWith(Path.DirectorySeparatorChar) && !normalizedRoot.EndsWith(Path.AltDirectorySeparatorChar))
+                {
+                    normalizedRoot += Path.DirectorySeparatorChar;
+                }
+
+                var normalizedPath = Path.GetFullPath(path);
+                return normalizedPath.StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static string ReadTextFile(string filePath)
         {
             ThrowCheck.StringNullOrWhiteSpace(filePath, "File path cannot be null or whitespace.", nameof(filePath));
