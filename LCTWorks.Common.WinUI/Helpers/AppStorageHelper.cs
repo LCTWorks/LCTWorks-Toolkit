@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace LCTWorks.Common.WinUI.Helpers;
 
 public static class AppStorageHelper
 {
+    public static string? AddToFutureAccessList(StorageFile storageFile, string? token = null)
+    {
+        token ??= string.Empty;
+        if (!StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            return StorageApplicationPermissions.FutureAccessList.Add(storageFile, token);
+        }
+
+        return default;
+    }
+
     public static async Task DeleteFileFromLocalFolderAsync(string folderName, string fileName)
     {
         var file = await GetStorageFileFromLocalFolderAsync(folderName, fileName);
@@ -15,8 +27,17 @@ public static class AppStorageHelper
         }
     }
 
+    public static async Task<StorageFolder?> GetFutureAccessListFolderAsync(string token)
+    {
+        if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            return await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+        }
+        return default;
+    }
+
     public static StorageFolder GetLocalFolder()
-            => ApplicationData.Current.LocalFolder;
+                => ApplicationData.Current.LocalFolder;
 
     public static async Task<StorageFile?> GetStorageFileFromLocalFolderAsync(string folderName, string fileName)
     {
@@ -55,6 +76,16 @@ public static class AppStorageHelper
         {
             return string.Empty;
         }
+    }
+
+    public static bool RemoveFromFutureAccessList(string token)
+    {
+        if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+        {
+            StorageApplicationPermissions.FutureAccessList.Remove(token);
+            return true;
+        }
+        return false;
     }
 
     public static async Task WriteTextOnFileAsync(string content, StorageFile? storageFile)
