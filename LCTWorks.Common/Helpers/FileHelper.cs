@@ -1,9 +1,67 @@
-﻿using System.Text;
+﻿using System.Buffers.Binary;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace LCTWorks.Common.Helpers
 {
     public static class FileHelper
     {
+        public static string GetFolderSignature(string? folder)
+        {
+            if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder))
+                return ":0:";
+
+            try
+            {
+                var entries = new List<(string Name, long Size, long WriteTicks)>();
+
+                foreach (var path in Directory.EnumerateFiles(folder, "*", SearchOption.TopDirectoryOnly))
+                {
+                    try
+                    {
+                        var fi = new FileInfo(path);
+                        entries.Add((fi.Name, fi.Length, fi.LastWriteTimeUtc.Ticks));
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (entries.Count == 0)
+                    return ":0:";
+
+                // Ensure deterministic order regardless of filesystem enumeration
+                entries.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+
+                using var hasher = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+                Span<byte> buffer8 = stackalloc byte[8];
+
+                foreach (var (Name, Size, WriteTicks) in entries)
+                {
+                    // name (case-insensitive match normalized to upper)
+                    var nameBytes = Encoding.UTF8.GetBytes(Name.ToUpperInvariant());
+                    hasher.AppendData(nameBytes);
+                    hasher.AppendData("|"u8.ToArray());
+
+                    // size
+                    BinaryPrimitives.WriteInt64LittleEndian(buffer8, Size);
+                    hasher.AppendData(buffer8);
+
+                    // last write time (UTC ticks)
+                    BinaryPrimitives.WriteInt64LittleEndian(buffer8, WriteTicks);
+                    hasher.AppendData(buffer8);
+                }
+
+                var hash = hasher.GetHashAndReset();
+                var hex = Convert.ToHexString(hash); // uppercase hex
+                return $"{entries.Count}:{hex}";
+            }
+            catch
+            {
+                return ":0:";
+            }
+        }
+
         /// <summary>
         /// Determines whether the specified <paramref name="path"/> is located within the directory tree rooted at <paramref name="root"/>.
         /// </summary>
@@ -16,6 +74,30 @@ namespace LCTWorks.Common.Helpers
         /// otherwise, false.
         /// </returns>
         public static bool IsPathUnderRoot(string path, string? root)
+        {
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                return false;
+            }
+
+            try
+            {
+                var normalizedRoot = Path.GetFullPath(root);
+                if (!normalizedRoot.EndsWith(Path.DirectorySeparatorChar) && !normalizedRoot.EndsWith(Path.AltDirectorySeparatorChar))
+                {
+                    normalizedRoot += Path.DirectorySeparatorChar;
+                }
+
+                var normalizedPath = Path.GetFullPath(path);
+                return normalizedPath.StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool IsUnder(string path, string? root)
         {
             if (string.IsNullOrWhiteSpace(root))
             {
