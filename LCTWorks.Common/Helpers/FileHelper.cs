@@ -6,6 +6,48 @@ namespace LCTWorks.Common.Helpers
 {
     public static class FileHelper
     {
+        public static bool CopyFile(string? filePath, string? destFolderPath, bool overwrite = false)
+        {
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(destFolderPath) || !Directory.Exists(destFolderPath))
+            {
+                return false;
+            }
+            var fileName = Path.GetFileName(filePath);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return false;
+            }
+            var destFilePath = Path.Combine(destFolderPath, fileName);
+            try
+            {
+                File.Copy(filePath, destFilePath, overwrite);
+                return true;
+            }
+            catch
+            {
+            }
+            return false;
+        }
+
+        public static bool DeleteFile(string? filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+                return false;
+            try
+            {
+                File.Delete(filePath);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static string GetFolderSignature(string? folder)
         {
             if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder))
