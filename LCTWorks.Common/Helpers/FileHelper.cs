@@ -48,6 +48,15 @@ namespace LCTWorks.Common.Helpers
             }
         }
 
+        public static bool FileExists(string? filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return false;
+            }
+            return File.Exists(filePath);
+        }
+
         public static string GetFolderSignature(string? folder)
         {
             if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder))
