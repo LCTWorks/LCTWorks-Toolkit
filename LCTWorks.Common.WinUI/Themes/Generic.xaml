@@ -3,6 +3,9 @@
                     xmlns:controls="using:LCTWorks.Common.WinUI.Controls"
                     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
+        <!--  Styles  -->
+        <ResourceDictionary Source="ms-appx:///LCTWorks.Common.WinUI/Styles/ToggleButtons.xaml" />
+        <!--  Controls  -->
         <ResourceDictionary Source="ms-appx:///LCTWorks.Common.WinUI/Controls/ThemedButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.Common.WinUI/Controls/ChipControl.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.Common.WinUI/Controls/MenuFlyoutHeader.xaml" />

@@ -11,6 +11,7 @@
     <None Remove="Controls\ChipControl.xaml" />
     <None Remove="Controls\MenuFlyoutHeader.xaml" />
     <None Remove="Controls\ThemedButton.xaml" />
+    <None Remove="Styles\ToggleButtons.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
@@ -36,6 +37,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\ThemedButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Styles\ToggleButtons.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

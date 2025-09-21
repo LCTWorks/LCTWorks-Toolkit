@@ -48,6 +48,26 @@ namespace LCTWorks.Common.Helpers
             }
         }
 
+        public static bool EnsureFolder(string? folderPath)
+        {
+            if (string.IsNullOrWhiteSpace(folderPath))
+            {
+                return false;
+            }
+            try
+            {
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                return true;
+            }
+            catch
+            {
+            }
+            return false;
+        }
+
         public static bool FileExists(string? filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
