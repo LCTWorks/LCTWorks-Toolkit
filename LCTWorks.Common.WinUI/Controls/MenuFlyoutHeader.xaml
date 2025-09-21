@@ -10,8 +10,6 @@
                 Value="16,0" />
         <Setter Property="MinHeight"
                 Value="{StaticResource MenuFlyoutHeaderMinHeight}" />
-        <Setter Property="FontFamily"
-                Value="{StaticResource AppFontRegular}" />
         <Setter Property="Opacity"
                 Value=".5" />
         <Setter Property="Template">
