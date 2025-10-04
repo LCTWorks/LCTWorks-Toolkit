@@ -9,5 +9,6 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ChipControl.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveItemsView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
