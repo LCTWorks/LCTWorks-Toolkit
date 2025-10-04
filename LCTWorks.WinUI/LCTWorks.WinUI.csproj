@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>LCTWorks.Common.WinUI</RootNamespace>
+    <RootNamespace>LCTWorks.WinUI</RootNamespace>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 	  <Nullable>enable</Nullable>
     <UseWinUI>true</UseWinUI>
@@ -22,8 +22,8 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LCTWorks.Common.Services\LCTWorks.Common.Services.csproj" />
     <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
+    <ProjectReference Include="..\LCTWorks.Services\LCTWorks.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MenuFlyoutHeader.xaml">
