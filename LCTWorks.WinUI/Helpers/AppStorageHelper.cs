@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class AppStorageHelper
 {

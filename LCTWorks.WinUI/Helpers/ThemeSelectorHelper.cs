@@ -1,9 +1,9 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
-using LCTWorks.Common.WinUI.Extensions;
+using LCTWorks.WinUI.Extensions;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class ThemeSelectorHelper
 {

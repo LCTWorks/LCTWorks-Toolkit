@@ -1,7 +1,7 @@
 ﻿using LCTWorks.Common.Helpers;
 using Windows.Storage;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class LocalSettingsHelper
 {

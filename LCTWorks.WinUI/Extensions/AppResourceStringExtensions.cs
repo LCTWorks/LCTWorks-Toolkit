@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class AppResourceStringExtensions
 {

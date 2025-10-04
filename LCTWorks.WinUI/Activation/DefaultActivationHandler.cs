@@ -1,8 +1,8 @@
-﻿using LCTWorks.Common.WinUI.Navigation;
+﻿using LCTWorks.WinUI.Navigation;
 using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Activation;
+namespace LCTWorks.WinUI.Activation;
 
 public class DefaultActivationHandler(FrameNavigationService navigationService) : ActivationHandler<LaunchActivatedEventArgs>
 {

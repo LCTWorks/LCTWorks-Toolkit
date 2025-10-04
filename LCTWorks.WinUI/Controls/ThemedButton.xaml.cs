@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
-namespace LCTWorks.Common.WinUI.Controls;
+namespace LCTWorks.WinUI.Controls;
 
 public sealed partial class ThemedButton : Button
 {

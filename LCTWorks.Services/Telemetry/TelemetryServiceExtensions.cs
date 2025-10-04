@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LCTWorks.Common.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace LCTWorks.Common.Services.Telemetry;
+namespace LCTWorks.Services.Telemetry;
 
 public static class TelemetryServiceExtensions
 {

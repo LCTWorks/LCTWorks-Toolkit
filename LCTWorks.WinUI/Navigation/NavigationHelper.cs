@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.Common.WinUI.Navigation;
+namespace LCTWorks.WinUI.Navigation;
 
 public class NavigationHelper
 {

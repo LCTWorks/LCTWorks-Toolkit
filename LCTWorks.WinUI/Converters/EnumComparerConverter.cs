@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml.Data;
 using System;
 
-namespace LCTWorks.Common.WinUI.Converters;
+namespace LCTWorks.WinUI.Converters;
 
 public partial class EnumComparerConverter : IValueConverter
 {

@@ -3,12 +3,10 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Navigation;
+namespace LCTWorks.WinUI.Navigation;
 
 public static class NavigationViewHelper
 {

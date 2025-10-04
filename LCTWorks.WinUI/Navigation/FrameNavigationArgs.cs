@@ -1,7 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-
-namespace LCTWorks.Common.WinUI.Navigation;
+﻿namespace LCTWorks.WinUI.Navigation;
 
 public class FrameNavigationArgs(bool clearNavigation, object? parameter)
 {

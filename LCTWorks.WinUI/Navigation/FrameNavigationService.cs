@@ -1,11 +1,11 @@
-﻿using LCTWorks.Common.WinUI.Extensions;
+﻿using LCTWorks.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace LCTWorks.Common.WinUI.Navigation;
+namespace LCTWorks.WinUI.Navigation;
 
 public class FrameNavigationService
 {

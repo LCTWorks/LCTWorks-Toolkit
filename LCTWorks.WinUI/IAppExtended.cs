@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace LCTWorks.Common.WinUI;
+namespace LCTWorks.WinUI;
 
 public interface IAppExtended
 {

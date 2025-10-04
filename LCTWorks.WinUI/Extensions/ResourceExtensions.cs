@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class ResourceExtensions
 {

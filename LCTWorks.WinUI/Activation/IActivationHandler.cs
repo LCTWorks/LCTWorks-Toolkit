@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Activation;
+namespace LCTWorks.WinUI.Activation;
 
 public interface IActivationHandler
 {

@@ -1,13 +1,12 @@
-﻿using LCTWorks.Common.Services.Telemetry;
-using LCTWorks.Common.WinUI.Extensions;
-using LCTWorks.Common.WinUI.Helpers;
+﻿using LCTWorks.WinUI.Extensions;
+using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Activation
+namespace LCTWorks.WinUI.Activation
 {
     public class ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers)
     {

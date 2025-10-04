@@ -1,5 +1,5 @@
 ﻿using LCTWorks.Common.Extensions;
-using LCTWorks.Common.WinUI.Extensions;
+using LCTWorks.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace LCTWorks.Common.WinUI.Helpers
+namespace LCTWorks.WinUI.Helpers
 {
     public static class PickerHelper
     {

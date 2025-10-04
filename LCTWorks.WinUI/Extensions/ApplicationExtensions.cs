@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class ApplicationExtensions
 {

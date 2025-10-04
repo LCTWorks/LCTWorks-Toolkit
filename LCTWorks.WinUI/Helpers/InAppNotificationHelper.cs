@@ -1,10 +1,10 @@
-﻿using LCTWorks.Common.WinUI.Extensions;
+﻿using LCTWorks.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class InAppNotificationHelper
 {

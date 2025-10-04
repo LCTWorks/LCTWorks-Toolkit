@@ -1,6 +1,6 @@
 ﻿using Windows.ApplicationModel.DataTransfer;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class ClipboardHelper
 {

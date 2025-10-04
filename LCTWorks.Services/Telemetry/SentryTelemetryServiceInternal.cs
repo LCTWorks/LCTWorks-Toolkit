@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace LCTWorks.Common.Services.Telemetry;
+namespace LCTWorks.Services.Telemetry;
 
 public class SentryTelemetryServiceInternal : ITelemetryService
 {

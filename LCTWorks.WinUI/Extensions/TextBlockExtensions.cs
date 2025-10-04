@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class TextBlockExtensions
 {

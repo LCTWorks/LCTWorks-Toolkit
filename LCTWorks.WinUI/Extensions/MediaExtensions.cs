@@ -3,7 +3,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 
-namespace LCTWorks.Common.WinUI.Extensions
+namespace LCTWorks.WinUI.Extensions
 {
     public static class MediaExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Common.WinUI.Navigation;
+﻿namespace LCTWorks.WinUI.Navigation;
 
 public interface INavigationObjectContainer
 {

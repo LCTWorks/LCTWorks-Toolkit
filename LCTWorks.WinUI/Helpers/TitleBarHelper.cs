@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LCTWorks.Common.WinUI.Extensions;
+using LCTWorks.WinUI.Extensions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class TitleBarHelper
 {

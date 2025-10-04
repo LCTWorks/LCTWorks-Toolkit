@@ -1,4 +1,4 @@
-using LCTWorks.Common.Services.Telemetry;
+using LCTWorks.Services.Telemetry;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -9,7 +9,7 @@ using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class RuntimePackageHelper
 {

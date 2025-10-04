@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LCTWorks.Common.WinUI.Navigation
+namespace LCTWorks.WinUI.Navigation
 {
     public static class NavigationPageMap
     {

@@ -1,10 +1,10 @@
-﻿using LCTWorks.Common.WinUI.Extensions;
+﻿using LCTWorks.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 
-namespace LCTWorks.Common.WinUI.Dialogs;
+namespace LCTWorks.WinUI.Dialogs;
 
 public class DialogService
 {

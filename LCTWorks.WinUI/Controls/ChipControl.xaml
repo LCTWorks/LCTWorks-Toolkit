@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:LCTWorks.Common.WinUI.Controls">
+                    xmlns:local="using:LCTWorks.WinUI.Controls">
 
     <Thickness x:Key="ChipControlPadding">8,4</Thickness>
     <TextAlignment x:Key="ChipControlTextAlignment">Center</TextAlignment>
