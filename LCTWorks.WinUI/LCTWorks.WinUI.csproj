@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LCTWorks.Common.Services\LCTWorks.Common.Services.csproj" />
+    <ProjectReference Include="..\LCTWorks.Common.Services\LCTWorks.Services.csproj" />
     <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
