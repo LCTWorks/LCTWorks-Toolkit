@@ -1,12 +1,11 @@
-﻿namespace LCTWorks.Common.Services.Telemetry
+﻿namespace LCTWorks.Services.Telemetry;
+
+public enum TelemetryTraceStatus
 {
-    public enum TelemetryTraceStatus
-    {
-        Ok,
-        AuthorizationError,
-        InvalidArgument,
-        OutOfRange,
-        Cancelled,
-        UnknownError,
-    }
+    Ok,
+    AuthorizationError,
+    InvalidArgument,
+    OutOfRange,
+    Cancelled,
+    UnknownError,
 }

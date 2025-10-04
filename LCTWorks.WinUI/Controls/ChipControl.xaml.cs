@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.Common.WinUI.Controls;
+namespace LCTWorks.WinUI.Controls;
 
 public sealed partial class ChipControl : Control
 {

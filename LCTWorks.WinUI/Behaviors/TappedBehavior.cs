@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.Xaml.Interactivity;
 using System.Windows.Input;
 
-namespace LCTWorks.Common.WinUI.Behaviors;
+namespace LCTWorks.WinUI.Behaviors;
 
 public sealed class TappedBehavior : Behavior<UIElement>
 {

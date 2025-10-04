@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace LCTWorks.Common.Services.Telemetry;
+namespace LCTWorks.Services.Telemetry;
 
 public record TelemetryEnvironmentContextData(
     string? AppDisplayName,

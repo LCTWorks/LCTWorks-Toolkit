@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LCTWorks.Common.WinUI.Abstractions;
+using LCTWorks.WinUI.Abstractions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Sentry.Protocol;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 
-namespace LCTWorks.Common.WinUI.Helpers;
+namespace LCTWorks.WinUI.Helpers;
 
 public static class TitleBarHelper
 {
@@ -53,7 +52,7 @@ public static class TitleBarHelper
 
         app.MainWindow.ExtendsContentIntoTitleBar = true;
         app.MainWindow.SetTitleBar(appTitleBar);
-        app.MainWindow.Activated += (object sender, WindowActivatedEventArgs args) =>
+        app.MainWindow.Activated += (sender, args) =>
         {
             var resource = args.WindowActivationState == WindowActivationState.Deactivated ? "WindowCaptionForegroundDisabled" : "WindowCaptionForeground";
 

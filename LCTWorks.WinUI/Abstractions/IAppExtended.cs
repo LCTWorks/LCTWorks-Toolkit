@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace LCTWorks.Common.WinUI.Abstractions;
+namespace LCTWorks.WinUI.Abstractions;
 
 public interface IAppExtended
 {

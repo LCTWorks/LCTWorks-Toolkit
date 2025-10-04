@@ -4,7 +4,7 @@ using System.Linq;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class NavigationViewExtensions
 {

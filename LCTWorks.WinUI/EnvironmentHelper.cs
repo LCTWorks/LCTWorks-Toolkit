@@ -1,15 +1,14 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System;
 using Windows.ApplicationModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using Windows.System.Profile;
 using Windows.Security.ExchangeActiveSyncProvisioning;
-using LCTWorks.Common.Services.Telemetry;
+using LCTWorks.Services.Telemetry;
 using System.Globalization;
 
-namespace LCTWorks.Common.WinUI;
+namespace LCTWorks.WinUI;
 
 public static class EnvironmentHelper
 {

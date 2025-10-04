@@ -1,7 +1,7 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.Messaging;
 
-namespace LCTWorks.Common.WinUI.Extensions;
+namespace LCTWorks.WinUI.Extensions;
 
 public static class MessengerExtensions
 {

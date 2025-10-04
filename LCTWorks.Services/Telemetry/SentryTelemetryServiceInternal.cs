@@ -1,10 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
+using LCTWorks.Common;
 using Microsoft.Extensions.Logging;
 using Sentry.Protocol;
 
-namespace LCTWorks.Common.Services.Telemetry;
+namespace LCTWorks.Services.Telemetry;
 
 public class SentryTelemetryServiceInternal : ITelemetryService
 {

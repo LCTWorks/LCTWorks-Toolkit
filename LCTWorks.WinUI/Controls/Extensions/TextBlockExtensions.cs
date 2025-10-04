@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.Common.WinUI.Controls.Extensions
+namespace LCTWorks.WinUI.Controls.Extensions
 {
     public static class TextBlockExtensions
     {

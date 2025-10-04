@@ -1,16 +1,15 @@
-﻿namespace LCTWorks.Common.Services.Telemetry
+﻿namespace LCTWorks.Services.Telemetry;
+
+public enum TelemetryLogType
 {
-    public enum TelemetryLogType
-    {
-        Default,
-        Navigation,
-        Info,
-        Http,
-        User,
-        Error,
-        System,
-        Session,
-        UI,
-        Query,
-    }
+    Default,
+    Navigation,
+    Info,
+    Http,
+    User,
+    Error,
+    System,
+    Session,
+    UI,
+    Query,
 }
