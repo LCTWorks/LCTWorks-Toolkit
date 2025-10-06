@@ -8,6 +8,7 @@
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\AdaptiveItemsView.xaml" />
     <None Remove="Controls\ChipControl.xaml" />
     <None Remove="Controls\MenuFlyoutHeader.xaml" />
     <None Remove="Controls\ThemedButton.xaml" />
@@ -15,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
@@ -24,6 +26,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
     <ProjectReference Include="..\LCTWorks.Services\LCTWorks.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\AdaptiveItemsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MenuFlyoutHeader.xaml">
