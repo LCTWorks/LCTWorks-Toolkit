@@ -46,6 +46,12 @@ public class FrameNavigationService
             _frame.GoBack();
             navObject?.OnNavigatedFrom();
 
+            var newNavObject = GetFrameContentsNavigationObject();
+            if (newNavObject != null)
+            {
+                newNavObject?.OnNavigatedTo(null);
+            }
+
             return true;
         }
 
@@ -88,7 +94,8 @@ public class FrameNavigationService
     }
 
     protected virtual void OnFrameNavigated(Frame sender, NavigationEventArgs e)
-    { }
+    {
+    }
 
     private INavigationObject? GetFrameContentsNavigationObject()
     {

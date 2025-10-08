@@ -4,5 +4,5 @@ public interface INavigationObject
 {
     void OnNavigatedFrom();
 
-    void OnNavigatedTo(object parameter);
+    void OnNavigatedTo(object? parameter);
 }
