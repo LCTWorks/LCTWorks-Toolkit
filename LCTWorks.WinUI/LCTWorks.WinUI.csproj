@@ -12,7 +12,6 @@
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Controls\ContentDialogs\FeedbackContentDialog.xaml" />
     <None Remove="Controls\MenuFlyoutHeader.xaml" />
     <None Remove="Controls\ThemedButton.xaml" />
   </ItemGroup>

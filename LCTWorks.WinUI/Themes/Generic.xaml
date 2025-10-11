@@ -7,14 +7,14 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!--  Font families  -->
+    <!--  Font family  -->
     <FontFamily x:Key="FluentIconsFontFamily">ms-appx:///Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
     <FontFamily x:Key="PoppinsBoldFontFamily">ms-appx:///Assets/Fonts/Poppins-Bold.ttf#Poppins</FontFamily>
     <FontFamily x:Key="PoppinsRegulaFontFamily">ms-appx:///Assets/Fonts/Poppins-Regular.ttf#Poppins</FontFamily>
     <FontFamily x:Key="PoppinsLightFontFamily">ms-appx:///Assets/Fonts/Poppins-Light.ttf#Poppins Light</FontFamily>
     <FontFamily x:Key="MaterialSymbolsFont">ms-appx:///Assets/Fonts/MaterialSymbols-Outlined-300.ttf#Material Symbols Outlined Light</FontFamily>
 
-    <!--  Constants  -->
+    <!--  Values  -->
     <x:Double x:Key="ContentDialogMaxHeight">1200</x:Double>
     <Thickness x:Key="ContentDialogLayoutRootMargin">32,0</Thickness>
     <x:Double x:Key="ContentDialogMainContainerMaxWidth">420</x:Double>
@@ -27,6 +27,68 @@
     <CornerRadius x:Key="ChipToggleButtonCornerRadius">16</CornerRadius>
     <Thickness x:Key="ChipToggleButtonPadding">16,12</Thickness>
     <TextLineBounds x:Key="ChipToggleButtonTextLineBounds">Tight</TextLineBounds>
+
+    <!--  TextBlock  -->
+    <Style x:Key="PoppinsRegularTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="{StaticResource PoppinsRegulaFontFamily}" />
+    </Style>
+    <Style x:Key="PoppinsLightTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="{StaticResource PoppinsLightFontFamily}" />
+    </Style>
+    <Style x:Key="PoppinsBoldTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="{StaticResource PoppinsBoldFontFamily}" />
+    </Style>
+    <Style x:Key="FluentIconsTextBlockStyle"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="{StaticResource FluentIconsFontFamily}" />
+        <Setter Property="FontSize"
+                Value="24" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="TextAlignment"
+                Value="Center" />
+    </Style>
+    <Style x:Key="ItemFluentIconTextBlockStyle"
+           BasedOn="{StaticResource FluentIconsTextBlockStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize"
+                Value="16" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="TextAlignment"
+                Value="Left" />
+    </Style>
+    <Style x:Key="ItemTitleTextBlockStyle"
+           BasedOn="{StaticResource PoppinsRegularTextBlockStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize"
+                Value="16" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="TextAlignment"
+                Value="Left" />
+    </Style>
+    <Style x:Key="ItemDescriptionTextBlockStyle"
+           BasedOn="{StaticResource ItemTitleTextBlockStyle}"
+           TargetType="TextBlock">
+        <Setter Property="Opacity"
+                Value=".75" />
+        <Setter Property="TextTrimming"
+                Value="CharacterEllipsis" />
+        <Setter Property="TextWrapping"
+                Value="WrapWholeWords" />
+        <Setter Property="MaxLines"
+                Value="2" />
+    </Style>
 
     <!--  Styles  -->
     <Style x:Key="ChipToggleButtonStyle"
@@ -309,12 +371,19 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="ContentDialogSoloButtonStyle"
+    <Style x:Key="ContentDialogModernButtonStyle"
+           BasedOn="{StaticResource DefaultButtonStyle}"
            TargetType="Button">
-        <Setter Property="MinWidth"
-                Value="240" />
-        <Setter Property="Margin"
-                Value="32" />
+
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+    </Style>
+    <Style x:Key="ContentDialogModernAccentButtonStyle"
+           BasedOn="{StaticResource AccentButtonStyle}"
+           TargetType="Button">
+
         <Setter Property="HorizontalAlignment"
                 Value="Center" />
         <Setter Property="VerticalAlignment"
@@ -329,88 +398,23 @@
         <Setter Property="Height"
                 Value="{StaticResource SeparatorRectangleHeight}" />
     </Style>
-    <Style x:Key="PoppinsRegularTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsRegulaFontFamily}" />
-    </Style>
-    <Style x:Key="PoppinsLightTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsLightFontFamily}" />
-    </Style>
-    <Style x:Key="PoppinsBoldTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsBoldFontFamily}" />
-    </Style>
-    <Style x:Key="FluentIconsTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource FluentIconsFontFamily}" />
-        <Setter Property="FontSize"
-                Value="24" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="TextAlignment"
-                Value="Center" />
-    </Style>
-    <Style x:Key="ItemFluentIconTextBlockStyle"
-           BasedOn="{StaticResource FluentIconsTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="FontSize"
-                Value="16" />
-        <Setter Property="HorizontalAlignment"
-                Value="Left" />
-        <Setter Property="TextAlignment"
-                Value="Left" />
-    </Style>
-
-    <Style x:Key="ItemTitleTextBlockStyle"
-           BasedOn="{StaticResource PoppinsRegularTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="FontSize"
-                Value="16" />
-        <Setter Property="HorizontalAlignment"
-                Value="Left" />
-        <Setter Property="TextAlignment"
-                Value="Left" />
-    </Style>
-    <Style x:Key="ItemDescriptionTextBlockStyle"
-           BasedOn="{StaticResource ItemTitleTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="Opacity"
-                Value=".75" />
-        <Setter Property="TextTrimming"
-                Value="CharacterEllipsis" />
-        <Setter Property="TextWrapping"
-                Value="WrapWholeWords" />
-        <Setter Property="MaxLines"
-                Value="2" />
-    </Style>
     <Style x:Key="ModernContentDialogStyle"
            BasedOn="{StaticResource DefaultContentDialogStyle}"
            TargetType="ContentDialog">
-        <Setter Property="Foreground"
-                Value="{ThemeResource ContentDialogForeground}" />
-        <Setter Property="Background"
-                Value="{ThemeResource ContentDialogBackground}" />
         <Setter Property="BorderThickness"
-                Value="{ThemeResource ContentDialogBorderWidth}" />
-        <Setter Property="BorderBrush"
-                Value="{ThemeResource ContentDialogBorderBrush}" />
-        <Setter Property="IsTabStop"
-                Value="False" />
+                Value="0" />
+        <Setter Property="Background"
+                Value="{ThemeResource ContentDialogTopOverlay}" />
         <Setter Property="PrimaryButtonStyle"
-                Value="{ThemeResource DefaultButtonStyle}" />
+                Value="{StaticResource ContentDialogModernButtonStyle}" />
         <Setter Property="SecondaryButtonStyle"
-                Value="{ThemeResource DefaultButtonStyle}" />
+                Value="{StaticResource ContentDialogModernButtonStyle}" />
         <Setter Property="CloseButtonStyle"
-                Value="{ThemeResource DefaultButtonStyle}" />
-        <Setter Property="CornerRadius"
-                Value="{ThemeResource OverlayCornerRadius}" />
+                Value="{StaticResource ContentDialogModernButtonStyle}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="DefaultButton"
+                Value="Primary" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentDialog">
@@ -443,27 +447,25 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <ScrollViewer x:Name="ContentScrollViewer"
+                                                  MaxWidth="{StaticResource ContentDialogMainContainerMaxWidth}"
                                                   HorizontalScrollBarVisibility="Disabled"
                                                   IsTabStop="False"
                                                   VerticalScrollBarVisibility="Disabled"
                                                   ZoomMode="Disabled">
                                         <Grid Padding="{ThemeResource ContentDialogPadding}"
-                                              Background="{ThemeResource ContentDialogTopOverlay}"
-                                              BorderBrush="{ThemeResource ContentDialogSeparatorBorderBrush}"
-                                              BorderThickness="{ThemeResource ContentDialogSeparatorThickness}">
+                                              Background="{ThemeResource ContentDialogTopOverlay}">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             <ContentControl x:Name="Title"
                                                             Margin="{ThemeResource ContentDialogTitleMargin}"
-                                                            HorizontalAlignment="Left"
+                                                            HorizontalAlignment="Center"
                                                             VerticalAlignment="Top"
                                                             Content="{TemplateBinding Title}"
                                                             ContentTemplate="{TemplateBinding TitleTemplate}"
                                                             FontFamily="{StaticResource ContentControlThemeFontFamily}"
-                                                            FontSize="20"
-                                                            FontWeight="SemiBold"
+                                                            FontSize="24"
                                                             Foreground="{TemplateBinding Foreground}"
                                                             IsTabStop="False">
                                                 <ContentControl.Template>
@@ -481,6 +483,7 @@
                                             </ContentControl>
                                             <ContentPresenter x:Name="Content"
                                                               Grid.Row="1"
+                                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                               Content="{TemplateBinding Content}"
                                                               ContentTemplate="{TemplateBinding ContentTemplate}"
                                                               FontFamily="{StaticResource ContentControlThemeFontFamily}"
@@ -668,8 +671,12 @@
                                 </VisualState>
                                 <VisualState x:Name="PrimaryVisible">
                                     <VisualState.Setters>
-                                        <Setter Target="PrimaryButton.(Grid.Column)"
-                                                Value="4" />
+                                        <Setter Target="PrimaryButton.HorizontalAlignment"
+                                                Value="Center" />
+                                        <Setter Target="PrimaryButton.Width"
+                                                Value="240" />
+                                        <Setter Target="CloseColumn.Width"
+                                                Value="0" />
                                         <Setter Target="SecondaryButton.Visibility"
                                                 Value="Collapsed" />
                                         <Setter Target="CloseButton.Visibility"
@@ -720,19 +727,19 @@
                                 <VisualState x:Name="PrimaryAsDefaultButton">
                                     <VisualState.Setters>
                                         <Setter Target="PrimaryButton.Style"
-                                                Value="{StaticResource AccentButtonStyle}" />
+                                                Value="{StaticResource ContentDialogModernAccentButtonStyle}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="SecondaryAsDefaultButton">
                                     <VisualState.Setters>
                                         <Setter Target="SecondaryButton.Style"
-                                                Value="{StaticResource AccentButtonStyle}" />
+                                                Value="{StaticResource ContentDialogModernAccentButtonStyle}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CloseAsDefaultButton">
                                     <VisualState.Setters>
                                         <Setter Target="CloseButton.Style"
-                                                Value="{StaticResource AccentButtonStyle}" />
+                                                Value="{StaticResource ContentDialogModernAccentButtonStyle}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
