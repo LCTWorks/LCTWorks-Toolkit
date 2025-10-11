@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <FontFamily x:Key="FluentIconsFontFamily">ms-appx:///Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
+    <FontFamily x:Key="PoppinsBoldFontFamily">ms-appx:///Assets/Fonts/Poppins-Bold.ttf#Poppins</FontFamily>
+    <FontFamily x:Key="PoppinsRegularFontFamily">ms-appx:///Assets/Fonts/Poppins-Regular.ttf#Poppins</FontFamily>
+    <FontFamily x:Key="PoppinsLightFontFamily">ms-appx:///Assets/Fonts/Poppins-Light.ttf#Poppins Light</FontFamily>
+    <FontFamily x:Key="MaterialSymbolsFont">ms-appx:///Assets/Fonts/MaterialSymbols-Outlined-300.ttf#Material Symbols Outlined Light</FontFamily>
+
+    <StaticResource x:Key="AppRegularFontFamily"
+                    ResourceKey="PoppinsRegularFontFamily" />
+    <StaticResource x:Key="AppBoldFontFamily"
+                    ResourceKey="PoppinsBoldFontFamily" />
+    <StaticResource x:Key="AppLightFontFamily"
+                    ResourceKey="PoppinsLightFontFamily" />
+</ResourceDictionary>

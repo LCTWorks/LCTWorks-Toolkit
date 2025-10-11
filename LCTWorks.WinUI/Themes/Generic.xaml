@@ -3,91 +3,19 @@
                     xmlns:controls="using:LCTWorks.WinUI.Controls"
                     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/Constants.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/TextBlocks.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/FontFamilies.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!--  Font family  -->
-    <FontFamily x:Key="FluentIconsFontFamily">ms-appx:///Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
-    <FontFamily x:Key="PoppinsBoldFontFamily">ms-appx:///Assets/Fonts/Poppins-Bold.ttf#Poppins</FontFamily>
-    <FontFamily x:Key="PoppinsRegulaFontFamily">ms-appx:///Assets/Fonts/Poppins-Regular.ttf#Poppins</FontFamily>
-    <FontFamily x:Key="PoppinsLightFontFamily">ms-appx:///Assets/Fonts/Poppins-Light.ttf#Poppins Light</FontFamily>
-    <FontFamily x:Key="MaterialSymbolsFont">ms-appx:///Assets/Fonts/MaterialSymbols-Outlined-300.ttf#Material Symbols Outlined Light</FontFamily>
-
-    <!--  Values  -->
-    <x:Double x:Key="ContentDialogMaxHeight">1200</x:Double>
-    <Thickness x:Key="ContentDialogLayoutRootMargin">32,0</Thickness>
-    <x:Double x:Key="ContentDialogMainContainerMaxWidth">420</x:Double>
-    <x:Double x:Key="ContentDialogMainContainerRowSpacing">24</x:Double>
-    <Thickness x:Key="ContentDialogContainerStackPanelMargin">32,32,32,0</Thickness>
-    <x:Double x:Key="ContentDialogContainerStackPanelSpacing">8</x:Double>
-    <x:Double x:Key="ContentDialogTitleFontSize">24</x:Double>
-    <x:Double x:Key="SeparatorRectangleHeight">2</x:Double>
-    <x:Double x:Key="SeparatorRectangleOpacity">0.2</x:Double>
-    <CornerRadius x:Key="ChipToggleButtonCornerRadius">16</CornerRadius>
-    <Thickness x:Key="ChipToggleButtonPadding">16,12</Thickness>
-    <TextLineBounds x:Key="ChipToggleButtonTextLineBounds">Tight</TextLineBounds>
-
-    <!--  TextBlock  -->
-    <Style x:Key="PoppinsRegularTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsRegulaFontFamily}" />
-    </Style>
-    <Style x:Key="PoppinsLightTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsLightFontFamily}" />
-    </Style>
-    <Style x:Key="PoppinsBoldTextBlockStyle"
-           TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="{StaticResource PoppinsBoldFontFamily}" />
-    </Style>
-    <Style x:Key="FluentIconsTextBlockStyle"
-           TargetType="TextBlock">
+    <!--  System default overrides  -->
+    <StaticResource x:Key="ContentControlThemeFontFamily"
+                    ResourceKey="AppRegularFontFamily" />
+    <Style TargetType="FontIcon">
         <Setter Property="FontFamily"
                 Value="{StaticResource FluentIconsFontFamily}" />
-        <Setter Property="FontSize"
-                Value="24" />
-        <Setter Property="HorizontalAlignment"
-                Value="Center" />
-        <Setter Property="VerticalAlignment"
-                Value="Center" />
-        <Setter Property="TextAlignment"
-                Value="Center" />
-    </Style>
-    <Style x:Key="ItemFluentIconTextBlockStyle"
-           BasedOn="{StaticResource FluentIconsTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="FontSize"
-                Value="16" />
-        <Setter Property="HorizontalAlignment"
-                Value="Left" />
-        <Setter Property="TextAlignment"
-                Value="Left" />
-    </Style>
-    <Style x:Key="ItemTitleTextBlockStyle"
-           BasedOn="{StaticResource PoppinsRegularTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="FontSize"
-                Value="16" />
-        <Setter Property="HorizontalAlignment"
-                Value="Left" />
-        <Setter Property="TextAlignment"
-                Value="Left" />
-    </Style>
-    <Style x:Key="ItemDescriptionTextBlockStyle"
-           BasedOn="{StaticResource ItemTitleTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="Opacity"
-                Value=".75" />
-        <Setter Property="TextTrimming"
-                Value="CharacterEllipsis" />
-        <Setter Property="TextWrapping"
-                Value="WrapWholeWords" />
-        <Setter Property="MaxLines"
-                Value="2" />
     </Style>
 
     <!--  Styles  -->
