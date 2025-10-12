@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:LCTWorks.WinUI.Controls">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LCTWorks.WinUI.Controls">
 
     <x:Double x:Key="MenuFlyoutHeaderMinHeight">32</x:Double>
 
     <Style TargetType="local:MenuFlyoutHeader">
-        <Setter Property="Padding"
-                Value="16,0" />
-        <Setter Property="MinHeight"
-                Value="{StaticResource MenuFlyoutHeaderMinHeight}" />
-        <Setter Property="Opacity"
-                Value=".5" />
+        <Setter
+            Property="Padding"
+            Value="16,0" />
+        <Setter
+            Property="MinHeight"
+            Value="{StaticResource MenuFlyoutHeaderMinHeight}" />
+        <Setter
+            Property="Opacity"
+            Value=".5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:MenuFlyoutHeader">
 
-                    <TextBlock Margin="{TemplateBinding Padding}"
-                               VerticalAlignment="Center"
-                               FontFamily="{TemplateBinding FontFamily}"
-                               Text="{TemplateBinding Header}" />
+                    <TextBlock
+                        Margin="{TemplateBinding Padding}"
+                        VerticalAlignment="Center"
+                        FontFamily="{TemplateBinding FontFamily}"
+                        Text="{TemplateBinding Header}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
