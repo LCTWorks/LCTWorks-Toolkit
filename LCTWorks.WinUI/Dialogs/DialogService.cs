@@ -1,4 +1,5 @@
 ﻿using LCTWorks.WinUI.Extensions;
+using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -11,12 +12,6 @@ public class DialogService
     private ContentDialog? _currentContentDialog;
     private bool _suppressEscKey;
     private XamlRoot? _xamlRoot;
-
-    public ElementTheme Theme
-    {
-        get;
-        set;
-    }
 
     public XamlRoot? XamlRoot
     {
@@ -42,7 +37,7 @@ public class DialogService
         _currentContentDialog = dialog;
         _currentContentDialog.XamlRoot = xamlRootToUse;
         _currentContentDialog.Closing += OnCurrentContentDialogClosing;
-        _currentContentDialog.RequestedTheme = Theme;
+        _currentContentDialog.RequestedTheme = ThemeSelectorHelper.Theme;
 
         return await _currentContentDialog.ShowAsync();
     }

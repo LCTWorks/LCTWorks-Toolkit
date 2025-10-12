@@ -4,9 +4,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace LCTWorks.WinUI.Controls.Internal;
 
-internal partial class FeedbackLinkItemDataTemplateSelector : DataTemplateSelector
+internal partial class ItemsContentDialogItemDataTemplateSelector : DataTemplateSelector
 {
-    public FeedbackLinkItemDataTemplateSelector()
+    public ItemsContentDialogItemDataTemplateSelector()
     {
     }
 
@@ -16,7 +16,7 @@ internal partial class FeedbackLinkItemDataTemplateSelector : DataTemplateSelect
 
     protected override DataTemplate SelectTemplateCore(object item)
     {
-        if (item is FeedbackLinkItem linkItem)
+        if (item is ItemsContentDialogItem linkItem)
         {
             return linkItem.Command is not null ? InteractiveTemplate ?? base.SelectTemplateCore(item) : NonInteractiveTemplate ?? base.SelectTemplateCore(item);
         }
