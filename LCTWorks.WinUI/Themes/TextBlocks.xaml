@@ -64,6 +64,14 @@
         <Setter Property="FontSize"
                 Value="{StaticResource MaterialSymbolsTextFontSize}" />
     </Style>
+    <Style x:Key="FontAwesomeBrandsTextBlockStyle"
+           BasedOn="{StaticResource SmoothIconTextBlockStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="{StaticResource FontAwesomeBrandsFontFamily}" />
+        <Setter Property="FontSize"
+                Value="{StaticResource MaterialSymbolsTextFontSize}" />
+    </Style>
 
     <!--  General text styles  -->
     <Style x:Key="SmoothHeaderTextBlockStyle"

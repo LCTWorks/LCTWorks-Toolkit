@@ -1,4 +1,5 @@
 ﻿using LCTWorks.WinUI.Controls.ContentDialogs;
+using LCTWorks.WinUI.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

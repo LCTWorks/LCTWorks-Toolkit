@@ -43,6 +43,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Fonts\FA7Brands-Regular.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Fonts\MaterialSymbols-Outlined-300.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
