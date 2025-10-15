@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
@@ -47,6 +46,7 @@ public static class RuntimePackageHelper
     }
 
     private static string? environment = null;
+    private static bool _isChecked = false;
 
     public static string Environment
     {
@@ -60,6 +60,10 @@ public static class RuntimePackageHelper
 
     public static void Check()
     {
+        if (_isChecked)
+        {
+            return;
+        }
         RuntimeCheck();
     }
 
@@ -80,6 +84,7 @@ public static class RuntimePackageHelper
                 IsAppUpdated = true;
             }
         }
+        _isChecked = true;
     }
 
     private static int ComparePackageVersions(PackageVersion v1, PackageVersion v2)
@@ -134,13 +139,25 @@ public static class RuntimePackageHelper
             Convert.ToUInt16(result[3]));
     }
 
-    public static string DeviceManufacturer { get; }
+    public static string DeviceManufacturer
+    {
+        get;
+    }
 
-    public static string DeviceModel { get; }
+    public static string DeviceModel
+    {
+        get;
+    }
 
-    public static string OsArchitecture { get; }
+    public static string OsArchitecture
+    {
+        get;
+    }
 
-    public static string DeviceFamily { get; }
+    public static string DeviceFamily
+    {
+        get;
+    }
 
     public static bool IsMSIX
     {
@@ -152,24 +169,36 @@ public static class RuntimePackageHelper
         }
     }
 
-    public static string PackageName { get; }
+    public static string PackageName
+    {
+        get;
+    }
 
-    public static string OSVersion { get; }
+    public static string OSVersion
+    {
+        get;
+    }
 
-    public static string OSDetails { get; }
+    public static string OSDetails
+    {
+        get;
+    }
 
     public static bool IsDebug()
     {
 #if DEBUG
         return true;
 #else
-            return false;
+        return false;
 #endif
     }
 
     public static string LocalCachePath => Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
 
-    public static string PackageVersion { get; }
+    public static string PackageVersion
+    {
+        get;
+    }
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int GetCurrentPackageFullName(ref int packageFullNameLength, StringBuilder? packageFullName);

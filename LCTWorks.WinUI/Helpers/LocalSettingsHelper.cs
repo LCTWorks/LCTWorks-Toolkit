@@ -1,4 +1,5 @@
 ﻿using LCTWorks.Common.Helpers;
+using LCTWorks.WinUI.Models;
 using Windows.Storage;
 
 namespace LCTWorks.WinUI.Helpers;
@@ -16,6 +17,18 @@ public static class LocalSettingsHelper
         get;
         set;
     } = "LastOpenedVersion";
+
+    public static RatingPromptData? RatingPromptData
+    {
+        get => ReadSetting<RatingPromptData>(RatingPromptDataKey);
+        set => SaveSetting(RatingPromptDataKey, value);
+    }
+
+    public static string RatingPromptDataKey
+    {
+        get;
+        set;
+    } = "RatingPromptData";
 
     public static string? ThemeName
     {

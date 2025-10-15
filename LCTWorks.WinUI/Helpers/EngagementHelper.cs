@@ -8,6 +8,28 @@ namespace LCTWorks.WinUI.Helpers;
 
 public static class EngagementHelper
 {
+    private static readonly StoreContext? _context;
+
+    public static async Task<TimeSpan?> GetRemainingTrialTimeAsync()
+    {
+        var context = GetStoreContext();
+        if (context != null)
+        {
+            try
+            {
+                var appLicense = await _context?.GetAppLicenseAsync();
+
+                return appLicense.IsActive && appLicense.IsTrial
+                    ? DateTimeOffset.Now - appLicense.ExpirationDate
+                    : null;
+            }
+            catch
+            {
+            }
+        }
+        return default;
+    }
+
     public static async Task LaunchEmailAsync(string email, string subject, string body = "")
     {
         var scapedSubject = Uri.EscapeDataString(subject);
@@ -18,17 +40,43 @@ public static class EngagementHelper
 
     public static async Task<StoreRateAndReviewStatus> LaunchRateAndReviewAsync()
     {
-        var exApp = Application.Current.AsAppExtended();
-        if (exApp == null || exApp.MainWindow == null)
+        var context = GetStoreContext();
+        if (context != null)
         {
-            return StoreRateAndReviewStatus.Error;
+            try
+            {
+                var result = await context.RequestRateAndReviewAppAsync();
+                return result?.Status ?? StoreRateAndReviewStatus.Error;
+            }
+            catch (Exception)
+            {
+            }
         }
+        return StoreRateAndReviewStatus.Error;
+    }
 
-        //This here, throws a Win32 Unknown exception. No idea why.
-        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(exApp.MainWindow);
-        var storeContext = StoreContext.GetDefault();
-        WinRT.Interop.InitializeWithWindow.Initialize(storeContext, hWnd);
-        var result = await storeContext.RequestRateAndReviewAppAsync();
-        return result?.Status ?? StoreRateAndReviewStatus.Error;
+    private static StoreContext? GetStoreContext()
+    {
+        if (_context != null)
+        {
+            return _context;
+        }
+        try
+        {
+            var exApp = Application.Current.AsAppExtended();
+            if (exApp == null || exApp.MainWindow == null)
+            {
+                return null;
+            }
+            //This here, throws a Win32 Unknown exception. No idea why.
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(exApp.MainWindow);
+            var storeContext = StoreContext.GetDefault();
+            WinRT.Interop.InitializeWithWindow.Initialize(storeContext, hWnd);
+            return storeContext;
+        }
+        catch (Exception)
+        {
+            return default;
+        }
     }
 }
