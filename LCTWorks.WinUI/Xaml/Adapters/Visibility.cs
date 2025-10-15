@@ -1,6 +1,6 @@
 ﻿using XamlVisibility = Microsoft.UI.Xaml.Visibility;
 
-namespace LCTWorks.WinUI.Adapters;
+namespace LCTWorks.WinUI.Xaml.Adapters;
 
 public static class Visibility
 {

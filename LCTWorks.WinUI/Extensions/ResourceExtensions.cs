@@ -7,15 +7,11 @@ public static class ResourceExtensions
 {
     private static readonly Dictionary<string, ResourceLoader> _map;
     private static readonly ResourceLoader _resourceLoader;
-    private static readonly ResourceLoader _textPreviewResourceLoader = ResourceLoader.GetForViewIndependentUse("TextPreview");
 
     static ResourceExtensions()
     {
         _resourceLoader = ResourceLoader.GetForViewIndependentUse();
-        _map = new Dictionary<string, ResourceLoader>
-        {
-            { nameof(_resourceLoader), _textPreviewResourceLoader }
-        };
+        _map = [];
     }
 
     public static string DefaultValue
@@ -27,7 +23,7 @@ public static class ResourceExtensions
 
     public static string GetTextLocalized(this string resourceKey, string resourceFileName)
     {
-        if (!_map.TryGetValue(resourceFileName, out ResourceLoader? value))
+        if (!_map.TryGetValue(resourceFileName, out var value))
         {
             try
             {
