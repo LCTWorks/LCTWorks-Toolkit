@@ -1,10 +1,11 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LCTWorks.Common.Collections;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace LCTWorks.WinUI.Navigation;
 
@@ -78,6 +79,16 @@ public static class NavigationViewHelper
         NavigationView.SelectedItem = null;
     }
 
+    public static NavigationViewItem? GetContainerFromMenuItem(object menuItem)
+    {
+        if (_navigationView == null)
+        {
+            return default!;
+        }
+        var container = _navigationView.ContainerFromMenuItem(menuItem);
+        return container as NavigationViewItem;
+    }
+
     public static NavigationViewItem? GetSelectedItem(Type pageType)
     {
         if (_navigationView != null)
@@ -97,25 +108,28 @@ public static class NavigationViewHelper
         return NavigationView.SelectedItem;
     }
 
-    public static async void SelectItem(object? item = null)
+    public static async void SelectItem(object? item = null, bool forceSelection = false)
     {
         //Sometimes there's a racing condition in which the
         //SelectedItem is the one just removed and the page
         //selection doesn't update.
         await Task.Delay(300);
 
-        if (NavigationView != null
-            && NavigationView.SelectedItem == null
-            && NavigationView.MenuItemsSource is IList list)
+        if (NavigationView != null)
         {
-            if (list.Count > 0)
+            if (forceSelection || (NavigationView.SelectedItem == null))
             {
-                var selectedItem = item ?? list[0];
-                NavigationView.SelectedItem = selectedItem;
-            }
-            else
-            {
-                NavigationService?.NavigateTo(null);
+                var collection = new TolerantCollection(NavigationView.MenuItemsSource);
+
+                if (collection.Count > 0)
+                {
+                    var selectedItem = item ?? collection.FirstOrDefault();
+                    NavigationView.SelectedItem = selectedItem;
+                }
+                else
+                {
+                    NavigationService?.NavigateTo(null);
+                }
             }
         }
     }
