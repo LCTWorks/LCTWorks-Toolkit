@@ -174,6 +174,12 @@ public partial class TolerantCollection : ICollection<object>, ICollection, ILis
         }
     }
 
+    object IList<object>.this[int index]
+    {
+        get => this[index] ?? new object();
+        set => this[index] = value;
+    }
+
     public object? this[int index]
     {
         get

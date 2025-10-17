@@ -8,7 +8,7 @@ namespace LCTWorks.WinUI.Helpers;
 
 public static class EngagementHelper
 {
-    private static readonly StoreContext? _context;
+    private static StoreContext? _context;
 
     public static async Task<TimeSpan?> GetRemainingTrialTimeAsync()
     {
@@ -72,7 +72,7 @@ public static class EngagementHelper
             var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(exApp.MainWindow);
             var storeContext = StoreContext.GetDefault();
             WinRT.Interop.InitializeWithWindow.Initialize(storeContext, hWnd);
-            return storeContext;
+            return _context = storeContext;
         }
         catch (Exception)
         {
