@@ -6,6 +6,7 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/Constants.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/TextBlocks.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/FontFamilies.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/Chip.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
     </ResourceDictionary.MergedDictionaries>

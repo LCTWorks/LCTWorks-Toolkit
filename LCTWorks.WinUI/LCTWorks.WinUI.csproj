@@ -13,6 +13,7 @@
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Controls\Chip.xaml" />
     <None Remove="Controls\MenuFlyoutHeader.xaml" />
     <None Remove="Controls\ThemedButton.xaml" />
     <None Remove="Themes\Constants.xaml" />
@@ -59,6 +60,11 @@
     <Content Update="Assets\Fonts\Poppins-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Chip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Themes\Constants.xaml">
