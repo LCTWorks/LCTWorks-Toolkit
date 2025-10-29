@@ -2,7 +2,7 @@
 
 namespace LCTWorks.Services.Logging;
 
-public class ConsoleLogger(string categoryName) : ILogger
+public class ConsoleSimpleLogger(string categoryName) : ILogger
 {
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
         => null;

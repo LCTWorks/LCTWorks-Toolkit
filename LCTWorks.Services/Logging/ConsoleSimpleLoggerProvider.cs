@@ -2,11 +2,11 @@
 
 namespace LCTWorks.Services.Logging;
 
-public sealed class ConsoleLoggerProvider : ILoggerProvider
+public sealed class ConsoleSimpleLoggerProvider : ILoggerProvider
 {
     public ILogger CreateLogger(string categoryName)
     {
-        return new ConsoleLogger(categoryName);
+        return new ConsoleSimpleLogger(categoryName);
     }
 
     public void Dispose()
