@@ -1,10 +1,13 @@
-﻿using LCTWorks.Common.Extensions;
+﻿using LCTWorks.Core.Extensions;
+using LCTWorks.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace LCTWorks.Services.Telemetry;
+namespace LCTWorks.Telemetry;
 
 public static class TelemetryServiceExtensions
 {
@@ -20,6 +23,35 @@ public static class TelemetryServiceExtensions
         var sentryService = new SentryTelemetryServiceInternal();
         sentryService.Initialize(sentryDsn, environment, isDebug, contextData);
         return services.AddSingleton<ITelemetryService>(sentryService);
+    }
+
+    public static IServiceCollection AddSerilog(this IServiceCollection services,
+            string logFilePath,
+            LogEventLevel loggerLogLevel,
+            bool isDebug,
+            bool includeConsole = false)
+    {
+        var configuration = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.File(path: $"{logFilePath}.txt", restrictedToMinimumLevel: loggerLogLevel, rollingInterval: RollingInterval.Hour)
+            .WriteTo.File(path: $"{logFilePath}.Error", restrictedToMinimumLevel: LogEventLevel.Warning, rollingInterval: RollingInterval.Hour)
+            .WriteTo.File(path: $"{logFilePath}.Critical", restrictedToMinimumLevel: LogEventLevel.Fatal, rollingInterval: RollingInterval.Hour);
+        if (isDebug)
+        {
+            configuration = configuration
+                .MinimumLevel.Debug()
+                .WriteTo.Debug();
+        }
+        if (includeConsole)
+        {
+            configuration = configuration
+                .WriteTo.Console();
+        }
+
+        Log.Logger = configuration.CreateLogger();
+
+        return services
+            .AddLogging(builder => builder.AddSerilog(dispose: true));
     }
 
     #endregion ServiceCollection

@@ -31,8 +31,8 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LCTWorks.Common\LCTWorks.Common.csproj" />
-    <ProjectReference Include="..\LCTWorks.Services\LCTWorks.Services.csproj" />
+    <ProjectReference Include="..\LCTWorks.Core\LCTWorks.Core.csproj" />
+    <ProjectReference Include="..\LCTWorks.Telemetry\LCTWorks.Telemetry.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MenuFlyoutHeader.xaml">

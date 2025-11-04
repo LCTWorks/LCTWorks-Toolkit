@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace LCTWorks.Services.Logging;
+namespace LCTWorks.Telemetry.Logging;
 
 public class ConsoleLogger(string categoryName) : ILogger
 {

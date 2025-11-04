@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Common.Helpers;
+﻿namespace LCTWorks.Core.Helpers;
 
 /// <summary>
 /// Checks and throw appropiate exceptions for method arguments.

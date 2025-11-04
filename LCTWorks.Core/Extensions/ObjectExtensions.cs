@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Common.Extensions;
+﻿namespace LCTWorks.Core.Extensions;
 
 public static class ObjectExtensions
 {

@@ -1,6 +1,6 @@
-﻿using LCTWorks.Common.Helpers;
+﻿using LCTWorks.Core.Helpers;
 
-namespace LCTWorks.Common.Extensions;
+namespace LCTWorks.Core.Extensions;
 
 public static class EnumerableExtensions
 {

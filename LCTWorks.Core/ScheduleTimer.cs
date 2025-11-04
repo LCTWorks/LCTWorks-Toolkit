@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace LCTWorks.Common;
+namespace LCTWorks.Core;
 
 public partial class ScheduleTimer : IDisposable
 {

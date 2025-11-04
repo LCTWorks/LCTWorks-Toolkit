@@ -39,6 +39,9 @@ public static class AppStorageHelper
     public static StorageFolder GetLocalFolder()
                 => ApplicationData.Current.LocalFolder;
 
+    public static StorageFolder GetLocalFolder(string subFolderName)
+        => ApplicationData.Current.LocalFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.OpenIfExists).AsTask().GetAwaiter().GetResult();
+
     public static async Task<StorageFile?> GetStorageFileFromLocalFolderAsync(string folderName, string fileName)
     {
         try

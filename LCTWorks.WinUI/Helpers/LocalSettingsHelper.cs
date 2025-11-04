@@ -1,4 +1,4 @@
-﻿using LCTWorks.Common.Helpers;
+﻿using LCTWorks.Core.Helpers;
 using LCTWorks.WinUI.Models;
 using Windows.Storage;
 

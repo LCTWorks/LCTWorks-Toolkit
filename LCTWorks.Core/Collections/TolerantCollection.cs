@@ -1,7 +1,6 @@
 ﻿using System.Collections;
-using LCTWorks.Common.Helpers;
 
-namespace LCTWorks.Common.Collections;
+namespace LCTWorks.Core.Collections;
 
 /// <summary>
 /// Provides a tolerant wrapper around an arbitrary instance that exposes collection semantics

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace LCTWorks.Common
+namespace LCTWorks.Core
 {
     public abstract class Singleton<T> where T : class
     {

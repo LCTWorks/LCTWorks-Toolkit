@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LCTWorks.Common.Helpers;
+namespace LCTWorks.Core.Helpers;
 
 public static class FileHelper
 {
