@@ -5,7 +5,10 @@
     <x:Double x:Key="FluentIconsItemTextBlockFontSize">16</x:Double>
     <x:Double x:Key="FluentIconsItemTextBlockOpacity">0.75</x:Double>
     <x:Double x:Key="MaterialSymbolsTextFontSize">20</x:Double>
+    <x:Double x:Key="SmoothHeaderTextBlockFontSize">32</x:Double>
     <x:Double x:Key="SmoothItemTitleTextBlockFontSize">16</x:Double>
+    <x:Double x:Key="SmoothTitleTextBlockFontSize">24</x:Double>
+    <x:Double x:Key="SmoothSubtitleTextBlockFontSize">16</x:Double>
     <x:Double x:Key="SmoothItemBodyTextBlockFontSize">14</x:Double>
     <x:Double x:Key="SmoothItemCaptionTextBlockOpacity">0.75</x:Double>
     <HorizontalAlignment x:Key="SmoothItemTextBlockHorizontalAlignment">Left</HorizontalAlignment>
@@ -78,13 +81,19 @@
            BasedOn="{StaticResource SmoothLightTextBlockStyle}"
            TargetType="TextBlock">
         <Setter Property="FontSize"
-                Value="32" />
+                Value="{StaticResource SmoothHeaderTextBlockFontSize}" />
     </Style>
     <Style x:Key="SmoothTitleTextBlockStyle"
            BasedOn="{StaticResource SmoothLightTextBlockStyle}"
            TargetType="TextBlock">
         <Setter Property="FontSize"
-                Value="24" />
+                Value="{StaticResource SmoothTitleTextBlockFontSize}" />
+    </Style>
+    <Style x:Key="SmoothSubtitleTextBlockStyle"
+           BasedOn="{StaticResource SmoothLightTextBlockStyle}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize"
+                Value="{StaticResource SmoothSubtitleTextBlockFontSize}" />
     </Style>
     <Style x:Key="SmoothBodyTextBlockStyle"
            BasedOn="{StaticResource SmoothRegularTextBlockStyle}"
