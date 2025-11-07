@@ -1,6 +1,7 @@
 ﻿using LCTWorks.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Sentry.Protocol;
+using Serilog.Events;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,6 +12,14 @@ public class SentryTelemetryServiceInternal : ITelemetryService
 {
     private static readonly TimeSpan _flushTime = TimeSpan.FromSeconds(2);
     private static readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
+    private List<string> _inMemoryLogs = new();
+    private bool _isDebug = false;
+
+    public bool IncludeSerilogIntegration
+    {
+        get;
+        set;
+    }
 
     public void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null)
     {
@@ -37,17 +46,24 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         });
     }
 
-    public void Flush()
+    public virtual void Flush()
     {
         SentrySdk.Flush(_flushTime);
+        if (IncludeSerilogIntegration)
+        {
+            Serilog.Log.CloseAndFlush();
+        }
     }
 
+    public IEnumerable<string> GetLogs() => _inMemoryLogs;
+
     public void Initialize(
-        string sentryDsn,
+            string sentryDsn,
         string? environment,
         bool isDebug,
         TelemetryEnvironmentContextData? contextData = null)
     {
+        _isDebug = isDebug;
         SentrySdk.Init(options =>
         {
             options.Dsn = sentryDsn;
@@ -90,7 +106,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         }
     }
 
-    public void Log(
+    public virtual void Log(
         string? message = null,
         LogLevel level = LogLevel.Information,
         Exception? exception = null,
@@ -118,9 +134,11 @@ public class SentryTelemetryServiceInternal : ITelemetryService
             type ?? TelemetryLogType.Default.ToString(),
             tags?.ToDictionary(),
             ToBreadCrumbLevel(level));
+
+        LogSerilog(level, message);
     }
 
-    public Guid ReportUnhandledException(Exception exception)
+    public virtual Guid ReportUnhandledException(Exception exception)
     {
         var serializedException = SerializeException(exception);
 
@@ -143,13 +161,14 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         unhandledEvent.SetTag("priority", "high");
 
         var id = SentrySdk.CaptureEvent(unhandledEvent);
+        LogSerilog(LogLevel.Critical, exception.Message);
 
         Flush();
 
         return id;
     }
 
-    public void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null)
+    public virtual void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null)
     {
         if (exception != null)
         {
@@ -283,17 +302,29 @@ public class SentryTelemetryServiceInternal : ITelemetryService
 
     #region Private
 
-    private static SpanStatus ConvertStatus(TelemetryTraceStatus traceState)
-        => traceState switch
+    private static LogEventLevel ConvertLogLevel(LogLevel level)
+        => level switch
         {
-            TelemetryTraceStatus.Ok => SpanStatus.Ok,
-            TelemetryTraceStatus.AuthorizationError => SpanStatus.PermissionDenied,
-            TelemetryTraceStatus.InvalidArgument => SpanStatus.InvalidArgument,
-            TelemetryTraceStatus.OutOfRange => SpanStatus.OutOfRange,
-            TelemetryTraceStatus.Cancelled => SpanStatus.Cancelled,
-            TelemetryTraceStatus.UnknownError => SpanStatus.UnknownError,
-            _ => SpanStatus.UnknownError,
+            LogLevel.Trace => LogEventLevel.Verbose,
+            LogLevel.Debug => LogEventLevel.Debug,
+            LogLevel.Information => LogEventLevel.Information,
+            LogLevel.Warning => LogEventLevel.Warning,
+            LogLevel.Error => LogEventLevel.Error,
+            LogLevel.Critical => LogEventLevel.Fatal,
+            _ => LogEventLevel.Information,
         };
+
+    private static SpanStatus ConvertStatus(TelemetryTraceStatus traceState)
+            => traceState switch
+            {
+                TelemetryTraceStatus.Ok => SpanStatus.Ok,
+                TelemetryTraceStatus.AuthorizationError => SpanStatus.PermissionDenied,
+                TelemetryTraceStatus.InvalidArgument => SpanStatus.InvalidArgument,
+                TelemetryTraceStatus.OutOfRange => SpanStatus.OutOfRange,
+                TelemetryTraceStatus.Cancelled => SpanStatus.Cancelled,
+                TelemetryTraceStatus.UnknownError => SpanStatus.UnknownError,
+                _ => SpanStatus.UnknownError,
+            };
 
     private static string SerializeException(Exception exception)
     {
@@ -318,6 +349,21 @@ public class SentryTelemetryServiceInternal : ITelemetryService
             LogLevel.Critical => BreadcrumbLevel.Critical,
             _ => BreadcrumbLevel.Info,
         };
+
+    private void LogSerilog(LogLevel level, string text)
+    {
+        var logger = Serilog.Log.Logger;
+        if (!IncludeSerilogIntegration || logger == null)
+        {
+            return;
+        }
+        var eventLevel = ConvertLogLevel(level);
+        logger.Write(eventLevel, text);
+        if (_isDebug)
+        {
+            _inMemoryLogs.Add("text");
+        }
+    }
 
     #endregion Private
 }

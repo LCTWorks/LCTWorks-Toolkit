@@ -13,6 +13,8 @@ public interface ITelemetryService
 
     void Flush();
 
+    IEnumerable<string> GetLogs();
+
     void Initialize(string serviceKey, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
 
     void Log(string? message = null,
