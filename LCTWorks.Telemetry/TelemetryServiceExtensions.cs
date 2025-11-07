@@ -35,11 +35,12 @@ public static class TelemetryServiceExtensions
             bool isDebug,
             bool includeConsole = false)
     {
+        var filePath = Path.Join(logFilePath, "Log.");
         var configuration = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.File(path: $"{logFilePath}.txt", restrictedToMinimumLevel: loggerLogLevel, rollingInterval: RollingInterval.Hour)
-            .WriteTo.File(path: $"{logFilePath}.Error", restrictedToMinimumLevel: LogEventLevel.Warning, rollingInterval: RollingInterval.Hour)
-            .WriteTo.File(path: $"{logFilePath}.Critical", restrictedToMinimumLevel: LogEventLevel.Fatal, rollingInterval: RollingInterval.Hour);
+            .WriteTo.File(path: $"{filePath}.txt", restrictedToMinimumLevel: loggerLogLevel, rollingInterval: RollingInterval.Hour)
+            .WriteTo.File(path: $"{filePath}.Error", restrictedToMinimumLevel: LogEventLevel.Warning, rollingInterval: RollingInterval.Hour)
+            .WriteTo.File(path: $"{filePath}.Critical", restrictedToMinimumLevel: LogEventLevel.Fatal, rollingInterval: RollingInterval.Hour);
         if (isDebug)
         {
             configuration = configuration
