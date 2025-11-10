@@ -1,4 +1,5 @@
-﻿using LCTWorks.WinUI.Extensions;
+﻿using LCTWorks.Telemetry;
+using LCTWorks.WinUI.Extensions;
 using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
