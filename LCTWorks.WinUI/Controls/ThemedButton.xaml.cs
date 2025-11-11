@@ -88,14 +88,28 @@ public sealed partial class ThemedButton : Button
         nameof(Glyph),
         typeof(string),
         typeof(ThemedButton),
-        new PropertyMetadata(string.Empty));
+        new PropertyMetadata(string.Empty, OnSeparationPropertyChanged));
+
+    public static readonly DependencyProperty SeparationMarginProperty =
+        DependencyProperty.Register(
+        nameof(SeparationMargin),
+        typeof(Thickness),
+        typeof(ThemedButton),
+        new PropertyMetadata(new Thickness(0), OnSeparationPropertyChanged));
 
     public static readonly DependencyProperty ShowGlyphProperty =
-            DependencyProperty.Register(
+        DependencyProperty.Register(
         nameof(ShowGlyph),
         typeof(bool),
         typeof(ThemedButton),
-        new PropertyMetadata(true));
+        new PropertyMetadata(true, OnSeparationPropertyChanged));
+
+    private static readonly DependencyProperty SeparationMarginInternalProperty =
+        DependencyProperty.Register(
+            nameof(SeparationMarginInternal),
+            typeof(Thickness),
+            typeof(ThemedButton),
+            new PropertyMetadata(default));
 
     public ThemedButton()
     {
@@ -174,9 +188,39 @@ public sealed partial class ThemedButton : Button
         set => SetValue(GlyphFontSizeProperty, value);
     }
 
+    public Thickness SeparationMargin
+    {
+        get => (Thickness)GetValue(SeparationMarginProperty);
+        set => SetValue(SeparationMarginProperty, value);
+    }
+
     public bool ShowGlyph
     {
         get => (bool)GetValue(ShowGlyphProperty);
         set => SetValue(ShowGlyphProperty, value);
+    }
+
+    private Thickness SeparationMarginInternal
+    {
+        get => (Thickness)GetValue(SeparationMarginInternalProperty);
+        set => SetValue(SeparationMarginInternalProperty, value);
+    }
+
+    protected override void OnContentChanged(object oldContent, object newContent)
+    {
+        base.OnContentChanged(oldContent, newContent);
+        UpdateSeparation();
+    }
+
+    private static void OnSeparationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((ThemedButton)d).UpdateSeparation();
+    }
+
+    private void UpdateSeparation()
+    {
+        bool hasGlyph = ShowGlyph && !string.IsNullOrEmpty(Glyph);
+        bool hasContent = Content is not null && (Content as string)?.Length != 0;
+        SeparationMarginInternal = (hasGlyph && hasContent) ? SeparationMargin : new Thickness(0);
     }
 }
