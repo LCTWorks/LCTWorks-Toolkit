@@ -29,7 +29,7 @@ public static class TelemetryServiceExtensions
         if (contextData.AppLocalCachePath != null)
         {
             var filePath = Path.Join(contextData.AppLocalCachePath, "Logs");
-            services = services.AddSerilog(filePath, LogEventLevel.Information, isDebug, isDebug);
+            services = services.AddSerilog(filePath, LogEventLevel.Information, isDebug, false);
             serilogIncluded = true;
         }
 

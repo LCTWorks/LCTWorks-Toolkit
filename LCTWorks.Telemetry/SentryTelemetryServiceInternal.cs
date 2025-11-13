@@ -12,8 +12,6 @@ public class SentryTelemetryServiceInternal : ITelemetryService
 {
     private static readonly TimeSpan _flushTime = TimeSpan.FromSeconds(2);
     private static readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
-    private List<string> _inMemoryLogs = new();
-    private bool _isDebug = false;
 
     public bool IncludeSerilogIntegration
     {
@@ -55,15 +53,12 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         }
     }
 
-    public IEnumerable<string> GetLogs() => _inMemoryLogs;
-
     public void Initialize(
             string sentryDsn,
         string? environment,
         bool isDebug,
         TelemetryEnvironmentContextData? contextData = null)
     {
-        _isDebug = isDebug;
         SentrySdk.Init(options =>
         {
             options.Dsn = sentryDsn;
@@ -359,10 +354,6 @@ public class SentryTelemetryServiceInternal : ITelemetryService
         }
         var eventLevel = ConvertLogLevel(level);
         logger.Write(eventLevel, text);
-        if (_isDebug)
-        {
-            _inMemoryLogs.Add("text");
-        }
     }
 
     #endregion Private
