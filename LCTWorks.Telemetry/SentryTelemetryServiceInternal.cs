@@ -54,7 +54,7 @@ public class SentryTelemetryServiceInternal : ITelemetryService
     }
 
     public void Initialize(
-            string sentryDsn,
+        string sentryDsn,
         string? environment,
         bool isDebug,
         TelemetryEnvironmentContextData? contextData = null)

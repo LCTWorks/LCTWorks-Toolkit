@@ -33,15 +33,13 @@ public static class TelemetryServiceExtensions
             serilogIncluded = true;
         }
 
-        if (!string.IsNullOrWhiteSpace(sentryDsn))
+        var sentryService = new SentryTelemetryServiceInternal
         {
-            var sentryService = new SentryTelemetryServiceInternal
-            {
-                IncludeSerilogIntegration = serilogIncluded
-            };
-            sentryService.Initialize(sentryDsn, environment, isDebug, contextData);
-            services = services.AddSingleton<ITelemetryService>(sentryService);
-        }
+            IncludeSerilogIntegration = serilogIncluded
+        };
+        sentryService.Initialize(sentryDsn ?? string.Empty, environment, isDebug, contextData);
+        services = services.AddSingleton<ITelemetryService>(sentryService);
+
         return services;
     }
 
