@@ -1,8 +1,8 @@
-﻿using LCTWorks.Common.Helpers;
+﻿using LCTWorks.Core.Helpers;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 
-namespace LCTWorks.Common.Extensions;
+namespace LCTWorks.Core.Extensions;
 
 /// <summary>
 /// High-performance, allocation-aware extensions for common collection scenarios.

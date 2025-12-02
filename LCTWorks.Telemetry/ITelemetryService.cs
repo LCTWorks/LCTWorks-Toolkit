@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace LCTWorks.Services.Telemetry;
+namespace LCTWorks.Telemetry;
 
 public interface ITelemetryService
 {

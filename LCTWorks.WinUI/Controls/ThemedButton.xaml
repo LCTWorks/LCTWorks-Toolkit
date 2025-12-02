@@ -4,10 +4,11 @@
                     xmlns:local="using:LCTWorks.WinUI.Controls">
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
-    <Thickness x:Key="ThemedButtonGlyphTextBlockMargin">0,0,8,0</Thickness>
+    <Thickness x:Key="ThemedButtonSeparationMargin">6,0,0,0</Thickness>
     <x:Double x:Key="ThemedButtonGlyphFontSize">20</x:Double>
     <VerticalAlignment x:Key="ThemedButtonGlyphVerticalAlignment">Center</VerticalAlignment>
-    <TextLineBounds x:Key="ThemedButtonTextLineBounds">TrimToCapHeight</TextLineBounds>
+    <TextLineBounds x:Key="ThemedButtonGlyphTextLineBounds">TrimToCapHeight</TextLineBounds>
+    <TextLineBounds x:Key="ThemedButtonContentTextLineBounds">Tight</TextLineBounds>
 
     <x:Double x:Key="ThemedPressedForegroundOpacity">0.7</x:Double>
     <x:Double x:Key="ThemedPointerOverBackgroundOpacity">0.9</x:Double>
@@ -85,6 +86,8 @@
                 Value="{ThemeResource ThemedButtonGlyphFontSize}" />
         <Setter Property="Padding"
                 Value="{StaticResource ThemedButtonPadding}" />
+        <Setter Property="SeparationMargin"
+                Value="{StaticResource ThemedButtonSeparationMargin}" />
         <Setter Property="GlyphFontFamily"
                 Value="{ThemeResource SymbolThemeFontFamily}" />
         <Setter Property="BackgroundPointerOver"
@@ -125,24 +128,25 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock x:Name="GlyphTextBlock"
-                                       Margin="{StaticResource ThemedButtonGlyphTextBlockMargin}"
                                        VerticalAlignment="{StaticResource ThemedButtonGlyphVerticalAlignment}"
                                        FontFamily="{TemplateBinding GlyphFontFamily}"
                                        FontSize="{TemplateBinding GlyphFontSize}"
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Glyph}"
-                                       TextLineBounds="{StaticResource ThemedButtonTextLineBounds}"
+                                       TextLineBounds="{StaticResource ThemedButtonGlyphTextLineBounds}"
                                        Visibility="{Binding ShowGlyph, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
 
                             <ContentPresenter x:Name="ContentPresenter"
                                               Grid.Column="1"
+                                              Margin="{TemplateBinding SeparationMarginInternal}"
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                               AutomationProperties.AccessibilityView="Raw"
                                               Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
                                               ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              Foreground="{TemplateBinding Foreground}" />
+                                              Foreground="{TemplateBinding Foreground}"
+                                              TextLineBounds="{StaticResource ThemedButtonContentTextLineBounds}" />
                         </Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

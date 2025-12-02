@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace LCTWorks.Common.Helpers;
+namespace LCTWorks.Core.Helpers;
 
 public class LowerCaseNamingPolicy : JsonNamingPolicy
 {

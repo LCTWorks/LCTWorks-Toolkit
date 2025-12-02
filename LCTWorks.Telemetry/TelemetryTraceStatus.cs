@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Services.Telemetry
+﻿namespace LCTWorks.Telemetry
 {
     public enum TelemetryTraceStatus
     {

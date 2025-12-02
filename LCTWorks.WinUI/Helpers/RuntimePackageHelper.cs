@@ -1,4 +1,4 @@
-using LCTWorks.Services.Telemetry;
+using LCTWorks.Telemetry;
 using System;
 using System.Globalization;
 using System.Reflection;

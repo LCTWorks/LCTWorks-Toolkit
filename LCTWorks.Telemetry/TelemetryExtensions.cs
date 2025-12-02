@@ -1,29 +1,12 @@
-﻿using LCTWorks.Common.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using LCTWorks.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace LCTWorks.Services.Telemetry;
+namespace LCTWorks.Telemetry;
 
-public static class TelemetryServiceExtensions
+public static class TelemetryExtensions
 {
-    #region ServiceCollection
-
-    public static IServiceCollection AddSentry(this IServiceCollection services)
-    {
-        return services.AddSingleton<ITelemetryService, SentryTelemetryServiceInternal>();
-    }
-
-    public static IServiceCollection AddSentry(this IServiceCollection services, string sentryDsn, string environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null)
-    {
-        var sentryService = new SentryTelemetryServiceInternal();
-        sentryService.Initialize(sentryDsn, environment, isDebug, contextData);
-        return services.AddSingleton<ITelemetryService>(sentryService);
-    }
-
-    #endregion ServiceCollection
-
     #region Tracing
 
     public static DisposableTrace StartDisposableTrace(this ITelemetryService service, string id, string name, string operation, string? parentId = null, IEnumerable<(string, string)>? data = null, bool finish = false)

@@ -1,4 +1,4 @@
-﻿using LCTWorks.Common.Extensions;
+﻿using LCTWorks.Core.Extensions;
 using LCTWorks.WinUI.Extensions;
 using Microsoft.UI.Xaml;
 using System;

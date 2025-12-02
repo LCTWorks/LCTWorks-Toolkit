@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LCTWorks.Common.Helpers;
+using LCTWorks.Core.Helpers;
 using Microsoft.UI.Xaml.Controls;
 
 namespace LCTWorks.WinUI.Extensions;

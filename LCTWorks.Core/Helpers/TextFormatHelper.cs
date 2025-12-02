@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Common.Helpers;
+﻿namespace LCTWorks.Core.Helpers;
 
 public static class TextFormatHelper
 {

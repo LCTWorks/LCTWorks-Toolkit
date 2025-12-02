@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LCTWorks.Common.Helpers;
+namespace LCTWorks.Core.Helpers;
 
 public class ExtendedDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 {

@@ -1,4 +1,4 @@
-﻿namespace LCTWorks.Services.Cache;
+﻿namespace LCTWorks.Core.Services;
 
 public class CacheService
 {
