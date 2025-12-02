@@ -39,7 +39,6 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Border x:Name="IconColumn"
                                         Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.SmallerIconWidth}">
@@ -66,11 +65,16 @@
                                                   ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                                                   ContentTransitions="{TemplateBinding ContentTransitions}"
                                                   Foreground="{TemplateBinding Foreground}" />
+                                <ContentPresenter x:Name="CustomContent"
+                                                  Grid.Column="2"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Content="{TemplateBinding CustomContent}" />
                             </Grid>
                         </Grid>
 
                         <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="PointerStates">
+                            <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
@@ -96,15 +100,31 @@
                                                 Value="Pressed" />
                                     </VisualState.Setters>
                                 </VisualState>
-                            </VisualStateGroup>
-
-                            <VisualStateGroup x:Name="DisabledStates">
-                                <VisualState x:Name="Enabled" />
-
                                 <VisualState x:Name="Disabled">
                                     <VisualState.Setters>
                                         <Setter Target="LayoutRoot.Opacity"
                                                 Value="{ThemeResource ListViewItemDisabledThemeOpacity}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="IconStates">
+                                <VisualState x:Name="IconVisible" />
+                                <VisualState x:Name="IconHidden">
+                                    <VisualState.Setters>
+                                        <Setter Target="IconBox.Visibility"
+                                                Value="Collapsed" />
+                                        <Setter Target="IconColumn.Width"
+                                                Value="8" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="CustomContentStates">
+                                <VisualState x:Name="CustomContentVisible" />
+                                <VisualState x:Name="CustomContentHidden">
+                                    <VisualState.Setters>
+                                        <Setter Target="CustomContent.Visibility"
+                                                Value="Collapsed" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
