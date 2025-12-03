@@ -13,6 +13,10 @@ public sealed partial class NavigationViewItemButton : Button
         DependencyProperty.Register(nameof(CustomContent), typeof(object), typeof(NavigationViewItemButton),
             new PropertyMetadata(null, OnCustomContentChanged));
 
+    public static readonly DependencyProperty IconOnlyProperty =
+        DependencyProperty.Register(nameof(IconOnly), typeof(bool), typeof(NavigationViewItemButton),
+            new PropertyMetadata(false, OnIconOnlyChanged));
+
     public object Icon
     {
         get => (object)GetValue(IconProperty);
@@ -23,6 +27,12 @@ public sealed partial class NavigationViewItemButton : Button
     {
         get => (object)GetValue(CustomContentProperty);
         set => SetValue(CustomContentProperty, value);
+    }
+
+    public bool IconOnly
+    {
+        get => (bool)GetValue(IconOnlyProperty);
+        set => SetValue(IconOnlyProperty, value);
     }
 
     public NavigationViewItemButton()
@@ -48,9 +58,24 @@ public sealed partial class NavigationViewItemButton : Button
         control.UpdateVisualStates(useTransitions: true);
     }
 
+    private static void OnIconOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (NavigationViewItemButton)d;
+        control.UpdateVisualStates(useTransitions: true);
+    }
+
     private void UpdateVisualStates(bool useTransitions)
     {
-        VisualStateManager.GoToState(this, Icon is null ? "IconHidden" : "IconVisible", useTransitions);
-        VisualStateManager.GoToState(this, CustomContent is null ? "CustomContentHidden" : "CustomContentVisible", useTransitions);
+        if (Icon is null)
+        {
+            VisualStateManager.GoToState(this, "IconHidden", useTransitions);
+        }
+        else
+        {
+            VisualStateManager.GoToState(this, IconOnly ? "IconOnly" : "IconVisible", useTransitions);
+        }
+
+        var customContentVisible = !IconOnly && CustomContent is not null;
+        VisualStateManager.GoToState(this, customContentVisible ? "CustomContentVisible" : "CustomContentHidden", useTransitions);
     }
 }

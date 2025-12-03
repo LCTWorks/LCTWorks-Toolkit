@@ -117,6 +117,14 @@
                                                 Value="8" />
                                     </VisualState.Setters>
                                 </VisualState>
+                                <VisualState x:Name="IconOnly">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Visibility"
+                                                Value="Collapsed" />
+                                        <Setter Target="ContentGrid.Margin"
+                                                Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="CustomContentStates">
