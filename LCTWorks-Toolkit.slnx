@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
+  <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
+  <Project Path="LCTWorks.WinUI/LCTWorks.WinUI.csproj" />
+</Solution>
