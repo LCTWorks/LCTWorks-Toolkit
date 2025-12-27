@@ -4,38 +4,6 @@ public static class StringExtensions
 {
     public const string DefaultCommentPrefix = "#";
 
-    public static Uri? BuildValidUri(this string? uriString)
-    {
-        if (string.IsNullOrWhiteSpace(uriString))
-        {
-            return default;
-        }
-        try
-        {
-            if (Uri.TryCreate(uriString, UriKind.Absolute, out var validatedUrl))
-            {
-                if (validatedUrl.Scheme == Uri.UriSchemeHttp || validatedUrl.Scheme == Uri.UriSchemeHttps)
-                {
-                    return validatedUrl;
-                }
-            }
-            var urlWithScheme = $"{Uri.UriSchemeHttps}://{uriString}";
-            if (Uri.TryCreate(urlWithScheme, UriKind.Absolute, out var validatedUrl2))
-            {
-                if (validatedUrl2.Host.Contains('.') &&
-                    (validatedUrl2.Scheme == Uri.UriSchemeHttp || validatedUrl2.Scheme == Uri.UriSchemeHttps))
-                {
-                    return validatedUrl2;
-                }
-            }
-            return default;
-        }
-        catch (Exception)
-        {
-            return default;
-        }
-    }
-
     /// <summary>
     /// Reads a text and splits it into lines.
     /// </summary>
