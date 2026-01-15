@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LCTWorks.Web.Extensions;
 
-public static class HtmlExtensions
+public static class HtmlHelper
 {
     private const string GoogleFavIconServiceUrl = @"http://www.google.com/s2/favicons?domain={0}&sz=64";
 
@@ -294,61 +294,6 @@ public static class HtmlExtensions
 
     #endregion Html5 entities table
 
-    #region HtmlAgilityPack
-
-    public static string GetAttributeValue(this HtmlNodeCollection collection, string attributeKeyName, string attributeValueName, params string[] propertyNames)
-    {
-        if (collection != null)
-        {
-            var singlePropertyName = propertyNames.Length == 1;
-            foreach (var node in collection)
-            {
-                var property = node.GetAttributeValue(attributeKeyName, "").ToLowerInvariant();
-                if (singlePropertyName && propertyNames[0] == property)
-                {
-                    return node.GetAttributeValue(attributeValueName, "");
-                }
-                else if (propertyNames.Any(x => x == property))
-                {
-                    return node.GetAttributeValue(attributeValueName, "");
-                }
-            }
-        }
-        return string.Empty;
-    }
-
-    public static string GetAttributeValue(this HtmlNodeCollection collection, IDictionary<string, string> conditionProperties, string returnPropertyName)
-    {
-        if (collection == null)
-        {
-            return string.Empty;
-        }
-        foreach (var node in collection)
-        {
-            if (conditionProperties.All(x => node.Attributes.Any(a => a.Name == x.Key && a.Value == x.Value)))
-            {
-                return node.GetAttributeValue(returnPropertyName, "");
-            }
-        }
-        return string.Empty;
-    }
-
-    private static string GetMetaPropertyValue(HtmlNodeCollection? collection, params string[] propertyNames)
-    {
-        if (collection == null)
-        {
-            return string.Empty;
-        }
-        var propertyValue = collection.GetAttributeValue("property", "content", propertyNames);
-        if (string.IsNullOrWhiteSpace(propertyValue))
-        {
-            propertyValue = collection.GetAttributeValue("name", "content", propertyNames);
-        }
-        return propertyValue;
-    }
-
-    #endregion HtmlAgilityPack
-
     /// <summary>
     /// Adds a standard User-Agent header to the HttpRequestHeaders.
     /// </summary>
@@ -375,11 +320,11 @@ public static class HtmlExtensions
     /// corresponding characters. It does not decode numeric character references (e.g., &amp;#60; or &amp;#x3C;).
     /// For full HTML decoding including numeric references, consider using <see cref="System.Web.HttpUtility.HtmlDecode"/>.
     /// </remarks>
-    public static string DecodeHtml5Entities(this string html)
+    public static string DecodeHtml5Entities(this string? html)
     {
         if (string.IsNullOrWhiteSpace(html))
         {
-            return html;
+            return string.Empty;
         }
         foreach (var item in Html5EntitiesTable)
         {
@@ -429,21 +374,6 @@ public static class HtmlExtensions
             }
         }
         return null;
-    }
-
-    public static async Task<HtmlMetaTags> GetMetaTagsFromUrlAsync(string url, string? html = null)
-    {
-        var tags = new HtmlMetaTags();
-
-        html ??= await GetHtmlFromUrlAsync(url);
-
-        var doc = await GetMetaTagsInternalAsync(html, url, tags);
-
-        if (string.IsNullOrWhiteSpace(tags.ThumbnailUrl) && tags.ThumbnailData == null)
-        {
-            tags.ThumbnailUrl = await GetFirstImageFromHtmlCrawlAsync(doc?.DocumentNode);
-        }
-        return tags;
     }
 
     public static bool IsValidImageDataUrl(this string? url)
@@ -530,151 +460,5 @@ public static class HtmlExtensions
         {
             return false;
         }
-    }
-
-    private static async Task<string?> GetHtmlFromUrlAsync(string url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            return null;
-        }
-        try
-        {
-            using var client = new HttpClient(new SocketsHttpHandler { SslOptions = new System.Net.Security.SslClientAuthenticationOptions { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12, } });
-            client.Timeout = Constants.HttpClientTimeout;
-
-            client.DefaultRequestHeaders.AddUserAgentHeader(url);
-
-            var response = await client.GetAsync(url);
-
-            return await response.Content.ReadAsStringAsync();
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static async Task<HtmlDocument?> GetMetaTagsInternalAsync(string? html, string url, HtmlMetaTags tags)
-    {
-        if (string.IsNullOrEmpty(html))
-        {
-            return null;
-        }
-
-        var doc = new HtmlDocument();
-
-        var decodedHtml = HttpUtility.HtmlDecode(html);
-        var decodedHtml5 = DecodeHtml5Entities(decodedHtml);
-        doc.LoadHtml(decodedHtml5);
-
-        var metaNodes = doc.DocumentNode.SelectNodes("//meta");
-
-        //Title
-        if (string.IsNullOrWhiteSpace(tags.Title))
-        {
-            var title = GetMetaPropertyValue(metaNodes, "og:title", "title", "twitter:title");
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                var node = doc.DocumentNode.SelectSingleNode("//title");
-                if (node != null && node.FirstChild != null)
-                {
-                    title = node.FirstChild.InnerHtml;
-                }
-            }
-            tags.Title = title;
-        }
-
-        //favIcon:
-        if (string.IsNullOrWhiteSpace(tags.SiteIconUrl))
-        {
-            var uriHost = new Uri(url).Host;
-            tags.SiteIconUrl = string.Format(GoogleFavIconServiceUrl, uriHost);
-        }
-
-        //site name:
-        if (string.IsNullOrWhiteSpace(tags.SiteName))
-        {
-            var siteName = GetMetaPropertyValue(metaNodes, "og:site_name", "al:ios:app_name", "al:android:app_name");
-            if (string.IsNullOrWhiteSpace(siteName))
-            {
-                var host = new Uri(url).Host;
-                if (host.StartsWith("www."))
-                {
-                    host = host[4..]; //Remove from 0, 4 items.
-                }
-                siteName = host;
-            }
-            tags.SiteName = siteName;
-        }
-
-        //url
-        if (string.IsNullOrWhiteSpace(tags.Url))
-        {
-            var ogurl = GetMetaPropertyValue(metaNodes, "og:url");
-            if (string.IsNullOrWhiteSpace(ogurl))
-            {
-                ogurl = url;
-            }
-            tags.Url = ogurl;
-        }
-
-        //Other
-        if (string.IsNullOrWhiteSpace(tags.Type))
-        {
-            tags.Type = GetMetaPropertyValue(metaNodes, "og:type");
-        }
-        if (string.IsNullOrWhiteSpace(tags.VideoUrl))
-        {
-            tags.VideoUrl = GetMetaPropertyValue(metaNodes, "og:video", "og:video:url");
-        }
-        if (string.IsNullOrWhiteSpace(tags.VideoType))
-        {
-            tags.VideoType = GetMetaPropertyValue(metaNodes, "og:video:type");
-        }
-        if (string.IsNullOrWhiteSpace(tags.Description))
-        {
-            tags.Description = GetMetaPropertyValue(metaNodes, "og:description", "description");
-        }
-
-        //Thumbnail
-        if (string.IsNullOrWhiteSpace(tags.ThumbnailUrl) && tags.ThumbnailData == null)
-        {
-            tags.ThumbnailUrl = await GetThumbnailSourceAsync(doc.DocumentNode);
-        }
-        return doc;
-    }
-
-    private static async Task<string?> GetThumbnailSourceAsync(HtmlNode rootNode)
-    {
-        var metaNodes = rootNode.SelectNodes("//meta");
-        var linkNodes = rootNode.SelectNodes("//link");
-
-        var thumbnailUrl = GetMetaPropertyValue(metaNodes, "og:image", "og:image:url", "og:image:secure_url", "twitter:image", "twitter:image:src", "lp:image");
-        if (string.IsNullOrWhiteSpace(thumbnailUrl))
-        {
-            thumbnailUrl = linkNodes.GetAttributeValue(
-                new Dictionary<string, string>
-                {
-                    { "rel", "preload" },
-                    { "as", "image" }
-                }, "href");
-        }
-
-        if (string.IsNullOrWhiteSpace(thumbnailUrl))
-        {
-            return null;
-        }
-
-        var thumbUri = new UriString(thumbnailUrl ?? string.Empty);
-
-        if (thumbUri.IsValid)
-        {
-            if (await thumbUri.ValidateImageDataAsync())
-            {
-                return new(thumbUri.Value);
-            }
-        }
-        return null;
     }
 }

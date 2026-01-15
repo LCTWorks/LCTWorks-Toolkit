@@ -4,6 +4,12 @@ public static class StringExtensions
 {
     public const string DefaultCommentPrefix = "#";
 
+    public static string? EmptyIfNull(this string? value)
+               => value ?? string.Empty;
+
+    public static string? NullIfEmpty(this string? value)
+                   => string.IsNullOrWhiteSpace(value) ? null : value;
+
     /// <summary>
     /// Reads a text and splits it into lines.
     /// </summary>
