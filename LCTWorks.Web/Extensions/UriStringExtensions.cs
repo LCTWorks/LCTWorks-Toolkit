@@ -18,7 +18,7 @@ public static class UriStringExtensions
             {
                 return false;
             }
-            string path = uri.Value;
+            var path = uri.Value;
             return imageExtensions.Any(path.EndsWith);
         }
 

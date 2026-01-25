@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LCTWorks.Web.Extensions;
 
-public static class HtmlHelper
+public static class HtmlExtensions
 {
     private const string GoogleFavIconServiceUrl = @"http://www.google.com/s2/favicons?domain={0}&sz=64";
 
@@ -368,7 +368,7 @@ public static class HtmlHelper
                 ? excludingVectors.First()
                 : allImgs.FirstOrDefault();
 
-            if (lastAttempt.IsValidImageDataUrl())
+            if (await lastAttempt.IsValidImageDataUrlAsync())
             {
                 return new(lastAttempt);
             }
@@ -376,7 +376,7 @@ public static class HtmlHelper
         return null;
     }
 
-    public static bool IsValidImageDataUrl(this string? url)
+    public static async Task<bool> IsValidImageDataUrlAsync(this string? url)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -391,7 +391,7 @@ public static class HtmlHelper
             };
             client.DefaultRequestHeaders.AddUserAgentHeader();
 
-            var response = client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
+            var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (!response.IsSuccessStatusCode)
             {
