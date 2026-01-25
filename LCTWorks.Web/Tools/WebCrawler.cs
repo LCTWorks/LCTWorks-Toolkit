@@ -9,14 +9,14 @@ namespace LCTWorks.Web.Tools;
 
 public partial class WebCrawler
 {
-    private static readonly string[] excludeIconExtensions = [".svg", ".ico"];
-    private static readonly string imgDataPrefix = "data:image/";
     private readonly HtmlDocument _doc;
     private readonly bool _docLoaded;
     private readonly string? _html;
 
+    public HtmlNode RootNode => _doc.DocumentNode;
+
     public static WebCrawler FromHtml(string html)
-        => new(html);
+            => new(html);
 
     public static async Task<WebCrawler> FromUrlAsync(string url)
         => new(await GetHtmlFromUrlAsync(url));
@@ -33,17 +33,21 @@ public partial class WebCrawler
         var results = new List<HtmlImage>();
 
         // Get images from <img> tags
-        var imgNodes = rootNode.SelectNodes("//img");
+        var imgNodes = rootNode.Descendants("img");
         if (imgNodes != null)
         {
             foreach (var node in imgNodes)
             {
                 var src = node.GetAttributeValue("src", string.Empty);
                 if (string.IsNullOrEmpty(src))
+                {
                     continue;
+                }
 
                 if (excludeExtensions.Any(ext => src.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                {
                     continue;
+                }
 
                 var image = await CreateHtmlImageAsync(src, validateImages, node);
                 if (image != null)
@@ -62,14 +66,20 @@ public partial class WebCrawler
                 var style = node.GetAttributeValue("style", string.Empty);
                 var match = BackgroundImageUrlRegex().Match(style);
                 if (!match.Success)
+                {
                     continue;
+                }
 
                 var src = match.Groups[1].Value;
                 if (string.IsNullOrEmpty(src))
+                {
                     continue;
+                }
 
                 if (excludeExtensions.Any(ext => src.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
+                {
                     continue;
+                }
 
                 var image = await CreateHtmlImageAsync(src, validateImages, node, isBackground: true);
                 if (image != null)
@@ -95,7 +105,7 @@ public partial class WebCrawler
         var linkNodes = _doc.DocumentNode.SelectNodes("//link");
 
         // Title
-        string title = metaNodes.GetMetaAttributeValue("og:title", "title", "twitter:title");
+        var title = metaNodes.GetMetaAttributeValue("og:title", "title", "twitter:title");
         if (string.IsNullOrWhiteSpace(title))
         {
             var node = _doc.DocumentNode.SelectSingleNode("//title");
@@ -133,6 +143,9 @@ public partial class WebCrawler
             OgImageHeight = metaNodes.GetMetaAttributeValue("og:image:height"),
             OgSiteName = metaNodes.GetMetaAttributeValue("og:site_name"),
             OgLocale = metaNodes.GetMetaAttributeValue("og:locale"),
+            OgVideo = metaNodes.GetMetaAttributeValue("og:video"),
+            OgVideoUrl = metaNodes.GetMetaAttributeValue("og:video:url"),
+            VideoType = metaNodes.GetMetaAttributeValue("og:video:type"),
 
             // Twitter Card Tags
             TwitterCard = metaNodes.GetMetaAttributeValue("twitter:card"),
@@ -185,6 +198,7 @@ public partial class WebCrawler
                         { "as", "image" }
                   }, "href");
         }
+
         return thumbnailUrl;
     }
 
@@ -197,22 +211,23 @@ public partial class WebCrawler
         var uri = new UriString(formattedSrc);
 
         if (!uri.IsValid)
-            return null;
-
-        if (validateImages && !await uri.ValidateImageDataAsync())
-            return null;
-
-        return new HtmlImage
         {
-            Src = uri.Value,
-            Alt = isBackground ? null : node.GetAttributeValue("alt", string.Empty).NullIfEmpty(),
-            Title = node.GetAttributeValue("title", string.Empty).NullIfEmpty(),
-            Width = node.GetAttributeValue("width", 0) is > 0 and var w ? w : TryExtractSizeFromUrl(uri.Value, "w"),
-            Height = node.GetAttributeValue("height", 0) is > 0 and var h ? h : TryExtractSizeFromUrl(uri.Value, "h"),
-            SrcSet = isBackground ? null : node.GetAttributeValue("srcset", string.Empty).NullIfEmpty(),
-            Sizes = isBackground ? null : node.GetAttributeValue("sizes", string.Empty).NullIfEmpty(),
-            Loading = isBackground ? null : node.GetAttributeValue("loading", string.Empty).NullIfEmpty(),
-        };
+            return null;
+        }
+
+        return validateImages && !await uri.ValidateImageDataAsync()
+            ? null
+            : new HtmlImage
+            {
+                Src = uri.Value,
+                Alt = isBackground ? null : node.GetAttributeValue("alt", string.Empty).NullIfEmpty(),
+                Title = node.GetAttributeValue("title", string.Empty).NullIfEmpty(),
+                Width = node.GetAttributeValue("width", 0) is > 0 and var w ? w : TryExtractSizeFromUrl(uri.Value, "w"),
+                Height = node.GetAttributeValue("height", 0) is > 0 and var h ? h : TryExtractSizeFromUrl(uri.Value, "h"),
+                SrcSet = isBackground ? null : node.GetAttributeValue("srcset", string.Empty).NullIfEmpty(),
+                Sizes = isBackground ? null : node.GetAttributeValue("sizes", string.Empty).NullIfEmpty(),
+                Loading = isBackground ? null : node.GetAttributeValue("loading", string.Empty).NullIfEmpty(),
+            };
     }
 
     /// <summary>
@@ -291,7 +306,7 @@ public partial class WebCrawler
     private static partial Regex UrlSizeRegexAlt();
 
     private bool IsHtmlLoaded()
-                        => !string.IsNullOrWhiteSpace(_html) && _docLoaded;
+        => !string.IsNullOrWhiteSpace(_html) && _docLoaded;
 
     #endregion Internal
 }
