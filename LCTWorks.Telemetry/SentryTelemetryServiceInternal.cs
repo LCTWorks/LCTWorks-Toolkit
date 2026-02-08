@@ -8,7 +8,7 @@ using System.Text;
 
 namespace LCTWorks.Telemetry;
 
-public class SentryTelemetryServiceInternal : ITelemetryService
+internal class SentryTelemetryServiceInternal : ITelemetryService
 {
     private static readonly TimeSpan _flushTime = TimeSpan.FromSeconds(2);
     private static readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
