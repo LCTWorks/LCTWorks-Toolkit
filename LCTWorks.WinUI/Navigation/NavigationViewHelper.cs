@@ -115,21 +115,22 @@ public static class NavigationViewHelper
         //selection doesn't update.
         await Task.Delay(300);
 
-        if (NavigationView != null)
+        if (NavigationView == null)
         {
-            if (forceSelection || (NavigationView.SelectedItem == null))
-            {
-                var collection = new TolerantCollection(NavigationView.MenuItemsSource);
+            return;
+        }
+        if (forceSelection || (NavigationView.SelectedItem == null))
+        {
+            var collection = new TolerantCollection(NavigationView.MenuItemsSource);
 
-                if (collection.Count > 0)
-                {
-                    var selectedItem = item ?? collection.FirstOrDefault();
-                    NavigationView.SelectedItem = selectedItem;
-                }
-                else
-                {
-                    NavigationService?.NavigateTo(null);
-                }
+            if (collection.Count > 0)
+            {
+                var selectedItem = item ?? collection.FirstOrDefault();
+                NavigationView.SelectedItem = selectedItem;
+            }
+            else
+            {
+                NavigationService?.NavigateTo(null);
             }
         }
     }

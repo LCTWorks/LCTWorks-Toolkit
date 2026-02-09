@@ -6,11 +6,16 @@ namespace LCTWorks.WinUI.Converters;
 
 public partial class BooleanToVisibilityConverter : IValueConverter
 {
+    public bool Invert
+    {
+        get; set;
+    }
+
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (value is bool b)
         {
-            return b ? Visibility.Visible : Visibility.Collapsed;
+            return b ^ Invert ? Visibility.Visible : Visibility.Collapsed;
         }
         return Visibility.Collapsed;
     }
@@ -19,7 +24,7 @@ public partial class BooleanToVisibilityConverter : IValueConverter
     {
         if (value is Visibility v)
         {
-            return v == Visibility.Visible;
+            return v == Visibility.Visible ^ Invert;
         }
         return false;
     }
