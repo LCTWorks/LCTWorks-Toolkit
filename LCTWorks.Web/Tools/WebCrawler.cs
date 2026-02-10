@@ -1,9 +1,9 @@
-﻿using HtmlAgilityPack;
-using LCTWorks.Web.Extensions;
-using LCTWorks.Core.Extensions;
-using LCTWorks.Web.Internal;
+﻿using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
+using HtmlAgilityPack;
+using LCTWorks.Core.Extensions;
+using LCTWorks.Web.Extensions;
 
 namespace LCTWorks.Web.Tools;
 
@@ -258,6 +258,12 @@ public partial class WebCrawler
 
     #region Internal
 
+    private static readonly HttpClient _client = new(new SocketsHttpHandler
+    {
+        AutomaticDecompression = DecompressionMethods.All,
+        PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+    });
+
     internal WebCrawler(string? html)
     {
         _html = html;
@@ -284,12 +290,13 @@ public partial class WebCrawler
         }
         try
         {
-            using var client = new HttpClient(new SocketsHttpHandler { SslOptions = new System.Net.Security.SslClientAuthenticationOptions { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12, } });
-            client.Timeout = Constants.HttpClientTimeout;
+            _client.DefaultRequestHeaders.AddBrowserHeaders(url);
 
-            client.DefaultRequestHeaders.AddUserAgentHeader(url);
-
-            var response = await client.GetAsync(url);
+            var response = await _client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                return default;
+            }
 
             return await response.Content.ReadAsStringAsync();
         }

@@ -43,7 +43,7 @@ public static class UriStringExtensions
                 {
                     Timeout = Constants.HttpClientTimeout
                 };
-                client.DefaultRequestHeaders.AddUserAgentHeader(url);
+                client.DefaultRequestHeaders.AddBrowserHeaders(url);
 
                 var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
