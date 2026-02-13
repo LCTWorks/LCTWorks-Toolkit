@@ -16,10 +16,10 @@ public partial class WebCrawler
     public HtmlNode RootNode => _doc.DocumentNode;
 
     public static WebCrawler FromHtml(string html)
-            => new(html);
+        => new(html);
 
-    public static async Task<WebCrawler> FromUrlAsync(string url)
-        => new(await GetHtmlFromUrlAsync(url));
+    public static async Task<WebCrawler> FromUrlAsync(string url, HttpClient? client = null)
+        => new(await GetHtmlFromUrlAsync(url, client ?? _internalClient));
 
     public async Task<HtmlImage[]> GetAllImagesAsync(string[]? excludeExtensions = null, bool validateImages = false)
     {
@@ -258,16 +258,17 @@ public partial class WebCrawler
 
     #region Internal
 
-    private static readonly HttpClient _client = new(new SocketsHttpHandler
+    private static readonly HttpClient _internalClient = new(new SocketsHttpHandler
     {
         AutomaticDecompression = DecompressionMethods.All,
         PooledConnectionLifetime = TimeSpan.FromMinutes(5)
     });
 
-    internal WebCrawler(string? html)
+    internal WebCrawler(string? html, HttpClient? client = null)
     {
         _html = html;
         _doc = new HtmlDocument();
+        Client = client ?? _internalClient;
         var decodedHtml = HttpUtility.HtmlDecode(_html);
         var decodedHtml5 = decodedHtml.DecodeHtml5Entities();
 
@@ -282,7 +283,12 @@ public partial class WebCrawler
         }
     }
 
-    private static async Task<string?> GetHtmlFromUrlAsync(string url)
+    public HttpClient Client
+    {
+        get; private set;
+    }
+
+    private static async Task<string?> GetHtmlFromUrlAsync(string url, HttpClient client)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -290,9 +296,10 @@ public partial class WebCrawler
         }
         try
         {
-            _client.DefaultRequestHeaders.AddBrowserHeaders(url);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.AddBrowserHeaders(url);
 
-            var response = await _client.GetAsync(url);
+            var response = await client.GetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
                 return default;
