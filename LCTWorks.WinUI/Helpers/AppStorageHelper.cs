@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
@@ -18,7 +19,7 @@ public static class AppStorageHelper
         return default;
     }
 
-    public static async Task DeleteFileFromLocalFolderAsync(string folderName, string fileName)
+    public static async Task DeleteFileFromLocalFolderAsync(string? folderName, string? fileName)
     {
         var file = await GetStorageFileFromLocalFolderAsync(folderName, fileName);
         if (file != null)
@@ -42,11 +43,15 @@ public static class AppStorageHelper
     public static StorageFolder GetLocalFolder(string subFolderName)
         => ApplicationData.Current.LocalFolder.CreateFolderAsync(subFolderName, CreationCollisionOption.OpenIfExists).AsTask().GetAwaiter().GetResult();
 
-    public static async Task<StorageFile?> GetStorageFileFromLocalFolderAsync(string folderName, string fileName)
+    public static async Task<StorageFile?> GetStorageFileFromLocalFolderAsync(string? folderName, string? fileName)
     {
+        if (string.IsNullOrEmpty(folderName) || string.IsNullOrEmpty(fileName))
+        {
+            return default;
+        }
         try
         {
-            StorageFolder sf = await GetLocalFolder().CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            var sf = await GetLocalFolder().CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
             return await sf.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
         }
         catch
@@ -55,7 +60,7 @@ public static class AppStorageHelper
         }
     }
 
-    public static async Task<string> ReadTextOnStorageFileAsync(string folderName, string fileName)
+    public static async Task<string> ReadTextOnStorageFileAsync(string? folderName, string? fileName)
     {
         var file = await GetStorageFileFromLocalFolderAsync(folderName, fileName);
         if (file != null)
@@ -91,11 +96,18 @@ public static class AppStorageHelper
         return false;
     }
 
-    public static async Task WriteTextOnFileAsync(string content, StorageFile? storageFile)
+    public static async Task<StorageFile?> WriteToLocalFolderFileAsync(string subFolder, string fileName, byte[] content)
     {
-        if (storageFile != null)
+        if (string.IsNullOrWhiteSpace(fileName) || content == null || content.Length == 0)
         {
-            await FileIO.WriteTextAsync(storageFile, content);
+            return null;
         }
+        var file = await GetStorageFileFromLocalFolderAsync(subFolder, fileName);
+        if (file == null)
+        {
+            return default;
+        }
+        await FileIO.WriteBytesAsync(file, content);
+        return file;
     }
 }

@@ -12,7 +12,7 @@ public static class UriStringExtensions
         /// Checks if the URI has an image file extension.
         /// </summary>
         /// <returns></returns>
-        public bool IsImageFromExtension()
+        public bool IsImageExtension()
         {
             if (uri == null)
             {
@@ -32,20 +32,15 @@ public static class UriStringExtensions
             {
                 return false;
             }
-            if (!uri.IsImageFromExtension())
+            if (!uri.IsImageExtension())
             {
                 return false;
             }
             try
             {
                 var url = uri.Value;
-                using var client = new HttpClient
-                {
-                    Timeout = Constants.HttpClientTimeout
-                };
-                client.DefaultRequestHeaders.AddBrowserHeaders(url);
 
-                var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                var response = await HttpTools.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
                 if (!response.IsSuccessStatusCode)
                 {

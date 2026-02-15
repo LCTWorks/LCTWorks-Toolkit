@@ -7,8 +7,6 @@ namespace LCTWorks.Web.Extensions;
 
 public static class HtmlExtensions
 {
-    private const string GoogleFavIconServiceUrl = @"http://www.google.com/s2/favicons?domain={0}&sz=64";
-
     #region Html5 entities table
 
     private static readonly Dictionary<string, string> Html5EntitiesTable = new()
@@ -297,18 +295,16 @@ public static class HtmlExtensions
     /// <summary>
     /// Adds common headers to the HttpRequestHeaders.
     /// </summary>
-    public static void AddBrowserHeaders(this HttpRequestHeaders headers, string? refererUrl = null)
+    public static void AddBrowserHeaders(this HttpRequestHeaders headers)
     {
-        headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0");
-        headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36");
+        if (headers == null)
+        {
+            return;
+        }
+        headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0");
         headers.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
         headers.Add("Accept-Language", "en-US,en;q=0.9");
         headers.Add("Upgrade-Insecure-Requests", "1");
-        if (refererUrl != null)
-        {
-            var uriHost = new Uri(refererUrl).Host;
-            headers.Add("Referer", uriHost);
-        }
     }
 
     /// <summary>
@@ -389,13 +385,7 @@ public static class HtmlExtensions
 
         try
         {
-            using var client = new HttpClient
-            {
-                Timeout = Constants.HttpClientTimeout
-            };
-            client.DefaultRequestHeaders.AddBrowserHeaders();
-
-            var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            var response = await HttpTools.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -463,6 +453,20 @@ public static class HtmlExtensions
         catch
         {
             return false;
+        }
+    }
+
+    public static void TryAddRefererHeader(this HttpRequestHeaders headers, string? referer)
+    {
+        try
+        {
+            if (referer != null && Uri.TryCreate(referer, UriKind.RelativeOrAbsolute, out var result) && result != null)
+            {
+                headers.Referrer = new Uri(result.GetLeftPart(UriPartial.Authority));
+            }
+        }
+        catch
+        {
         }
     }
 }

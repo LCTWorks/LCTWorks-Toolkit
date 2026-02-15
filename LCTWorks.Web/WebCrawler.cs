@@ -15,11 +15,22 @@ public partial class WebCrawler
 
     public HtmlNode RootNode => _doc.DocumentNode;
 
-    public static WebCrawler FromHtml(string html)
-        => new(html);
+    public Uri? SourceUrl
+    {
+        get; private set;
+    }
 
-    public static async Task<WebCrawler> FromUrlAsync(string url, HttpClient? client = null)
-        => new(await GetHtmlFromUrlAsync(url, client ?? _internalClient));
+    public static WebCrawler FromHtml(string html, string? sourceUrl = null)
+        => new(html)
+        {
+            SourceUrl = Uri.TryCreate(sourceUrl, UriKind.Absolute, out var uri) ? uri : null
+        };
+
+    public static async Task<WebCrawler> FromUrlAsync(string url)
+        => new(await GetHtmlFromUrlAsync(url))
+        {
+            SourceUrl = Uri.TryCreate(url, UriKind.Absolute, out var uri) ? uri : null
+        };
 
     public async Task<HtmlImage[]> GetAllImagesAsync(string[]? excludeExtensions = null, bool validateImages = false)
     {
@@ -115,6 +126,9 @@ public partial class WebCrawler
             }
         }
 
+        // Resolve the base URI from <base href>, canonical, og:url, or the source URL
+        var baseUri = GetBaseUri(linkNodes, metaNodes);
+
         return new HtmlMetaTags
         {
             // Basic Meta Tags
@@ -167,14 +181,14 @@ public partial class WebCrawler
             AppleMobileWebAppCapable = metaNodes.GetMetaAttributeValue("apple-mobile-web-app-capable"),
             AppleMobileWebAppTitle = metaNodes.GetMetaAttributeValue("apple-mobile-web-app-title"),
             AppleMobileWebAppStatusBarStyle = metaNodes.GetMetaAttributeValue("apple-mobile-web-app-status-bar-style"),
-            AppleTouchIcon = linkNodes.GetLinkHref("apple-touch-icon"),
+            AppleTouchIcon = ResolveUrl(linkNodes.GetLinkHref("apple-touch-icon"), baseUri),
 
             // Microsoft Specific
             MsApplicationTileColor = metaNodes.GetMetaAttributeValue("msapplication-TileColor"),
-            MsApplicationTileImage = metaNodes.GetMetaAttributeValue("msapplication-TileImage"),
+            MsApplicationTileImage = ResolveUrl(metaNodes.GetMetaAttributeValue("msapplication-TileImage"), baseUri),
 
             // Other Common Tags
-            Favicon = linkNodes.GetLinkHref("icon", "shortcut icon"),
+            Favicon = ResolveUrl(linkNodes.GetLinkHref("icon", "shortcut icon"), baseUri),
             Copyright = metaNodes.GetMetaAttributeValue("copyright"),
             Rating = metaNodes.GetMetaAttributeValue("rating"),
             Referrer = metaNodes.GetMetaAttributeValue("referrer"),
@@ -231,6 +245,38 @@ public partial class WebCrawler
     }
 
     /// <summary>
+    /// Resolves a potentially relative URL against the given base URI.
+    /// Returns the original value if already absolute or if no base URI is available.
+    /// </summary>
+    private static string? ResolveUrl(string? url, Uri? baseUri)
+    {
+        if (string.IsNullOrWhiteSpace(url) || baseUri is null)
+        {
+            return url;
+        }
+
+        // Already absolute
+        if (Uri.TryCreate(url, UriKind.Absolute, out _))
+        {
+            return url;
+        }
+
+        // Protocol-relative (//example.com/path)
+        if (url.StartsWith("//"))
+        {
+            return $"{baseUri.Scheme}:{url}";
+        }
+
+        // Relative path — resolve against base
+        if (Uri.TryCreate(baseUri, url, out var resolved))
+        {
+            return resolved.AbsoluteUri;
+        }
+
+        return url;
+    }
+
+    /// <summary>
     /// Tries to extract size from CDN URLs like: s(w:1280,h:720) or /1280x720.
     /// </summary>
     private static int? TryExtractSizeFromUrl(string url, string dimension)
@@ -256,19 +302,49 @@ public partial class WebCrawler
         return null;
     }
 
-    #region Internal
-
-    private static readonly HttpClient _internalClient = new(new SocketsHttpHandler
+    /// <summary>
+    /// Determines the base URI for resolving relative URLs by checking
+    /// the HTML &lt;base&gt; tag, canonical link, og:url, or the original source URL.
+    /// </summary>
+    private Uri? GetBaseUri(HtmlNodeCollection? linkNodes, HtmlNodeCollection? metaNodes)
     {
-        AutomaticDecompression = DecompressionMethods.All,
-        PooledConnectionLifetime = TimeSpan.FromMinutes(5)
-    });
+        // 1. <base href="...">
+        var baseHref = _doc.DocumentNode.SelectSingleNode("//base")?.GetAttributeValue("href", null);
+        if (!string.IsNullOrWhiteSpace(baseHref) && Uri.TryCreate(baseHref, UriKind.Absolute, out var baseUri))
+        {
+            return baseUri;
+        }
+
+        // 2. Canonical URL
+        var canonical = linkNodes.GetLinkHref("canonical");
+        if (!string.IsNullOrWhiteSpace(canonical) && Uri.TryCreate(canonical, UriKind.Absolute, out var canonUri))
+        {
+            return new Uri(canonUri.GetLeftPart(UriPartial.Authority));
+        }
+
+        // 3. og:url
+        var ogUrl = metaNodes.GetMetaAttributeValue("og:url");
+        if (!string.IsNullOrWhiteSpace(ogUrl) && Uri.TryCreate(ogUrl, UriKind.Absolute, out var ogUri))
+        {
+            return new Uri(ogUri.GetLeftPart(UriPartial.Authority));
+        }
+
+        // 4. Original source URL
+        if (SourceUrl is not null)
+        {
+            return new Uri(SourceUrl.GetLeftPart(UriPartial.Authority));
+        }
+
+        return null;
+    }
+
+    #region Internal;
 
     internal WebCrawler(string? html, HttpClient? client = null)
     {
         _html = html;
         _doc = new HtmlDocument();
-        Client = client ?? _internalClient;
+        Client = client ?? HttpTools.Client;
         var decodedHtml = HttpUtility.HtmlDecode(_html);
         var decodedHtml5 = decodedHtml.DecodeHtml5Entities();
 
@@ -288,7 +364,7 @@ public partial class WebCrawler
         get; private set;
     }
 
-    private static async Task<string?> GetHtmlFromUrlAsync(string url, HttpClient client)
+    private static async Task<string?> GetHtmlFromUrlAsync(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -296,10 +372,10 @@ public partial class WebCrawler
         }
         try
         {
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.AddBrowserHeaders(url);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.TryAddRefererHeader(url);
 
-            var response = await client.GetAsync(url);
+            using var response = await HttpTools.Client.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
                 return default;
@@ -322,5 +398,5 @@ public partial class WebCrawler
     private bool IsHtmlLoaded()
         => !string.IsNullOrWhiteSpace(_html) && _docLoaded;
 
-    #endregion Internal
+    #endregion Internal;
 }
