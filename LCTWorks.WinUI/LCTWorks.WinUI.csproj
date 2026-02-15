@@ -8,6 +8,7 @@
     <UseWinUI>true</UseWinUI>
 	  <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
@@ -23,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />

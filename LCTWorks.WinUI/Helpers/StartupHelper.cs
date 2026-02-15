@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using LCTWorks.WinUI.Models;
+﻿using LCTWorks.WinUI.Models;
+using System;
 
 namespace LCTWorks.WinUI.Helpers;
 
