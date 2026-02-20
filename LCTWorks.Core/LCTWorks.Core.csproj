@@ -12,12 +12,16 @@
 	  <Authors>LCTWorks</Authors>
 	  <Description>LCTWorks Core library</Description>
 	  <PackageIcon>Icon-64.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
   </PropertyGroup>
 
 	<ItemGroup>
 		<None Include="Assets\Icon-64.png" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Assets\Readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 </Project>
