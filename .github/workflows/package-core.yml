@@ -15,7 +15,7 @@ env:
   DOTNET_VERSION: "9.0.x"
 
 jobs:
-  build:
+  build-publish:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.value }}
@@ -48,23 +48,8 @@ jobs:
       - name: Push to NuGet
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-  # tag:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: Create and push tag
-  #       run: |
-  #         TAG="Core-${{ needs.build.outputs.version }}"
-  #         git tag "$TAG"
-  #         git push origin "$TAG"
-  release:
-    needs: build
+  tag:
+    needs: build-publish
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -73,19 +58,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download packages
-        uses: actions/download-artifact@v4
-        with:
-          name: nupkg
-          path: ./nupkg
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Create and push tag
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
-          TAG="Core-$VERSION"
-          gh release create "$TAG" ./nupkg/* \
-            --title "LCTWorks.Core $VERSION" \
-            --generate-notes \
-            --target ${{ github.sha }}
+          TAG="Core-${{ needs.build.outputs.version }}"
+          git tag "$TAG"
+          git push origin "$TAG"
