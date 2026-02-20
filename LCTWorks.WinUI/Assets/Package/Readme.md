@@ -1,1 +1,1 @@
-﻿Common tools for .NET development.
+﻿Common tools for WinUI apps development.
