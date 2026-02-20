@@ -13,6 +13,7 @@ on:
 env:
   PROJECT: LCTWorks.WinUI/LCTWorks.WinUI.csproj
   DOTNET_VERSION: "9.0.x"
+  NUPKG_DIR: ${{ github.workspace }}\nupkg
 
 jobs:
   build-publish:
@@ -47,10 +48,10 @@ jobs:
         run: msbuild ${{ env.PROJECT }} -p:Configuration=Release -p:Platform=AnyCPU -restore:false
 
       - name: Pack NuGet package
-        run: msbuild ${{ env.PROJECT }} -t:Pack -p:Configuration=Release -p:Version=${{ steps.version.outputs.value }} -p:PackageOutputPath=${{ github.workspace }}/nupkg -restore:false
+        run: msbuild ${{ env.PROJECT }} -t:Pack -p:Configuration=Release -p:Version=${{ steps.version.outputs.value }} -p:PackageOutputPath=${{ env.NUPKG_DIR }} -restore:false
 
       - name: Push to NuGet
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ${{ env.NUPKG_DIR }}\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
   tag:
     needs: build-publish
