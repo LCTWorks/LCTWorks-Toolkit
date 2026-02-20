@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/workflows/">
-    <File Path=".github/workflows/pacakge-core.yml" />
+    <File Path=".github/workflows/package-core.yml" />
+    <File Path=".github/workflows/package-winui.yml" />
   </Folder>
   <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
   <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
