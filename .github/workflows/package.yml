@@ -1,0 +1,70 @@
+name: Pack & Publish LCTWorks.Core
+
+on:
+  push:
+    branches:
+      - release/*        
+  workflow_dispatch:   # allow manual runs
+    inputs:
+      ref:
+        description: 'Branch or tag to build'
+        required: false
+        default: ''
+env:
+  PROJECT: LCTWorks.Core/LCTWorks.Core.csproj
+  DOTNET_VERSION: "9.0.x"
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        rid: [win-x86, win-x64, win-arm64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.PROJECT }} -r ${{ matrix.rid }}
+
+      - name: Build
+        run: dotnet build ${{ env.PROJECT }} -c Release -r ${{ matrix.rid }} --no-restore
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.rid }}
+          path: LCTWorks.Core/bin/Release/**/
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: pack
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Extract version from branch name
+        id: version
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          VERSION="${BRANCH#release/}"
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Pack NuGet package
+        run: dotnet pack ${{ env.PROJECT }} -c Release -p:Version=${{ steps.version.outputs.value }} --output ./nupkg
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
