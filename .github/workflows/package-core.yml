@@ -3,7 +3,7 @@ name: Pack & Publish LCTWorks.Core
 on:
   push:
     branches:
-      - release/*        
+      - release/core/*
   workflow_dispatch:
     inputs:
       ref:
@@ -15,8 +15,10 @@ env:
   DOTNET_VERSION: "9.0.x"
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
 
     steps:
       - name: Checkout
@@ -31,7 +33,7 @@ jobs:
         id: version
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
-          VERSION="${BRANCH#release/}"
+          VERSION="${BRANCH#release/core/}"
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependencies
@@ -45,3 +47,19 @@ jobs:
 
       - name: Push to NuGet
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+  tag:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create and push tag
+        run: |
+          TAG="Core ${{ needs.build.outputs.version }}"
+          git tag "$TAG"
+          git push origin "$TAG"

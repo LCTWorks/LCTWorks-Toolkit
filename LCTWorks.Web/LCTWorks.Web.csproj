@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Core\LCTWorks.Core.csproj" />
-    <ProjectReference Include="..\LCTWorks.Telemetry\LCTWorks.Telemetry.csproj" />
   </ItemGroup>
 
 </Project>
