@@ -5,6 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+	  
+	  <!-- NuGet package metadata -->
+	  <PackageId>LCTWorks.Core</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>LCTWorks</Authors>
+	  <Description>LCTWorks Core library</Description>
+	  <PackageIcon>Icon-64.png</PackageIcon>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
   </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Assets\Icon-64.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>
