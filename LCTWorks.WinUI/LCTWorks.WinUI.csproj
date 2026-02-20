@@ -24,8 +24,8 @@
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
   </ItemGroup>
 	<ItemGroup>
-		<None Include="Assets\Package\Icon-64.png" Pack="true" PackagePath=""/>
-		<None Include="Assets\Package\Readme.md" Pack="true" PackagePath=""/>
+		<None Include="Assets\Package\Icon-64.png" Pack="true" PackagePath="" />
+		<None Include="Assets\Package\Readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
   <ItemGroup>
     <None Remove="Controls\Chip.xaml" />
@@ -42,7 +42,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />
-    <PackageReference Include="LCTWorks.Core" Version="1.0.0.3" />
+    <PackageReference Include="LCTWorks.Core" Version="1.0.2602" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />

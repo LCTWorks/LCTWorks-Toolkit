@@ -29,6 +29,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Extract version from branch name
         id: version
         shell: bash
@@ -41,10 +44,10 @@ jobs:
         run: dotnet restore ${{ env.PROJECT }}
 
       - name: Build
-        run: dotnet build ${{ env.PROJECT }} -c Release --no-restore
+        run: msbuild ${{ env.PROJECT }} -p:Configuration=Release -p:Platform=AnyCPU -restore:false
 
       - name: Pack NuGet package
-        run: dotnet pack ${{ env.PROJECT }} -c Release -p:Version=${{ steps.version.outputs.value }} --no-build --output ./nupkg
+        run: msbuild ${{ env.PROJECT }} -t:Pack -p:Configuration=Release -p:Version=${{ steps.version.outputs.value }} -p:PackageOutputPath=${{ github.workspace }}/nupkg -restore:false
 
       - name: Push to NuGet
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
