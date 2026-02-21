@@ -1,4 +1,5 @@
 <Solution>
+  <Folder Name="/Solution/" />
   <Folder Name="/workflows/">
     <File Path=".github/workflows/package-core.yml" />
     <File Path=".github/workflows/package-winui.yml" />
