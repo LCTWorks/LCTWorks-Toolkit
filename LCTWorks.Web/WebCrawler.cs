@@ -309,7 +309,7 @@ public partial class WebCrawler
     private Uri? GetBaseUri(HtmlNodeCollection? linkNodes, HtmlNodeCollection? metaNodes)
     {
         // 1. <base href="...">
-        var baseHref = _doc.DocumentNode.SelectSingleNode("//base")?.GetAttributeValue("href", null);
+        var baseHref = _doc.DocumentNode.SelectSingleNode("//base")?.GetAttributeValue("href", string.Empty);
         if (!string.IsNullOrWhiteSpace(baseHref) && Uri.TryCreate(baseHref, UriKind.Absolute, out var baseUri))
         {
             return baseUri;

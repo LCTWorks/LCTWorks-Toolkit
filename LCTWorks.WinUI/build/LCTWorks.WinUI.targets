@@ -1,0 +1,8 @@
+﻿<Project>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)..\content\Assets\Fonts\**"
+             Link="Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest"
+             Pack="false" />
+  </ItemGroup>
+</Project>
