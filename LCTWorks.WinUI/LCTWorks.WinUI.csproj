@@ -18,33 +18,8 @@
 		<PackageReadmeFile>Readme.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
-
-		<!-- Include project reference DLLs in the package -->
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeRuntimesInPackage;IncludeAssetsInPackage</TargetsForTfmSpecificBuildOutput>
-		<DefaultItemExcludes>$(DefaultItemExcludes);Package\**</DefaultItemExcludes>
 	</PropertyGroup>
 
-	<Target Name="IncludeRuntimesInPackage">
-		<ItemGroup>
-			<BuildOutputInPackage Include="$(OutputPath)LCTWorks.WinUI\runtimes\**\*"
-			                      TargetPath="LCTWorks.WinUI\runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
-		</ItemGroup>
-	</Target>
-	<Target Name="IncludeAssetsInPackage">
-		<ItemGroup>
-			<BuildOutputInPackage Include="Assets\Fonts\**"
-			                      TargetPath="LCTWorks.WinUI\Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)" />
-		</ItemGroup>
-	</Target>
-
-
-	<!-- Prevent all auto-globbed Content items from being packed via default content paths -->
-	<ItemGroup>
-		<Content Update="Assets\**" Pack="false" />
-	</ItemGroup>
-
-
-	<!-- Package metadata (root of .nupkg) -->
 	<ItemGroup>
 		<None Include="Package\Icon-64.png" Pack="true" PackagePath="\" />
 		<None Include="Package\Readme.md" Pack="true" PackagePath="\" />
@@ -57,25 +32,16 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.250402" />
 		<PackageReference Include="LCTWorks.Core" Version="1.0.2602" />
+		<PackageReference Include="LCTWorks.Telemetry" Version="1.0.0.1" />
+		<PackageReference Include="LCTWorks.Web" Version="1.0.0.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
+	</ItemGroup>
 
-		<!-- Transitive dependencies from bundled projects must be declared explicitly -->
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
-		<PackageReference Include="Sentry" Version="5.14.1" />
-		<PackageReference Include="Serilog" Version="4.3.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
-		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\LCTWorks.Telemetry\LCTWorks.Telemetry.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" PrivateAssets="all" />
-	</ItemGroup>
+
+
 	<ItemGroup>
 		<Page Update="Controls\MenuFlyoutHeader.xaml">
 			<Generator>MSBuild:Compile</Generator>

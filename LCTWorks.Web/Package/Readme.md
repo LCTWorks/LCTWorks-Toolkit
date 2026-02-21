@@ -1,1 +1,1 @@
-﻿Common tools for .NET development.
+﻿Common .NET Web features

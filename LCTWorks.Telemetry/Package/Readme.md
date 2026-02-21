@@ -1,1 +1,1 @@
-﻿Common tools for .NET development.
+﻿Telemetry services and tools for .NET applications.
