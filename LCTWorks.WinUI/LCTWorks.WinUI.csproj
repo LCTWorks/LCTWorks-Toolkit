@@ -35,10 +35,12 @@
 
   <ItemGroup>
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
+    <Content Remove="Assets\Package\Icon-64.png" />
+    <Content Remove="Assets\Package\Readme.md" />
   </ItemGroup>
 	<ItemGroup>
-		<None Update="Assets\Package\Icon-64.png" Pack="true" PackagePath="\" />
-		<None Update="Assets\Package\Readme.md" Pack="true" PackagePath="\" />
+		<None Include="Assets\Package\Icon-64.png" Pack="true" PackagePath="\" />
+		<None Include="Assets\Package\Readme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
   <!-- Pack font files under content/ and the .targets file under build/ and buildTransitive/ -->
