@@ -19,8 +19,6 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
 
-		<!-- Prevent Content items (fonts, native DLLs, etc.) from being packed into lib/ -->
-		<IncludeContentInPack>false</IncludeContentInPack>
 
 		<!-- Include project reference DLLs in the package -->
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeProjectReferenceDlls</TargetsForTfmSpecificBuildOutput>
@@ -34,24 +32,24 @@
 	</Target>
 
 	<ItemGroup>
-		<Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
+		<Content Update="Assets\**" Pack="true" PackagePath="content\Assets\" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Update="PackageMetadata\Icon-64.png" Pack="true" PackagePath="\" />
-		<None Update="PackageMetadata\Readme.md" Pack="true" PackagePath="\" />
+		<None Include="Package\Icon-64.png" Pack="true" PackagePath="\" />
+		<None Include="Package\Readme.md" Pack="true" PackagePath="\" />
+		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build\" />
+		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="buildTransitive\" />
 	</ItemGroup>
 
 	<!-- Pack font files under content/ and the .targets file under build/ and buildTransitive/ -->
-	<ItemGroup>
-		<None Include="Assets\Fonts\SegoeFluentIcons.ttf" Pack="true" PackagePath="content\Assets\Fonts\"/>
+	<!--<ItemGroup>
+		<None Include="Assets\Fonts\SegoeFluentIcons.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
 		<None Include="Assets\Fonts\FA7Brands-Regular.otf" Pack="true" PackagePath="content\Assets\Fonts\" />
 		<None Include="Assets\Fonts\MaterialSymbols-Outlined-300.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
 		<None Include="Assets\Fonts\Poppins-Bold.otf" Pack="true" PackagePath="content\Assets\Fonts\" />
 		<None Include="Assets\Fonts\Poppins-Light.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
 		<None Include="Assets\Fonts\Poppins-Regular.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build\" />
-		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="buildTransitive\" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<None Remove="Controls\Chip.xaml" />
@@ -61,6 +59,10 @@
 		<None Remove="Themes\Constants.xaml" />
 		<None Remove="Themes\FontFamilies.xaml" />
 		<None Remove="Themes\TextBlocks.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Package\Readme.md" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
@@ -98,7 +100,7 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	<ItemGroup>
+	<!--<ItemGroup>
 		<Content Update="Assets\Fonts\FA7Brands-Regular.otf">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -114,7 +116,7 @@
 		<Content Update="Assets\Fonts\Poppins-Regular.ttf">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
+	</ItemGroup>-->
 	<ItemGroup>
 		<Page Update="Controls\NavigationViewItemButton.xaml">
 			<Generator>MSBuild:Compile</Generator>
