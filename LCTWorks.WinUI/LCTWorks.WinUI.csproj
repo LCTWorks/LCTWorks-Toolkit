@@ -18,7 +18,18 @@
 	  <PackageReadmeFile>Readme.md</PackageReadmeFile>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
+
+	  <!-- Include project reference DLLs in the package -->
+	  <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeProjectReferenceDlls</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
+
+  <!-- Bundle project reference assemblies into the package -->
+  <Target Name="IncludeProjectReferenceDlls" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.ReferenceSourceTarget)' == 'ProjectReference'" />
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <Content Remove="Assets\Fonts\SegoeFluentIcons.ttf" />
   </ItemGroup>
@@ -46,10 +57,20 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
+    
+	  <!-- Transitive dependencies from bundled projects must be declared explicitly -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
+    <PackageReference Include="Sentry" Version="5.14.1" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LCTWorks.Telemetry\LCTWorks.Telemetry.csproj" />
-    <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" />
+    <ProjectReference Include="..\LCTWorks.Telemetry\LCTWorks.Telemetry.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\MenuFlyoutHeader.xaml">
