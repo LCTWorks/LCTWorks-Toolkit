@@ -1,0 +1,17 @@
+name: Pack & Publish LCTWorks.Web
+
+on:
+  push:
+    branches:
+      - release/web/*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: ./.github/workflows/package-publish.yml
+    with:
+      TriggerBranch: "release/web/"
+      ProjectName: "LCTWorks.Web/LCTWorks.Web.csproj"
+      TagName: "Web"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

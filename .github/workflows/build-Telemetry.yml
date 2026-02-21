@@ -1,4 +1,4 @@
-name: Pack & Publish LCTWorks.Core
+name: Pack & Publish LCTWorks.Telemetry
 
 on:
   push:
