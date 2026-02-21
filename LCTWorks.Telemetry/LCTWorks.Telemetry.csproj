@@ -5,6 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+
+	  <!-- NuGet package metadata -->
+	  <PackageId>LCTWorks.Telemetry</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>LCTWorks</Authors>
+	  <Description>LCTWorks Telemetry library</Description>
+	  <PackageIcon>Icon-64.png</PackageIcon>
+	  <PackageReadmeFile>Readme.md</PackageReadmeFile>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +27,12 @@
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
+
+	<ItemGroup>
+		<None Include="Package\Icon-64.png" Pack="true" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Package\Readme.md" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>

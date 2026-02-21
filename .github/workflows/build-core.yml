@@ -1,0 +1,17 @@
+name: Pack & Publish LCTWorks.Core
+
+on:
+  push:
+    branches:
+      - release/core/*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: ./.github/workflows/package-publish.yml
+    with:
+      TriggerBranch: "release/core/"
+      ProjectName: "LCTWorks.Core/LCTWorks.Core.csproj"
+      TagName: "Core"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

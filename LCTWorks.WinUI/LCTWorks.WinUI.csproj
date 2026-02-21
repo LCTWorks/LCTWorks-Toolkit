@@ -19,51 +19,37 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
 
-
 		<!-- Include project reference DLLs in the package -->
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeProjectReferenceDlls</TargetsForTfmSpecificBuildOutput>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeRuntimesInPackage;IncludeAssetsInPackage</TargetsForTfmSpecificBuildOutput>
+		<DefaultItemExcludes>$(DefaultItemExcludes);Package\**</DefaultItemExcludes>
 	</PropertyGroup>
 
-	<!-- Bundle project reference assemblies into the package -->
-	<Target Name="IncludeProjectReferenceDlls" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+	<Target Name="IncludeRuntimesInPackage">
 		<ItemGroup>
-			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.ReferenceSourceTarget)' == 'ProjectReference'" />
+			<BuildOutputInPackage Include="$(OutputPath)LCTWorks.WinUI\runtimes\**\*"
+			                      TargetPath="LCTWorks.WinUI\runtimes\%(RecursiveDir)%(Filename)%(Extension)" />
+		</ItemGroup>
+	</Target>
+	<Target Name="IncludeAssetsInPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="Assets\Fonts\**"
+			                      TargetPath="LCTWorks.WinUI\Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)" />
 		</ItemGroup>
 	</Target>
 
+
+	<!-- Prevent all auto-globbed Content items from being packed via default content paths -->
 	<ItemGroup>
-		<Content Update="Assets\**" Pack="true" PackagePath="content\Assets\" />
+		<Content Update="Assets\**" Pack="false" />
 	</ItemGroup>
+
+
+	<!-- Package metadata (root of .nupkg) -->
 	<ItemGroup>
 		<None Include="Package\Icon-64.png" Pack="true" PackagePath="\" />
 		<None Include="Package\Readme.md" Pack="true" PackagePath="\" />
-		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build\" />
-		<None Include="build\LCTWorks.WinUI.targets" Pack="true" PackagePath="buildTransitive\" />
 	</ItemGroup>
 
-	<!-- Pack font files under content/ and the .targets file under build/ and buildTransitive/ -->
-	<!--<ItemGroup>
-		<None Include="Assets\Fonts\SegoeFluentIcons.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="Assets\Fonts\FA7Brands-Regular.otf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="Assets\Fonts\MaterialSymbols-Outlined-300.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="Assets\Fonts\Poppins-Bold.otf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="Assets\Fonts\Poppins-Light.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
-		<None Include="Assets\Fonts\Poppins-Regular.ttf" Pack="true" PackagePath="content\Assets\Fonts\" />
-	</ItemGroup>-->
-
-	<ItemGroup>
-		<None Remove="Controls\Chip.xaml" />
-		<None Remove="Controls\MenuFlyoutHeader.xaml" />
-		<None Remove="Controls\NavigationViewItemButton.xaml" />
-		<None Remove="Controls\ThemedButton.xaml" />
-		<None Remove="Themes\Constants.xaml" />
-		<None Remove="Themes\FontFamilies.xaml" />
-		<None Remove="Themes\TextBlocks.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Package\Readme.md" />
-	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
@@ -100,23 +86,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	<!--<ItemGroup>
-		<Content Update="Assets\Fonts\FA7Brands-Regular.otf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Fonts\MaterialSymbols-Outlined-300.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Fonts\Poppins-Bold.otf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Fonts\Poppins-Light.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Fonts\Poppins-Regular.ttf">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>-->
 	<ItemGroup>
 		<Page Update="Controls\NavigationViewItemButton.xaml">
 			<Generator>MSBuild:Compile</Generator>

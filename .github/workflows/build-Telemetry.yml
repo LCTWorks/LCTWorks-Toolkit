@@ -1,0 +1,17 @@
+name: Pack & Publish LCTWorks.Core
+
+on:
+  push:
+    branches:
+      - release/telemetry/*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: ./.github/workflows/package-publish.yml
+    with:
+      TriggerBranch: "release/telemetry/"
+      ProjectName: "LCTWorks.Telemetry/LCTWorks.Telemetry.csproj"
+      TagName: "Telemetry"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

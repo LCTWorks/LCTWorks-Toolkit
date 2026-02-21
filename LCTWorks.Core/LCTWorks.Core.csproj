@@ -8,7 +8,7 @@
 	  
 	  <!-- NuGet package metadata -->
 	  <PackageId>LCTWorks.Core</PackageId>
-	  <Version>$(LCTWorksVersion)</Version>
+	  <Version>1.0.0</Version>
 	  <Authors>LCTWorks</Authors>
 	  <Description>LCTWorks Core library</Description>
 	  <PackageIcon>Icon-64.png</PackageIcon>
@@ -18,10 +18,10 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<None Include="Assets\Icon-64.png" Pack="true" PackagePath="" />
+		<None Include="Package\Icon-64.png" Pack="true" PackagePath="" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="Assets\Readme.md" Pack="true" PackagePath="" />
+		<None Include="Package\Readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 </Project>

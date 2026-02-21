@@ -1,17 +1,25 @@
-name: Pack & Publish LCTWorks.Core
+name: Pack & Publish
 
 on:
-  push:
-    branches:
-      - release/core/*
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      ref:
-        description: 'Branch or tag to build'
-        required: false
-        default: ''
+      TriggerBranch:
+        description: 'Branch prefix that triggered the build (e.g. release/core/)'
+        required: true
+        type: string
+      ProjectName:
+        description: 'Path to the .csproj file (e.g. LCTWorks.Core/LCTWorks.Core.csproj)'
+        required: true
+        type: string
+      TagName:
+        description: 'Tag prefix for the release (e.g. Core)'
+        required: true
+        type: string
+    secrets:
+      NUGET_API_KEY:
+        required: true
+
 env:
-  PROJECT: LCTWorks.Core/LCTWorks.Core.csproj
   DOTNET_VERSION: "9.0.x"
 
 jobs:
@@ -33,17 +41,17 @@ jobs:
         id: version
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
-          VERSION="${BRANCH#release/core/}"
+          VERSION="${BRANCH#${{ inputs.TriggerBranch }}}"
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT }}
+        run: dotnet restore ${{ inputs.ProjectName }}
 
       - name: Build
-        run: dotnet build ${{ env.PROJECT }} -c Release --no-restore
+        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore
 
       - name: Pack NuGet package
-        run: dotnet pack ${{ env.PROJECT }} -c Release -p:Version=${{ steps.version.outputs.value }} --no-build --output ./nupkg
+        run: dotnet pack ${{ inputs.ProjectName }} -c Release -p:Version=${{ steps.version.outputs.value }} --no-build --output ./nupkg
 
       - name: Push to NuGet
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
@@ -60,6 +68,6 @@ jobs:
 
       - name: Create and push tag
         run: |
-          TAG="Core-${{ needs.build-publish.outputs.version }}"
+          TAG="${{ inputs.TagName }}-${{ needs.build-publish.outputs.version }}"
           git tag "$TAG"
           git push origin "$TAG"
