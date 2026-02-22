@@ -1,0 +1,123 @@
+﻿using LCTWorks.WinUI.Activation;
+using LCTWorks.WinUI.Dialogs;
+using LCTWorks.WinUI.Gallery.ViewModels;
+using LCTWorks.WinUI.Gallery.ViewModels.Controls;
+using LCTWorks.WinUI.Gallery.Views;
+using LCTWorks.WinUI.Gallery.Views.Controls;
+using LCTWorks.WinUI.Navigation;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.UI.Xaml;
+using System;
+using System.Threading.Tasks;
+using Windows.UI.ApplicationSettings;
+
+namespace LCTWorks.WinUI.Gallery;
+
+public partial class App : Application, IAppExtended
+{
+    public App()
+    {
+        InitializeComponent();
+
+        Host = Microsoft.Extensions.Hosting.Host
+           .CreateDefaultBuilder()
+           .UseContentRoot(AppContext.BaseDirectory)
+           .ConfigureServices((context, services) =>
+           {
+               services
+               //Activation
+               .AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>()
+               //Services:
+               .AddSingleton<ActivationService>()
+               .AddSingleton<DialogService>()
+               .AddSingleton<FrameNavigationService>()
+               //ViewModels:
+               .AddSingleton<ShellViewModel>()
+               .AddSingleton<SettingsViewModel>()
+               .AddSingleton<SoftImageViewModel>()
+               //Views:
+               .AddSingleton<ShellPage>()
+               .AddSingleton<SettingsPage>()
+               ;
+           }).Build();
+
+        InitializePageHelper();
+
+        UnhandledException += App_UnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += AppDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
+
+    public static Window MainWindow { get; } = new MainWindow();
+
+    public IHost Host
+    {
+        get;
+    }
+
+    Window IAppExtended.MainWindow => MainWindow;
+
+    public static T? GetService<T>()
+        where T : class
+    {
+        try
+        {
+            if ((Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
+            {
+                throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
+            }
+            return service;
+        }
+        catch
+        {
+            return default;
+        }
+    }
+
+    public void AppDomainUnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception exception)
+        {
+            exception.Data["AppExType"] = "AppDomainUnhandledException";
+            //Send report here.
+        }
+    }
+
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        base.OnLaunched(args);
+        var shellPage = GetService<ShellPage>();
+        var actSvc = GetService<ActivationService>();
+        if (actSvc != null)
+        {
+            await actSvc.ActivateAsync(args, shellPage);
+        }
+    }
+
+    private static void InitializePageHelper()
+    {
+        NavigationPageMap.Configure<SettingsViewModel, SettingsPage>();
+        //Controls:
+        NavigationPageMap.Configure<SoftImageViewModel, SoftImagePage>();
+    }
+
+    private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+    {
+        //Send report here.
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs? e)
+    {
+        if (e?.Exception == null)
+        {
+            return;
+        }
+        var flattenedExceptions = e.Exception.Flatten().InnerExceptions;
+        foreach (var exception in flattenedExceptions)
+        {
+            //Send reports here.
+        }
+        e.SetObserved();
+    }
+}

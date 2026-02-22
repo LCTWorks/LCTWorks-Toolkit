@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LCTWorks.WinUI.Gallery (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LCTWorks.WinUI.Gallery (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

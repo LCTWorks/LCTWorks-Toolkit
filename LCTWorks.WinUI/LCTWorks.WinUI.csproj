@@ -30,6 +30,7 @@
 
 	<ItemGroup>
 		<!-- Explicit reference and PrivateAssets="all" to avoid native asset conflicts in consuming projects -->
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.3" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2651.64" PrivateAssets="all" />
 
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
@@ -49,6 +50,12 @@
 	<ItemGroup>
 		<!-- Pack the .targets file to both build/ and buildTransitive/ -->
 		<None Include="Build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build;buildTransitive" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Controls\SmoothImage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<ItemGroup>

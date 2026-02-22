@@ -9,5 +9,9 @@
   <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
   <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
   <Project Path="LCTWorks.Web/LCTWorks.Web.csproj" Id="f407d15d-f3e1-467a-925b-8d21e9fb4e0b" />
+  <Project Path="LCTWorks.WinUI.Gallery/LCTWorks.WinUI.Gallery.csproj" Id="916bf107-730c-46f7-ae32-ddfacad7092e">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
   <Project Path="LCTWorks.WinUI/LCTWorks.WinUI.csproj" />
 </Solution>
