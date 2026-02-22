@@ -48,7 +48,10 @@
 
 	</ItemGroup>
 
-
+	<ItemGroup>
+		<None Include="build\**" Pack="true" PackagePath="build;buildTransitive" />
+		<None Include="assets\Fonts\*" LinkBase="Assets" Pack="true" PackagePath="contentTransitive/$(PackageId)/Assets" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Page Update="Controls\MenuFlyoutHeader.xaml">
