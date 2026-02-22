@@ -143,7 +143,7 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             "Unhandled exception info",
             TelemetryLogType.Info.ToLowerInvariantString(),
             new[] { ("exception data", serializedException) }.ToDictionary(),
-            BreadcrumbLevel.Critical);
+            BreadcrumbLevel.Fatal);
 
         //Set the critical event:
         exception.Data[Mechanism.HandledKey] = false;
@@ -341,7 +341,7 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             LogLevel.Debug => BreadcrumbLevel.Debug,
             LogLevel.Warning => BreadcrumbLevel.Warning,
             LogLevel.Error => BreadcrumbLevel.Error,
-            LogLevel.Critical => BreadcrumbLevel.Critical,
+            LogLevel.Critical => BreadcrumbLevel.Fatal,
             _ => BreadcrumbLevel.Info,
         };
 
