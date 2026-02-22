@@ -23,5 +23,4 @@
 	<ItemGroup>
 		<None Include="Package\Readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
-
 </Project>
