@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<_LCTWorksWinUILibDir>$(MSBuildThisFileDirectory)LCTWorks.WinUI\</_LCTWorksWinUILibDir>
+		<_LCTWorksWinUILibDir>$(MSBuildThisFileDirectory)..\buildTransitive\LCTWorks.WinUI\</_LCTWorksWinUILibDir>
 	</PropertyGroup>
 	<ItemGroup Condition="Exists('$(_LCTWorksWinUILibDir)')">
 		<Content Include="$(_LCTWorksWinUILibDir)**"

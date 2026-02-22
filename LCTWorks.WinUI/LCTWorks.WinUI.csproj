@@ -29,9 +29,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Avoid native asset conflicts for local projects -->
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2651.64" ExcludeAssets="buildTransitive" PrivateAssets="all" />
-		<!--<PackageReference Include="Microsoft.Web.WebView2.Core.Projection" Version="1.0.2651.64" ExcludeAssets="buildTransitive" PrivateAssets="all"/>-->
+		<!-- Explicit reference and PrivateAssets="all" to avoid native asset conflicts in consuming projects -->
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2651.64" PrivateAssets="all" />
 
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
@@ -48,10 +47,10 @@
 
 	</ItemGroup>
 
-	<!--<ItemGroup>
-		<None Include="Build\**" Pack="true" PackagePath="build;buildTransitive" />
-		<None Include="assets\Fonts\*" LinkBase="Assets" Pack="true" PackagePath="contentTransitive/$(PackageId)/Assets" />
-	</ItemGroup>-->
+	<ItemGroup>
+		<!-- Pack the .targets file to both build/ and buildTransitive/ -->
+		<None Include="Build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build;buildTransitive" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Page Update="Controls\MenuFlyoutHeader.xaml">
@@ -94,15 +93,35 @@
 		</Page>
 	</ItemGroup>
 
-	<!-- Pack the library layout (pri + xbf files) into the NuGet package -->
+	<!-- Pack only the expected library layout files (no recursive nesting) into a single location -->
 	<Target Name="PackLibraryLayout" BeforeTargets="GenerateNuspec" DependsOnTargets="Build">
+		<PropertyGroup>
+			<_LibLayout>$(OutputPath)LCTWorks.WinUI\</_LibLayout>
+			<_PackDest>buildTransitive\LCTWorks.WinUI\</_PackDest>
+		</PropertyGroup>
 		<ItemGroup>
-			<_PackageFiles Include="$(OutputPath)LCTWorks.WinUI\**\*.*">
-				<PackagePath>build\LCTWorks.WinUI\%(RecursiveDir)</PackagePath>
+			<!-- Root-level files (e.g. .pri) -->
+			<_PackageFiles Include="$(_LibLayout)*.*">
+				<PackagePath>$(_PackDest)</PackagePath>
 				<BuildAction>None</BuildAction>
 			</_PackageFiles>
-			<_PackageFiles Include="$(OutputPath)LCTWorks.WinUI\**\*.*">
-				<PackagePath>buildTransitive\LCTWorks.WinUI\%(RecursiveDir)</PackagePath>
+			<!-- Assets -->
+			<_PackageFiles Include="$(_LibLayout)Assets\Fonts\*.*">
+				<PackagePath>$(_PackDest)Assets\Fonts\</PackagePath>
+				<BuildAction>None</BuildAction>
+			</_PackageFiles>
+			<!-- Controls -->
+			<_PackageFiles Include="$(_LibLayout)Controls\*.*">
+				<PackagePath>$(_PackDest)Controls\</PackagePath>
+				<BuildAction>None</BuildAction>
+			</_PackageFiles>
+			<_PackageFiles Include="$(_LibLayout)Controls\ContentDialogs\*.*">
+				<PackagePath>$(_PackDest)Controls\ContentDialogs\</PackagePath>
+				<BuildAction>None</BuildAction>
+			</_PackageFiles>
+			<!-- Themes -->
+			<_PackageFiles Include="$(_LibLayout)Themes\*.*">
+				<PackagePath>$(_PackDest)Themes\</PackagePath>
 				<BuildAction>None</BuildAction>
 			</_PackageFiles>
 		</ItemGroup>
