@@ -5,6 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:LCTWorks.WinUI.Gallery.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:LCTWorks.WinUI.Gallery.Models"
+      xmlns:n="using:LCTWorks.WinUI.Navigation"
       mc:Ignorable="d">
 
     <Grid>
@@ -60,6 +62,17 @@
                         MenuItemsSource="{x:Bind ViewModel.ItemsSource, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
                         TabIndex="0">
+            <NavigationView.MenuItemTemplate>
+
+                <DataTemplate x:DataType="models:DocItem">
+                    <NavigationViewItem n:NavigationHelper.NavigateTo="{x:Bind NavigationKey}"
+                                        Content="{x:Bind Title}">
+                        <NavigationViewItem.Icon>
+                            <ImageIcon Source="/Assets/ColorIcons/Image.svg" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </DataTemplate>
+            </NavigationView.MenuItemTemplate>
 
             <Grid Margin="0">
                 <Frame x:Name="NavigationFrame" />

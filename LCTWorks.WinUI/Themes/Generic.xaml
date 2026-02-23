@@ -11,6 +11,7 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/NavigationViewItemButton.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/SmoothImage.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--  System default overrides  -->

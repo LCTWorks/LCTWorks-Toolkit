@@ -1,5 +1,6 @@
 ﻿using LCTWorks.WinUI.Activation;
 using LCTWorks.WinUI.Dialogs;
+using LCTWorks.WinUI.Gallery.Services;
 using LCTWorks.WinUI.Gallery.ViewModels;
 using LCTWorks.WinUI.Gallery.ViewModels.Controls;
 using LCTWorks.WinUI.Gallery.Views;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
-using Windows.UI.ApplicationSettings;
 
 namespace LCTWorks.WinUI.Gallery;
 
@@ -32,6 +32,7 @@ public partial class App : Application, IAppExtended
                .AddSingleton<ActivationService>()
                .AddSingleton<DialogService>()
                .AddSingleton<FrameNavigationService>()
+               .AddSingleton<DocsService>()
                //ViewModels:
                .AddSingleton<ShellViewModel>()
                .AddSingleton<SettingsViewModel>()
@@ -98,8 +99,6 @@ public partial class App : Application, IAppExtended
     private static void InitializePageHelper()
     {
         NavigationPageMap.Configure<SettingsViewModel, SettingsPage>();
-        //Controls:
-        NavigationPageMap.Configure<SoftImageViewModel, SoftImagePage>();
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -114,7 +113,7 @@ public partial class App : Application, IAppExtended
             return;
         }
         var flattenedExceptions = e.Exception.Flatten().InnerExceptions;
-        foreach (var exception in flattenedExceptions)
+        foreach (var _ in flattenedExceptions)
         {
             //Send reports here.
         }
