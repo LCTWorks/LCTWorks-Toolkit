@@ -2,9 +2,8 @@
 using LCTWorks.WinUI.Dialogs;
 using LCTWorks.WinUI.Gallery.Services;
 using LCTWorks.WinUI.Gallery.ViewModels;
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
+using LCTWorks.WinUI.Gallery.ViewModels.Items;
 using LCTWorks.WinUI.Gallery.Views;
-using LCTWorks.WinUI.Gallery.Views.Controls;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +35,7 @@ public partial class App : Application, IAppExtended
                //ViewModels:
                .AddSingleton<ShellViewModel>()
                .AddSingleton<SettingsViewModel>()
+               .AddSingleton<HomeViewModel>()
                .AddSingleton<SoftImageViewModel>()
                //Views:
                .AddSingleton<ShellPage>()

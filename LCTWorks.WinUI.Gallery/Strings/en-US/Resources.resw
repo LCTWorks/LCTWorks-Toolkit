@@ -120,6 +120,12 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>LCTWorks.WinUI Gallery</value>
   </data>
+  <data name="HomeViewModel_Description" xml:space="preserve">
+    <value>Start here</value>
+  </data>
+  <data name="HomeViewModel_Title" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="SoftImageViewModel_Description" xml:space="preserve">
     <value>An expanded Image control</value>
   </data>

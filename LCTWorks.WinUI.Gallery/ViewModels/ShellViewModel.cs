@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LCTWorks.WinUI.Gallery.Models;
 using LCTWorks.WinUI.Gallery.Services;
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
 using System.Collections.ObjectModel;
 
 namespace LCTWorks.WinUI.Gallery.ViewModels;

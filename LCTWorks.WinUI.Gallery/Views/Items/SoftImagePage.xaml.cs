@@ -1,7 +1,7 @@
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
+using LCTWorks.WinUI.Gallery.ViewModels.Items;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.WinUI.Gallery.Views.Controls;
+namespace LCTWorks.WinUI.Gallery.Views.Items;
 
 public sealed partial class SoftImagePage : Page
 {

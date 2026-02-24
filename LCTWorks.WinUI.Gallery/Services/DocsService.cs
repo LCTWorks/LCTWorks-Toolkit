@@ -1,13 +1,11 @@
 ﻿using LCTWorks.WinUI.Extensions;
 using LCTWorks.WinUI.Gallery.Models;
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
-using LCTWorks.WinUI.Gallery.Views.Controls;
+using LCTWorks.WinUI.Gallery.ViewModels.Items;
+using LCTWorks.WinUI.Gallery.Views.Items;
 using LCTWorks.WinUI.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LCTWorks.WinUI.Gallery.Services;
 
@@ -20,6 +18,7 @@ public class DocsService
     {
         _itemKeyToTypeMap = new Dictionary<string, Type>
         {
+            { typeof(HomeViewModel).ToString(), typeof(HomePage) },
             { typeof(SoftImageViewModel).ToString(), typeof(SoftImagePage) },
         };
     }
@@ -53,7 +52,8 @@ public class DocsService
             var resKey = GetResourceKey(item.Key);
             var title = $"{resKey}_Title".GetTextLocalized();
             var description = $"{resKey}_Description".GetTextLocalized();
-            _items.Add(new DocItem(title, description, "", item.Key));
+            var icon = $"ms-appx:///Assets/Icons/{resKey}.svg";
+            _items.Add(new DocItem(title, description, icon, item.Key));
         }
     }
 }

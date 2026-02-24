@@ -1,3 +1,3 @@
 ﻿namespace LCTWorks.WinUI.Gallery.Models;
 
-public record class DocItem(string Title, string Description, string Icon, string NavigationKey);
+public record class DocItem(string Title, string Description, string IconPath, string NavigationKey);
