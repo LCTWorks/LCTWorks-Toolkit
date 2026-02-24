@@ -11,6 +11,7 @@ namespace LCTWorks.WinUI.Gallery.Services;
 
 public class DocsService
 {
+    private const string IconResKeySuffix = "ViewModel";
     private static readonly Dictionary<string, Type> _itemKeyToTypeMap;
     private readonly List<DocItem> _items = [];
 
@@ -19,7 +20,7 @@ public class DocsService
         _itemKeyToTypeMap = new Dictionary<string, Type>
         {
             { typeof(HomeViewModel).ToString(), typeof(HomePage) },
-            { typeof(SoftImageViewModel).ToString(), typeof(SoftImagePage) },
+            { typeof(AdaptiveImageViewModel).ToString(), typeof(AdaptiveImagePage) },
         };
     }
 
@@ -30,7 +31,21 @@ public class DocsService
 
     public List<DocItem> Items => _items;
 
-    private string GetResourceKey(string originalKey)
+    private static string GetIconResKey(string resKey)
+    {
+        if (string.IsNullOrEmpty(resKey))
+        {
+            return string.Empty;
+        }
+        var index = resKey.LastIndexOf(IconResKeySuffix);
+        if (index == -1)
+        {
+            return string.Empty;
+        }
+        return resKey.Substring(0, index);
+    }
+
+    private static string GetResourceKey(string originalKey)
     {
         if (string.IsNullOrEmpty(originalKey))
         {
@@ -52,7 +67,7 @@ public class DocsService
             var resKey = GetResourceKey(item.Key);
             var title = $"{resKey}_Title".GetTextLocalized();
             var description = $"{resKey}_Description".GetTextLocalized();
-            var icon = $"ms-appx:///Assets/Icons/{resKey}.svg";
+            var icon = $"ms-appx:///Assets/Icons/{GetIconResKey(resKey)}.svg";
             _items.Add(new DocItem(title, description, icon, item.Key));
         }
     }

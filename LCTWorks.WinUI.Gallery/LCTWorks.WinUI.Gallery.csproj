@@ -15,9 +15,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\Icons\HomeViewModel.svg" />
     <None Remove="Views\Items\Homepage.xaml" />
-    <None Remove="Views\Items\SoftImagePage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>

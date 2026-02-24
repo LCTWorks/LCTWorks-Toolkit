@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="using:LCTWorks.WinUI.Controls">
-    <Style TargetType="local:SmoothImage">
+    <Style TargetType="local:AdaptiveImage">
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
@@ -10,8 +10,9 @@
                 Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:SmoothImage">
-                    <Grid Background="{TemplateBinding Background}"
+                <ControlTemplate TargetType="local:AdaptiveImage">
+                    <Grid x:Name="RootGrid"
+                          Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}"
                           CornerRadius="{TemplateBinding CornerRadius}">

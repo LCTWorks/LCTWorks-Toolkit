@@ -2,6 +2,6 @@
 
 namespace LCTWorks.WinUI.Gallery.ViewModels.Items;
 
-public partial class SoftImageViewModel : ObservableObject
+public partial class AdaptiveImageViewModel : ObservableObject
 {
 }

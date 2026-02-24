@@ -1,0 +1,22 @@
+<Page x:Class="LCTWorks.WinUI.Gallery.Views.Items.AdaptiveImagePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:c="using:LCTWorks.WinUI.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:LCTWorks.WinUI.Gallery.Views.Items"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    Orientation="Vertical">
+
+            <c:AdaptiveImage x:Name="img"
+                             Width="64"
+                             Height="64"
+                             Source="/Assets/Icons/AdaptiveImage.svg" />
+            <Button Content="Action"
+                    Tapped="Button_Tapped" />
+        </StackPanel>
+    </Grid>
+</Page>

@@ -53,7 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Page Update="Controls\SmoothImage.xaml">
+	  <Page Update="Controls\AdaptiveImage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>

@@ -3,6 +3,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LCTWorks.WinUI.Controls;
 
@@ -12,7 +15,7 @@ namespace LCTWorks.WinUI.Controls;
 [TemplateVisualState(Name = FailedState, GroupName = CommonGroup)]
 [TemplatePart(Name = ImagePartName, Type = typeof(Image))]
 [TemplatePart(Name = PlaceholderImagePartName, Type = typeof(Image))]
-public partial class SmoothImage : Control
+public partial class AdaptiveImage : Control
 {
     private const string CommonGroup = "CommonStates";
     private const string FailedState = "Failed";
@@ -21,64 +24,60 @@ public partial class SmoothImage : Control
     private const string LoadingState = "Loading";
     private const string PlaceholderImagePartName = "PlaceholderImage";
     private const string UnloadedState = "Unloaded";
+    private static readonly Duration DefaultAnimationDuration = new(TimeSpan.FromMilliseconds(300));
     private Image? _image;
     private bool _isInVisualTree;
-
-    public SmoothImage()
-    {
-        DefaultStyleKey = typeof(SmoothImage);
-    }
 
     #region Dependency Properties
 
     public static readonly DependencyProperty AnimationDurationProperty =
         DependencyProperty.Register(
             nameof(AnimationDuration),
-            typeof(TimeSpan),
-            typeof(SmoothImage),
-            new PropertyMetadata(TimeSpan.FromMilliseconds(300)));
+            typeof(Duration),
+            typeof(AdaptiveImage),
+            new PropertyMetadata(DefaultAnimationDuration));
 
     public static readonly DependencyProperty NineGridProperty =
         DependencyProperty.Register(
             nameof(NineGrid),
             typeof(Thickness),
-            typeof(SmoothImage),
+            typeof(AdaptiveImage),
             new PropertyMetadata(default(Thickness)));
 
     public static readonly DependencyProperty PlaceholderSourceProperty =
         DependencyProperty.Register(
             nameof(PlaceholderSource),
             typeof(ImageSource),
-            typeof(SmoothImage),
+            typeof(AdaptiveImage),
             new PropertyMetadata(null));
 
     public static readonly DependencyProperty PlaceholderStretchProperty =
         DependencyProperty.Register(
             nameof(PlaceholderStretch),
             typeof(Stretch),
-            typeof(SmoothImage),
+            typeof(AdaptiveImage),
             new PropertyMetadata(Stretch.Uniform));
 
     public static readonly DependencyProperty SourceProperty =
                         DependencyProperty.Register(
             nameof(Source),
             typeof(ImageSource),
-            typeof(SmoothImage),
+            typeof(AdaptiveImage),
             new PropertyMetadata(null, OnSourceChanged));
 
     public static readonly DependencyProperty StretchProperty =
         DependencyProperty.Register(
             nameof(Stretch),
             typeof(Stretch),
-            typeof(SmoothImage),
+            typeof(AdaptiveImage),
             new PropertyMetadata(Stretch.Uniform));
 
     /// <summary>
     /// Gets or sets the duration of the crossfade animation.
     /// </summary>
-    public TimeSpan AnimationDuration
+    public Duration AnimationDuration
     {
-        get => (TimeSpan)GetValue(AnimationDurationProperty);
+        get => (Duration)GetValue(AnimationDurationProperty);
         set => SetValue(AnimationDurationProperty, value);
     }
 
@@ -129,11 +128,17 @@ public partial class SmoothImage : Control
 
     #endregion Dependency Properties
 
+    public AdaptiveImage()
+    {
+        DefaultStyleKey = typeof(AdaptiveImage);
+    }
+
+    public event EventHandler? ImageLoaded;
+
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
 
-        // Detach previous event handlers
         RemoveImageHandlers();
 
         _image = GetTemplateChild(ImagePartName) as Image;
@@ -144,14 +149,41 @@ public partial class SmoothImage : Control
 
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is SmoothImage control)
+        if (d is AdaptiveImage control)
         {
             control.OnSourceChanged(e.NewValue as ImageSource);
         }
     }
 
+    private void ApplyAnimationDuration()
+    {
+        var groups = VisualStateManager.GetVisualStateGroups(
+            (FrameworkElement)GetTemplateChild("RootGrid"));
+
+        foreach (var group in groups)
+        {
+            foreach (var state in group.States)
+            {
+                if (state.Name == LoadedState && state.Storyboard is not null)
+                {
+                    foreach (var child in state.Storyboard.Children)
+                    {
+                        child.Duration = AnimationDuration;
+                    }
+
+                    return;
+                }
+            }
+        }
+    }
+
     private void GoToState(string stateName)
     {
+        if (stateName == LoadedState)
+        {
+            ApplyAnimationDuration();
+        }
+
         VisualStateManager.GoToState(this, stateName, true);
     }
 
@@ -164,7 +196,7 @@ public partial class SmoothImage : Control
     private void OnImageOpened(object sender, RoutedEventArgs e)
     {
         RemoveImageHandlers();
-        GoToState(nameof(LoadedState));
+        GoToState(LoadedState);
     }
 
     private void OnSourceChanged(ImageSource? newSource)
@@ -178,11 +210,11 @@ public partial class SmoothImage : Control
         {
             RemoveImageHandlers();
             _image.Source = null;
-            GoToState(nameof(Unloaded));
+            GoToState(UnloadedState);
             return;
         }
 
-        GoToState(nameof(LoadingState));
+        GoToState(LoadingState);
         SetImageSource(_image, newSource);
     }
 
@@ -207,7 +239,7 @@ public partial class SmoothImage : Control
         if (source is null)
         {
             image.Source = null;
-            GoToState(nameof(Unloaded));
+            GoToState(UnloadedState);
             return;
         }
 
@@ -223,7 +255,7 @@ public partial class SmoothImage : Control
         // Non-BitmapImage sources (e.g., WriteableBitmap) are already loaded
         if (source is not BitmapImage)
         {
-            GoToState(nameof(Loaded));
+            GoToState(LoadedState);
         }
     }
 }

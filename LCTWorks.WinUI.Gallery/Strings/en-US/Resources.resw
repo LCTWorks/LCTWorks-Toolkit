@@ -126,10 +126,10 @@
   <data name="HomeViewModel_Title" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="SoftImageViewModel_Description" xml:space="preserve">
+  <data name="AdaptiveImageViewModel_Description" xml:space="preserve">
     <value>An expanded Image control</value>
   </data>
-  <data name="SoftImageViewModel_Title" xml:space="preserve">
-    <value>SoftImage</value>
+  <data name="AdaptiveImageViewModel_Title" xml:space="preserve">
+    <value>AdaptiveImage</value>
   </data>
 </root>
