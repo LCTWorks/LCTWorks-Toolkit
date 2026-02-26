@@ -1,12 +1,12 @@
 using LCTWorks.WinUI.Experimental.Helpers;
 using LCTWorks.WinUI.Extensions;
-using LCTWorks.WinUI.Gallery.ViewModels;
+using LCTWorks.Workshop.ViewModels;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 
-namespace LCTWorks.WinUI.Gallery.Views;
+namespace LCTWorks.Workshop.Views;
 
 public sealed partial class ShellPage : Page
 {

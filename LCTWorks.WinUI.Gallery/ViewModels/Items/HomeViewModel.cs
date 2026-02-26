@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LCTWorks.WinUI.Gallery.ViewModels.Items;
+namespace LCTWorks.Workshop.ViewModels.Items;
 
 public partial class HomeViewModel : ObservableObject
 {

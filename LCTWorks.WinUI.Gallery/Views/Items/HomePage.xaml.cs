@@ -1,7 +1,7 @@
-using LCTWorks.WinUI.Gallery.ViewModels.Items;
+using LCTWorks.Workshop.ViewModels.Items;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.WinUI.Gallery.Views.Items;
+namespace LCTWorks.Workshop.Views.Items;
 
 public sealed partial class HomePage : Page
 {

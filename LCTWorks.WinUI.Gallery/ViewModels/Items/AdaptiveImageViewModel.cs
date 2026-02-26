@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LCTWorks.WinUI.Gallery.ViewModels.Items;
+namespace LCTWorks.Workshop.ViewModels.Items;
 
 public partial class AdaptiveImageViewModel : ObservableObject
 {

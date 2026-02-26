@@ -1,17 +1,18 @@
 ﻿using LCTWorks.WinUI.Activation;
 using LCTWorks.WinUI.Dialogs;
-using LCTWorks.WinUI.Gallery.Services;
-using LCTWorks.WinUI.Gallery.ViewModels;
-using LCTWorks.WinUI.Gallery.ViewModels.Items;
-using LCTWorks.WinUI.Gallery.Views;
+using LCTWorks.Workshop.Services;
+using LCTWorks.Workshop.ViewModels;
+using LCTWorks.Workshop.ViewModels.Items;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
+using LCTWorks.WinUI;
+using LCTWorks.Workshop.Views;
 
-namespace LCTWorks.WinUI.Gallery;
+namespace LCTWorks.Workshop;
 
 public partial class App : Application, IAppExtended
 {

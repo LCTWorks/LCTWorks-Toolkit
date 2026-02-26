@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LCTWorks.WinUI.Gallery.Models;
-using LCTWorks.WinUI.Gallery.Services;
+using LCTWorks.Workshop.Models;
+using LCTWorks.Workshop.Services;
 using System.Collections.ObjectModel;
 
-namespace LCTWorks.WinUI.Gallery.ViewModels;
+namespace LCTWorks.Workshop.ViewModels;
 
 public partial class ShellViewModel : ObservableObject
 {

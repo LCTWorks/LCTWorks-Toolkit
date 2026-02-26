@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "LCTWorks.WinUI.Gallery (Package)": {
+    "LCTWorks.Workshop (Package)": {
       "commandName": "MsixPackage"
     },
-    "LCTWorks.WinUI.Gallery (Unpackaged)": {
+    "LCTWorks.Workshop (Unpackaged)": {
       "commandName": "Project"
     }
   }

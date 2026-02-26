@@ -1,13 +1,14 @@
 ﻿using LCTWorks.WinUI.Extensions;
-using LCTWorks.WinUI.Gallery.Models;
-using LCTWorks.WinUI.Gallery.ViewModels.Items;
-using LCTWorks.WinUI.Gallery.Views.Items;
+using LCTWorks.Workshop.Models;
+using LCTWorks.Workshop.ViewModels.Items;
+using LCTWorks.Workshop.Items;
 using LCTWorks.WinUI.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LCTWorks.Workshop.Views.Items;
 
-namespace LCTWorks.WinUI.Gallery.Services;
+namespace LCTWorks.Workshop.Services;
 
 public class DocsService
 {

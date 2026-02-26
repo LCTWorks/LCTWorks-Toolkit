@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>LCTWorks.WinUI Gallery</value>
+    <value>Workshop</value>
   </data>
   <data name="HomeViewModel_Description" xml:space="preserve">
     <value>Start here</value>

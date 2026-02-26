@@ -16,7 +16,7 @@
   <mp:PhoneIdentity PhoneProductId="96bd1a4a-d0da-4923-a836-547ac74f6717" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>LCTWorks.WinUI.Gallery</DisplayName>
+    <DisplayName>LCTWorks.Workshop</DisplayName>
     <PublisherDisplayName>rathm</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -35,8 +35,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="LCTWorks.WinUI.Gallery"
-        Description="LCTWorks.WinUI.Gallery"
+        DisplayName="LCTWorks.Workshop"
+        Description="LCTWorks.Workshop"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">

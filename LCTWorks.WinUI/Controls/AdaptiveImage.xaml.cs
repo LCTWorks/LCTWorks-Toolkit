@@ -15,14 +15,18 @@ namespace LCTWorks.WinUI.Controls;
 [TemplateVisualState(Name = FailedState, GroupName = CommonGroup)]
 [TemplatePart(Name = ImagePartName, Type = typeof(Image))]
 [TemplatePart(Name = PlaceholderImagePartName, Type = typeof(Image))]
+[TemplatePart(Name = RootGridPartName, Type = typeof(Grid))]
 public partial class AdaptiveImage : Control
 {
+    private const string Base64Prefix = "base64,";
+    private const string Base64Scheme = "data";
     private const string CommonGroup = "CommonStates";
     private const string FailedState = "Failed";
     private const string ImagePartName = "Image";
     private const string LoadedState = "Loaded";
     private const string LoadingState = "Loading";
     private const string PlaceholderImagePartName = "PlaceholderImage";
+    private const string RootGridPartName = "RootGrid";
     private const string UnloadedState = "Unloaded";
     private static readonly Duration DefaultAnimationDuration = new(TimeSpan.FromMilliseconds(300));
     private Image? _image;
@@ -59,9 +63,9 @@ public partial class AdaptiveImage : Control
             new PropertyMetadata(Stretch.Uniform));
 
     public static readonly DependencyProperty SourceProperty =
-                        DependencyProperty.Register(
+            DependencyProperty.Register(
             nameof(Source),
-            typeof(ImageSource),
+            typeof(object),
             typeof(AdaptiveImage),
             new PropertyMetadata(null, OnSourceChanged));
 
@@ -111,7 +115,7 @@ public partial class AdaptiveImage : Control
     /// <summary>
     /// Gets or sets the image source to display.
     /// </summary>
-    public ImageSource? Source
+    public object? Source
     {
         get => (ImageSource?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -128,6 +132,8 @@ public partial class AdaptiveImage : Control
 
     #endregion Dependency Properties
 
+    private CancellationTokenSource? _tokenSource;
+
     public AdaptiveImage()
     {
         DefaultStyleKey = typeof(AdaptiveImage);
@@ -139,26 +145,32 @@ public partial class AdaptiveImage : Control
     {
         base.OnApplyTemplate();
 
-        RemoveImageHandlers();
-
         _image = GetTemplateChild(ImagePartName) as Image;
         _isInVisualTree = true;
 
-        SetImageSource(_image, Source);
+        LoadSourceAsync(Source);
     }
 
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is AdaptiveImage control)
         {
-            control.OnSourceChanged(e.NewValue as ImageSource);
+            control.SourceChanged(e.NewValue);
         }
     }
 
     private void ApplyAnimationDuration()
     {
-        var groups = VisualStateManager.GetVisualStateGroups(
-            (FrameworkElement)GetTemplateChild("RootGrid"));
+        var grid = GetTemplateChild(RootGridPartName) as Grid;
+        if (grid == null)
+        {
+            return;
+        }
+        var groups = VisualStateManager.GetVisualStateGroups(grid);
+        if (groups == null)
+        {
+            return;
+        }
 
         foreach (var group in groups)
         {
@@ -177,6 +189,13 @@ public partial class AdaptiveImage : Control
         }
     }
 
+    private void ClearImageSource()
+    {
+        TryRemoveImageHandlers();
+        _image?.Source = null;
+        GoToState(UnloadedState);
+    }
+
     private void GoToState(string stateName)
     {
         if (stateName == LoadedState)
@@ -187,19 +206,123 @@ public partial class AdaptiveImage : Control
         VisualStateManager.GoToState(this, stateName, true);
     }
 
+    private async void LoadSourceAsync(object? source)
+    {
+        if (_image is null || !_isInVisualTree)
+        {
+            return;
+        }
+
+        _tokenSource?.Cancel();
+        _tokenSource = new CancellationTokenSource();
+
+        ClearImageSource();
+        if (source is null)
+        {
+            GoToState(UnloadedState);
+            return;
+        }
+
+        if (source is ImageSource imageSource)
+        {
+            SetImageSource(imageSource);
+            return;
+        }
+        try
+        {
+            await LoadSourceFromUnknownSourceAsync(source, _tokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception)
+        {
+            VisualStateManager.GoToState(this, FailedState, true);
+        }
+    }
+
+    private async Task LoadSourceFromUnknownSourceAsync(object? source, CancellationToken token)
+    {
+        Uri? uri = source as Uri;
+        if (uri == null)
+        {
+            var url = source as string ?? source?.ToString();
+            if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
+            {
+                GoToState(FailedState);
+                return;
+            }
+        }
+        else
+        {
+            if (uri.Scheme != "http" && uri.Scheme != "https" && !uri.IsAbsoluteUri)
+            {
+                uri = new Uri("ms-appx:///" + uri.OriginalString.TrimStart('/'));
+            }
+        }
+        BitmapImage? bitmapImage = null;
+        if (uri != null)
+        {
+            if (string.Equals(uri.Scheme, Base64Scheme, StringComparison.OrdinalIgnoreCase))
+            {
+                var src = uri.OriginalString;
+
+                var index = src.IndexOf(Base64Prefix);
+                if (index >= 0)
+                {
+                    var bytes = Convert.FromBase64String(src[(index + Base64Prefix.Length)..]);
+                    bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(new MemoryStream(bytes).AsRandomAccessStream());
+                }
+            }
+            else
+            {
+                bitmapImage = new BitmapImage(uri)
+                {
+                    CreateOptions = BitmapCreateOptions.IgnoreImageCache
+                };
+            }
+        }
+        if (bitmapImage != null && !token.IsCancellationRequested)
+        {
+            SetImageSource(bitmapImage);
+        }
+    }
+
     private void OnImageFailed(object sender, ExceptionRoutedEventArgs e)
     {
-        RemoveImageHandlers();
+        TryRemoveImageHandlers();
         GoToState(FailedState);
     }
 
     private void OnImageOpened(object sender, RoutedEventArgs e)
     {
-        RemoveImageHandlers();
+        TryRemoveImageHandlers();
         GoToState(LoadedState);
     }
 
-    private void OnSourceChanged(ImageSource? newSource)
+    private void SetImageSource(ImageSource? source)
+    {
+        _image?.Source = source;
+        if (source == null)
+        {
+            ClearImageSource();
+        }
+        if (source is BitmapImage bitmapImage)
+        {
+            bitmapImage.ImageOpened += OnImageOpened;
+            bitmapImage.ImageFailed += OnImageFailed;
+            //TODO: Loading
+        }
+        if (source is BitmapSource bitmapSource &&
+                 bitmapSource.PixelHeight > 0 &&
+                 bitmapSource.PixelWidth > 0)
+        {
+            GoToState(LoadedState);
+        }
+    }
+
+    private void SourceChanged(object newSource)
     {
         if (!_isInVisualTree || _image is null)
         {
@@ -208,54 +331,20 @@ public partial class AdaptiveImage : Control
 
         if (newSource is null)
         {
-            RemoveImageHandlers();
-            _image.Source = null;
-            GoToState(UnloadedState);
+            ClearImageSource();
             return;
         }
 
         GoToState(LoadingState);
-        SetImageSource(_image, newSource);
+        LoadSourceAsync(newSource);
     }
 
-    private void RemoveImageHandlers()
+    private void TryRemoveImageHandlers()
     {
         if (_image?.Source is BitmapImage bitmapImage)
         {
             bitmapImage.ImageOpened -= OnImageOpened;
             bitmapImage.ImageFailed -= OnImageFailed;
-        }
-    }
-
-    private void SetImageSource(Image? image, ImageSource? source)
-    {
-        if (image is null)
-        {
-            return;
-        }
-
-        RemoveImageHandlers();
-
-        if (source is null)
-        {
-            image.Source = null;
-            GoToState(UnloadedState);
-            return;
-        }
-
-        // For BitmapImage sources, listen for load completion/failure
-        if (source is BitmapImage bitmapImage)
-        {
-            bitmapImage.ImageOpened += OnImageOpened;
-            bitmapImage.ImageFailed += OnImageFailed;
-        }
-
-        image.Source = source;
-
-        // Non-BitmapImage sources (e.g., WriteableBitmap) are already loaded
-        if (source is not BitmapImage)
-        {
-            GoToState(LoadedState);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LCTWorks.WinUI.Gallery.ViewModels;
+namespace LCTWorks.Workshop.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
