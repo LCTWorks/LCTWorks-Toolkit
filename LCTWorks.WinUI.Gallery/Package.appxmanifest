@@ -8,47 +8,47 @@
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   IgnorableNamespaces="uap rescap systemai">
 
-  <Identity
-    Name="96bd1a4a-d0da-4923-a836-547ac74f6717"
-    Publisher="CN=rathm"
-    Version="1.0.0.0" />
+	<Identity
+	  Name="96bd1a4a-d0da-4923-a836-547ac74f6717"
+	  Publisher="CN=rathm"
+	  Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="96bd1a4a-d0da-4923-a836-547ac74f6717" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="96bd1a4a-d0da-4923-a836-547ac74f6717" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
 
-  <Properties>
-    <DisplayName>LCTWorks.Workshop</DisplayName>
-    <PublisherDisplayName>rathm</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>LCTWorks.Workshop</DisplayName>
+		<PublisherDisplayName>rathm</PublisherDisplayName>
+		<Logo>Assets\Store\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="x-generate"/>
-  </Resources>
+	<Resources>
+		<Resource Language="x-generate" />
+	</Resources>
 
-  <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
-      <uap:VisualElements
-        DisplayName="LCTWorks.Workshop"
-        Description="LCTWorks.Workshop"
-        BackgroundColor="transparent"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
-        </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
-      </uap:VisualElements>
-    </Application>
-  </Applications>
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="$targetentrypoint$">
+			<uap:VisualElements
+			  DisplayName="LCTWorks.Workshop"
+			  Description="LCTWorks.Workshop"
+			  BackgroundColor="transparent"
+			  Square150x150Logo="Assets\Store\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Store\Square44x44Logo.png">
+				<uap:DefaultTile Wide310x150Logo="Assets\Store\Wide310x150Logo.png"  Square71x71Logo="Assets\Store\SmallTile.png" Square310x310Logo="Assets\Store\LargeTile.png">
+				</uap:DefaultTile>
+				<uap:SplashScreen Image="Assets\Store\SplashScreen.png" />
+			</uap:VisualElements>
+		</Application>
+	</Applications>
 
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-    <systemai:Capability Name="systemAIModels"/>
-  </Capabilities>
+	<Capabilities>
+		<rescap:Capability Name="runFullTrust" />
+		<systemai:Capability Name="systemAIModels" />
+	</Capabilities>
 </Package>

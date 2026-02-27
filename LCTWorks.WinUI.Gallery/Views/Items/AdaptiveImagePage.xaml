@@ -2,21 +2,41 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:c="using:LCTWorks.WinUI.Controls"
+      xmlns:clocal="using:LCTWorks.Workshop.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:LCTWorks.Workshop.Items"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center"
-                    Orientation="Vertical">
-
-            <c:AdaptiveImage x:Name="img"
-                             Width="64"
-                             Height="64"
-                             PlaceholderSource="/Assets/Icons/AdaptiveImage.svg" />
-            <Button Content="Action"
-                    Tapped="Button_Tapped" />
-        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <clocal:SampleCodePresenter x:Name="Sample"
+                                            Margin="16"
+                                            CSharpCodeFilePath="ms-appx:///Assets/CodeSnippets/Sample1_CSharp.txt"
+                                            Description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pharetra, tellus sit amet congue vulputate, nisi erat iaculis nibh, vitae feugiat sapien ante eget mauris. Aenean sollicitudin imperdiet arcu, v"
+                                            ExpanderHeader="Code here"
+                                            Header="Some header"
+                                            MinOptionsPaneWidth="200"
+                                            PlainTextFilePath="ms-appx:///Assets/CodeSnippets/Sample1_Plain.txt"
+                                            PlainTextHeaderText="Docs"
+                                            XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/Sample1_Xaml.txt">
+                    <clocal:SampleCodePresenter.Content>
+                        <c:AdaptiveImage x:Name="img"
+                                         Width="64"
+                                         Height="64"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         PlaceholderSource="/Assets/Icons/AdaptiveImage.svg" />
+                    </clocal:SampleCodePresenter.Content>
+                    <clocal:SampleCodePresenter.OptionsPaneContent>
+                        <Button HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="Load image"
+                                Tapped="Button_Tapped" />
+                    </clocal:SampleCodePresenter.OptionsPaneContent>
+                </clocal:SampleCodePresenter>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
