@@ -120,16 +120,22 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>Workshop</value>
   </data>
-  <data name="HomeViewModel_Description" xml:space="preserve">
+  <data name="Home_Description" xml:space="preserve">
     <value>Start here</value>
   </data>
-  <data name="HomeViewModel_Title" xml:space="preserve">
+  <data name="Home_Title" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="AdaptiveImageViewModel_Description" xml:space="preserve">
+  <data name="AdaptiveImage_Description" xml:space="preserve">
     <value>An expanded Image control</value>
   </data>
-  <data name="AdaptiveImageViewModel_Title" xml:space="preserve">
+  <data name="AdaptiveImage_Title" xml:space="preserve">
     <value>AdaptiveImage</value>
+  </data>
+  <data name="SampleCodePresenter_Title" xml:space="preserve">
+    <value>SampleCodePresenter</value>
+  </data>
+  <data name="SampleCodePresenter_Description" xml:space="preserve">
+    <value>A control to demo control properties and behaviors.</value>
   </data>
 </root>

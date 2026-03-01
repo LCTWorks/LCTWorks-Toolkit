@@ -19,6 +19,7 @@ namespace LCTWorks.Workshop.Controls;
 [TemplatePart(Name = LoadingBorderPartName, Type = typeof(Border))]
 [TemplatePart(Name = CodeContainerPartName, Type = typeof(Grid))]
 [TemplatePart(Name = CodeRichTextBlockPartName, Type = typeof(RichTextBlock))]
+[TemplatePart(Name = ContentLoadingProgressBarPartName, Type = typeof(ProgressBar))]
 public partial class SampleCodePresenter : Control
 {
     public static readonly DependencyProperty ContentProperty =
@@ -40,6 +41,10 @@ public partial class SampleCodePresenter : Control
     public static readonly DependencyProperty HeaderProperty =
                     DependencyProperty.Register(nameof(Header), typeof(string), typeof(SampleCodePresenter),
             new PropertyMetadata(default));
+
+    public static readonly DependencyProperty IsLoadingBarVisibleProperty =
+        DependencyProperty.Register(nameof(IsLoadingBarVisible), typeof(bool), typeof(SampleCodePresenter),
+            new PropertyMetadata(default, OnLoadingPropertyChanged));
 
     public static readonly DependencyProperty MinOptionsPaneWidthProperty =
         DependencyProperty.Register(nameof(MinOptionsPaneWidth), typeof(double), typeof(SampleCodePresenter),
@@ -67,6 +72,8 @@ public partial class SampleCodePresenter : Control
 
     private const string CodeSelectorPartName = "CodeSelector";
 
+    private const string ContentLoadingProgressBarPartName = "ContentLoadingProgressBar";
+
     private const string DescriptionTextPresenterPartName = "DescriptionTextPresenter";
 
     private const string ExpanderPartName = "Expander";
@@ -82,6 +89,7 @@ public partial class SampleCodePresenter : Control
     private SelectorBar? _codeSelector;
 
     private Expander? _expander;
+
     private RichTextBlock? _richTextBlock;
 
     public SampleCodePresenter()
@@ -118,6 +126,12 @@ public partial class SampleCodePresenter : Control
     {
         get => (string)GetValue(HeaderProperty);
         set => SetValue(HeaderProperty, value);
+    }
+
+    public bool IsLoadingBarVisible
+    {
+        get => (bool)GetValue(IsLoadingBarVisibleProperty);
+        set => SetValue(IsLoadingBarVisibleProperty, value);
     }
 
     public double MinOptionsPaneWidth
@@ -178,6 +192,14 @@ public partial class SampleCodePresenter : Control
         if (d is SampleCodePresenter control)
         {
             control.SetDescriptionVisibility();
+        }
+    }
+
+    private static void OnLoadingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SampleCodePresenter control)
+        {
+            control.SetLoadingBarVisibility();
         }
     }
 
@@ -251,33 +273,6 @@ public partial class SampleCodePresenter : Control
         }
     }
 
-    #region Initial events
-
-    private void ControlLoaded(object sender, RoutedEventArgs e)
-    {
-        _expander = GetTemplateChild(ExpanderPartName) as Expander;
-        _richTextBlock = GetTemplateChild(CodeRichTextBlockPartName) as RichTextBlock;
-        _expander?.Expanding += Expander_Expanding;
-        SetDescriptionVisibility();
-        SetExpanderVisibility();
-        Loaded -= ControlLoaded;
-    }
-
-    private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
-    {
-        var selector = GetTemplateChild(CodeSelectorPartName) as SelectorBar;
-        if (selector != null)
-        {
-            _codeSelector = selector;
-            _codeSelector.SelectionChanged += CodeSelectorSelectionChanged;
-
-            _expander?.Expanding -= Expander_Expanding;
-            ReloadCodeSnippetsVisualsAsync();
-        }
-    }
-
-    #endregion Initial events
-
     private async void ReloadCodeSnippetsVisualsAsync()
     {
         if (_codeSelector == null)
@@ -324,6 +319,42 @@ public partial class SampleCodePresenter : Control
         var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, PlainTextFilePath }.Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
         _expander?.Visibility = pathsToLoad.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
+
+    private void SetLoadingBarVisibility()
+    {
+        if (GetTemplateChild(ContentLoadingProgressBarPartName) is ProgressBar loadingProgressBar)
+        {
+            loadingProgressBar.Visibility = IsLoadingBarVisible ? Visibility.Visible : Visibility.Collapsed;
+        }
+    }
+
+    #region Initial events
+
+    private void ControlLoaded(object sender, RoutedEventArgs e)
+    {
+        _expander = GetTemplateChild(ExpanderPartName) as Expander;
+        _richTextBlock = GetTemplateChild(CodeRichTextBlockPartName) as RichTextBlock;
+        _expander?.Expanding += Expander_Expanding;
+        SetDescriptionVisibility();
+        SetExpanderVisibility();
+        SetLoadingBarVisibility();
+        Loaded -= ControlLoaded;
+    }
+
+    private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+    {
+        var selector = GetTemplateChild(CodeSelectorPartName) as SelectorBar;
+        if (selector != null)
+        {
+            _codeSelector = selector;
+            _codeSelector.SelectionChanged += CodeSelectorSelectionChanged;
+
+            _expander?.Expanding -= Expander_Expanding;
+            ReloadCodeSnippetsVisualsAsync();
+        }
+    }
+
+    #endregion Initial events
 
     private void SetLoadingState(bool isLoading)
     {

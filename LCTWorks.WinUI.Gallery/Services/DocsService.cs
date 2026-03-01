@@ -22,6 +22,7 @@ public class DocsService
         {
             { typeof(HomeViewModel).ToString(), typeof(HomePage) },
             { typeof(AdaptiveImageViewModel).ToString(), typeof(AdaptiveImagePage) },
+            //{ typeof(SampleCodePresenterViewModel).ToString(), typeof(SampleCodePresenterPage) },
         };
     }
 
@@ -31,20 +32,6 @@ public class DocsService
     }
 
     public List<DocItem> Items => _items;
-
-    private static string GetIconResKey(string resKey)
-    {
-        if (string.IsNullOrEmpty(resKey))
-        {
-            return string.Empty;
-        }
-        var index = resKey.LastIndexOf(IconResKeySuffix);
-        if (index == -1)
-        {
-            return string.Empty;
-        }
-        return resKey.Substring(0, index);
-    }
 
     private static string GetResourceKey(string originalKey)
     {
@@ -57,7 +44,13 @@ public class DocsService
         {
             return string.Empty;
         }
-        return sections.Last();
+        var lastSection = sections.Last();
+        var index = lastSection.LastIndexOf(IconResKeySuffix);
+        if (index == -1)
+        {
+            return lastSection;
+        }
+        return lastSection[..index];
     }
 
     private void InitializeItems()
@@ -68,7 +61,7 @@ public class DocsService
             var resKey = GetResourceKey(item.Key);
             var title = $"{resKey}_Title".GetTextLocalized();
             var description = $"{resKey}_Description".GetTextLocalized();
-            var icon = $"ms-appx:///Assets/Icons/{GetIconResKey(resKey)}.svg";
+            var icon = $"ms-appx:///Assets/Icons/{resKey}.svg";
             _items.Add(new DocItem(title, description, icon, item.Key));
         }
     }

@@ -1,6 +1,5 @@
 using LCTWorks.Workshop.ViewModels.Items;
 using Microsoft.UI.Xaml.Controls;
-using System;
 
 namespace LCTWorks.Workshop.Items;
 

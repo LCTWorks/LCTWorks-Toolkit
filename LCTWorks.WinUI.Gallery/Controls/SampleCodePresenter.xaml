@@ -15,6 +15,8 @@
     <Style TargetType="local:SampleCodePresenter">
         <Setter Property="ExpanderHeader"
                 Value="Code snippets" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SampleCodePresenter">
@@ -60,6 +62,12 @@
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Content="{TemplateBinding Content}"
                                               IsTabStop="False" />
+                            <ProgressBar x:Name="ContentLoadingProgressBar"
+                                         Margin="12,0"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Top"
+                                         IsIndeterminate="True"
+                                         Visibility="Collapsed" />
                             <ContentPresenter x:Name="OptionsControlPresenter"
                                               Grid.Column="1"
                                               MinWidth="{TemplateBinding MinOptionsPaneWidth}"

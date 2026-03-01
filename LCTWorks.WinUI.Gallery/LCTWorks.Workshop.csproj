@@ -15,8 +15,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\CodeSnippets\SampleCodePresenter_Xaml.txt" />
+    <None Remove="Assets\Icons\SampleCodePresenter.svg" />
     <None Remove="Styles\Generic.xaml" />
     <None Remove="Views\Items\Homepage.xaml" />
+    <None Remove="Views\Items\SampleCodePresenterPage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>
@@ -42,6 +45,11 @@
     <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" />
     <ProjectReference Include="..\LCTWorks.WinUI.Experimental\LCTWorks.WinUI.Experimental.csproj" />
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Items\SampleCodePresenterPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\SampleCodePresenter.xaml">

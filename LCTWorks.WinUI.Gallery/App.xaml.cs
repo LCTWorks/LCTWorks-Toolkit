@@ -38,6 +38,7 @@ public partial class App : Application, IAppExtended
                .AddSingleton<SettingsViewModel>()
                .AddSingleton<HomeViewModel>()
                .AddSingleton<AdaptiveImageViewModel>()
+               .AddSingleton<SampleCodePresenterViewModel>()
                //Views:
                .AddSingleton<ShellPage>()
                .AddSingleton<SettingsPage>()
