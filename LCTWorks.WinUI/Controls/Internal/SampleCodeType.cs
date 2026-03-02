@@ -11,5 +11,5 @@ public enum SampleCodeType
     CSharp,
 
     [Description("More info")]
-    PlainText,
+    Markdown,
 }

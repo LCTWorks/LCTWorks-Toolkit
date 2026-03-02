@@ -1,4 +1,6 @@
 ﻿using ColorCode;
+using CommunityToolkit.Common.Parsers.Markdown;
+using CommunityToolkit.WinUI.UI.Controls;
 using LCTWorks.Core.Extensions;
 using LCTWorks.WinUI.Controls.Internal;
 using LCTWorks.WinUI.Helpers;
@@ -20,6 +22,7 @@ namespace LCTWorks.Workshop.Controls;
 [TemplatePart(Name = CodeContainerPartName, Type = typeof(Grid))]
 [TemplatePart(Name = CodeRichTextBlockPartName, Type = typeof(RichTextBlock))]
 [TemplatePart(Name = ContentLoadingProgressBarPartName, Type = typeof(ProgressBar))]
+[TemplatePart(Name = MdTextBlockPartName, Type = typeof(MarkdownTextBlock))]
 public partial class SampleCodePresenter : Control
 {
     public static readonly DependencyProperty ContentProperty =
@@ -46,20 +49,20 @@ public partial class SampleCodePresenter : Control
         DependencyProperty.Register(nameof(IsLoadingBarVisible), typeof(bool), typeof(SampleCodePresenter),
             new PropertyMetadata(default, OnLoadingPropertyChanged));
 
+    public static readonly DependencyProperty MarkdownFilePathProperty =
+        DependencyProperty.Register(nameof(MarkdownFilePath), typeof(string), typeof(SampleCodePresenter),
+            new PropertyMetadata(default, OnCodePropertyChanged));
+
+    public static readonly DependencyProperty MarkdownTabHeaderProperty =
+        DependencyProperty.Register(nameof(MarkdownTabHeader), typeof(string), typeof(SampleCodePresenter),
+            new PropertyMetadata(default));
+
     public static readonly DependencyProperty MinOptionsPaneWidthProperty =
-        DependencyProperty.Register(nameof(MinOptionsPaneWidth), typeof(double), typeof(SampleCodePresenter),
+                DependencyProperty.Register(nameof(MinOptionsPaneWidth), typeof(double), typeof(SampleCodePresenter),
             new PropertyMetadata(0));
 
     public static readonly DependencyProperty OptionsPaneContentProperty =
             DependencyProperty.Register(nameof(OptionsPaneContent), typeof(object), typeof(SampleCodePresenter),
-            new PropertyMetadata(default));
-
-    public static readonly DependencyProperty PlainTextFilePathProperty =
-        DependencyProperty.Register(nameof(PlainTextFilePath), typeof(string), typeof(SampleCodePresenter),
-            new PropertyMetadata(default, OnCodePropertyChanged));
-
-    public static readonly DependencyProperty PlainTextHeaderTextProperty =
-        DependencyProperty.Register(nameof(PlainTextHeaderText), typeof(string), typeof(SampleCodePresenter),
             new PropertyMetadata(default));
 
     public static readonly DependencyProperty XamlCodeFilePathProperty =
@@ -73,16 +76,10 @@ public partial class SampleCodePresenter : Control
     private const string CodeSelectorPartName = "CodeSelector";
 
     private const string ContentLoadingProgressBarPartName = "ContentLoadingProgressBar";
-
     private const string DescriptionTextPresenterPartName = "DescriptionTextPresenter";
-
     private const string ExpanderPartName = "Expander";
-
     private const string LoadingBorderPartName = "LoadingBorder";
-
-    private static readonly string CodeFontFamily = "Consolas, Cascadia Code";
-
-    private static readonly string TextFontFamily = "Segoe UI Variable Display, Segoe UI";
+    private const string MdTextBlockPartName = "MdTextBlock";
 
     private readonly Dictionary<string, string> codeSnippets = [];
 
@@ -90,6 +87,7 @@ public partial class SampleCodePresenter : Control
 
     private Expander? _expander;
 
+    private MarkdownTextBlock? _markdownTextBlock;
     private RichTextBlock? _richTextBlock;
 
     public SampleCodePresenter()
@@ -134,6 +132,18 @@ public partial class SampleCodePresenter : Control
         set => SetValue(IsLoadingBarVisibleProperty, value);
     }
 
+    public string MarkdownFilePath
+    {
+        get => (string)GetValue(MarkdownFilePathProperty);
+        set => SetValue(MarkdownFilePathProperty, value);
+    }
+
+    public string MarkdownTabHeader
+    {
+        get => (string)GetValue(MarkdownTabHeaderProperty);
+        set => SetValue(MarkdownTabHeaderProperty, value);
+    }
+
     public double MinOptionsPaneWidth
     {
         get => (double)GetValue(MinOptionsPaneWidthProperty);
@@ -144,18 +154,6 @@ public partial class SampleCodePresenter : Control
     {
         get => (object)GetValue(OptionsPaneContentProperty);
         set => SetValue(OptionsPaneContentProperty, value);
-    }
-
-    public string PlainTextFilePath
-    {
-        get => (string)GetValue(PlainTextFilePathProperty);
-        set => SetValue(PlainTextFilePathProperty, value);
-    }
-
-    public string PlainTextHeaderText
-    {
-        get => (string)GetValue(PlainTextHeaderTextProperty);
-        set => SetValue(PlainTextHeaderTextProperty, value);
     }
 
     public string XamlCodeFilePath
@@ -210,14 +208,14 @@ public partial class SampleCodePresenter : Control
         {
             return;
         }
-        if (_richTextBlock == null)
+        if (_richTextBlock == null || _markdownTextBlock == null)
         {
             return;
         }
         var codeType = (SampleCodeType)selectedItem.Tag;
         var formatter = new RichTextBlockFormatter(ActualTheme);
         string codeSnippet = string.Empty;
-        string fontFamily = TextFontFamily;
+        bool isMarkdown = true;
         ILanguage richLanguage = Languages.Markdown;
 
         switch (codeType)
@@ -225,17 +223,17 @@ public partial class SampleCodePresenter : Control
             case SampleCodeType.Xaml:
                 codeSnippet = codeSnippets.TryGetValue(XamlCodeFilePath, out var xamlCode) ? xamlCode : string.Empty;
                 richLanguage = Languages.Xml;
-                fontFamily = CodeFontFamily;
+                isMarkdown = false;
                 break;
 
             case SampleCodeType.CSharp:
                 codeSnippet = codeSnippets.TryGetValue(CSharpCodeFilePath, out var csCode) ? csCode : string.Empty;
                 richLanguage = Languages.CSharp;
-                fontFamily = CodeFontFamily;
+                isMarkdown = false;
                 break;
 
-            case SampleCodeType.PlainText:
-                codeSnippet = codeSnippets.TryGetValue(PlainTextFilePath, out var plainText) ? plainText : string.Empty;
+            case SampleCodeType.Markdown:
+                codeSnippet = codeSnippets.TryGetValue(MarkdownFilePath, out var plainText) ? plainText : string.Empty;
                 richLanguage = Languages.Markdown;
                 break;
 
@@ -243,13 +241,24 @@ public partial class SampleCodePresenter : Control
                 break;
         }
         _richTextBlock.Blocks.Clear();
-        _richTextBlock.FontFamily = new FontFamily(fontFamily);
-        formatter.FormatRichTextBlock(codeSnippet, richLanguage, _richTextBlock);
+        if (isMarkdown)
+        {
+            _richTextBlock.Visibility = Visibility.Collapsed;
+            _markdownTextBlock.Visibility = Visibility.Visible;
+            _markdownTextBlock.Text = codeSnippet;
+        }
+        else
+        {
+            _markdownTextBlock.Visibility = Visibility.Collapsed;
+            _richTextBlock.Visibility = Visibility.Visible;
+
+            formatter.FormatRichTextBlock(codeSnippet, richLanguage, _richTextBlock);
+        }
     }
 
     private async Task LoadCodeSnippetsAsync()
     {
-        var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, PlainTextFilePath }.Where(v => v != null).ToList();
+        var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, MarkdownFilePath }.Where(v => v != null).ToList();
         var pruneItems = codeSnippets.Keys.Where(k => !pathsToLoad.Contains(k)).ToList();
         foreach (var pruneItem in pruneItems)
         {
@@ -291,10 +300,10 @@ public partial class SampleCodePresenter : Control
         {
             selectorItems.Add(new SelectorBarItem { Text = GetEnumDescription(SampleCodeType.CSharp), Tag = SampleCodeType.CSharp });
         }
-        if (!string.IsNullOrEmpty(PlainTextFilePath))
+        if (!string.IsNullOrEmpty(MarkdownFilePath))
         {
-            var header = string.IsNullOrWhiteSpace(PlainTextHeaderText) ? GetEnumDescription(SampleCodeType.PlainText) : PlainTextHeaderText.Trim();
-            selectorItems.Add(new SelectorBarItem { Text = header, Tag = SampleCodeType.PlainText });
+            var header = string.IsNullOrWhiteSpace(MarkdownTabHeader) ? GetEnumDescription(SampleCodeType.Markdown) : MarkdownTabHeader.Trim();
+            selectorItems.Add(new SelectorBarItem { Text = header, Tag = SampleCodeType.Markdown });
         }
         _codeSelector.Items.Clear();
         bool hasItems = selectorItems.Count > 0;
@@ -316,7 +325,7 @@ public partial class SampleCodePresenter : Control
 
     private void SetExpanderVisibility()
     {
-        var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, PlainTextFilePath }.Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
+        var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, MarkdownFilePath }.Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
         _expander?.Visibility = pathsToLoad.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -334,6 +343,7 @@ public partial class SampleCodePresenter : Control
     {
         _expander = GetTemplateChild(ExpanderPartName) as Expander;
         _richTextBlock = GetTemplateChild(CodeRichTextBlockPartName) as RichTextBlock;
+        _markdownTextBlock = GetTemplateChild(MdTextBlockPartName) as MarkdownTextBlock;
         _expander?.Expanding += Expander_Expanding;
         SetDescriptionVisibility();
         SetExpanderVisibility();

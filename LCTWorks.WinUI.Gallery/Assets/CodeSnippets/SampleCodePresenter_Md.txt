@@ -1,0 +1,101 @@
+﻿# SampleCodePresenter
+
+The **SampleCodePresenter** is a versatile WinUI 3 control designed to display *live UI samples* alongside their corresponding **source code snippets**. It lives in the `LCTWorks.Workshop.Controls` namespace.
+
+---
+
+##Key Features
+
+- 📦 **Content area** — host any UIElement as a live preview
+- 📝 **Code expander** — view XAML, C#, or plain-text snippets in a collapsible section
+- ⚙️ **Options pane** — an optional side panel for interactive configuration
+- 🔄 **Loading indicators** — built-in `ProgressBar` and `ProgressRing` states
+- 🎨 **Syntax highlighting** — powered by [ColorCode](https://github.com/CommunityToolkit/ColorCode) with theme-aware formatting
+
+> **Tip:** The expander loads code snippets *lazily* — only when the user first opens it — keeping initial render times fast.
+
+---
+
+## Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `Header` | `string` | Title displayed above the content area |
+| `Description` | `string` | Descriptive text shown below the header |
+| `Content` | `object` | The live sample UI element |
+| `OptionsPaneContent` | `object` | Content for the side options panel |
+| `MinOptionsPaneWidth` | `double` | Minimum width of the options pane |
+| `XamlCodeFilePath` | `string` | Path to the XAML code snippet file |
+| `CSharpCodeFilePath` | `string` | Path to the C# code snippet file |
+| `PlainTextFilePath` | `string` | Path to a plain-text or markdown file |
+| `PlainTextHeaderText` | `string` | Custom label for the plain-text tab |
+| `ExpanderHeader` | `string` | Header text for the code expander |
+| `IsLoadingBarVisible` | `bool` | Shows or hides the top loading bar |
+
+---
+
+## Getting Started
+
+### 1. Add the namespace
+### 2. Use the control in your page
+### 3. Provide code snippet files
+
+Place your snippet `.txt` files under `Assets/CodeSnippets/` and set their **Build Action** to `Content`.
+
+---
+
+## Control Anatomy
+
+The template is composed of these regions, from top to bottom:
+
+1. **Header** — a `TextBlock` bound to the `Header` property
+2. **Description** — a `TextBlock` (collapsed when empty)
+3. **Content area** — split into two columns:
+   - *Main content* on the left
+   - *Options pane* on the right
+4. **Code expander** — a collapsible `Expander` containing:
+   - A `SelectorBar` for switching between code tabs
+   - A `RichTextBlock` for rendered, syntax-highlighted code
+
+> **Note:** The options pane only appears when `OptionsPaneContent` is set.
+
+---
+
+## Supported Code Types
+
+The `SelectorBar` tabs are populated based on which file-path properties are set:
+
+- [x] **XAML** — set `XamlCodeFilePath`
+- [x] **C#** — set `CSharpCodeFilePath`
+- [x] **Plain Text / Markdown** — set `PlainTextFilePath`
+
+Each tab uses a different `ColorCode` language for highlighting:
+
+| Tab | Language | Font |
+|---|---|---|
+| XAML | `Languages.Xml` | `Consolas, Cascadia Code` |
+| C# | `Languages.CSharp` | `Consolas, Cascadia Code` |
+| Plain Text | `Languages.Markdown` | `Segoe UI Variable Display` |
+
+---
+
+## Styling & Customization
+
+Override these theme resources to adjust appearance:
+
+| Resource Key | Type | Default |
+|---|---|---|
+| `SampleCodePresenterHeaderMargin` | `Thickness` | `8,8,8,4` |
+| `SampleCodePresenterDescriptionMargin` | `Thickness` | `8,0,8,8` |
+| `SampleCodePresenterBorderThickness` | `Thickness` | `1` |
+| `SampleCodePresenterCornerRadius` | `CornerRadius` | `8` |
+| `SampleCodePresenterExpanderCornerRadius` | `CornerRadius` | `0,0,8,8` |
+
+You can also override the text styles:
+
+- `SampleCodePresenterHeaderTextBlockStyle` — based on `SmoothItemTitleTextBlockStyle`
+- `SampleCodePresenterDescriptionTextBlockStyle` — based on `SmoothItemCaptionTextBlockStyle`
+
+---
+
+*Built with ❤️ as part of the LCTWorks Toolkit.*

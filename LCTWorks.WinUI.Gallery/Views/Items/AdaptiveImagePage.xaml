@@ -18,9 +18,9 @@
                                             ExpanderHeader="Code here"
                                             Header="Some header"
                                             IsLoadingBarVisible="True"
+                                            MarkdownFilePath="ms-appx:///Assets/CodeSnippets/Sample1_Plain.txt"
+                                            MarkdownTabHeader="Docs"
                                             MinOptionsPaneWidth="200"
-                                            PlainTextFilePath="ms-appx:///Assets/CodeSnippets/Sample1_Plain.txt"
-                                            PlainTextHeaderText="Docs"
                                             XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/Sample1_Xaml.txt">
                     <clocal:SampleCodePresenter.Content>
                         <c:AdaptiveImage x:Name="img"
