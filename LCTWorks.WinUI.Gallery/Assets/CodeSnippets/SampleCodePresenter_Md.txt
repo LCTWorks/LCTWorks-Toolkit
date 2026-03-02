@@ -27,8 +27,8 @@ The **SampleCodePresenter** is a versatile WinUI 3 control designed to display *
 | `MinOptionsPaneWidth` | `double` | Minimum width of the options pane |
 | `XamlCodeFilePath` | `string` | Path to the XAML code snippet file |
 | `CSharpCodeFilePath` | `string` | Path to the C# code snippet file |
-| `PlainTextFilePath` | `string` | Path to a plain-text or markdown file |
-| `PlainTextHeaderText` | `string` | Custom label for the plain-text tab |
+| `MarkdownFilePath` | `string` | Path to a plain-text or markdown file |
+| `MarkdownHeader` | `string` | Custom label for the plain-text tab |
 | `ExpanderHeader` | `string` | Header text for the code expander |
 | `IsLoadingBarVisible` | `bool` | Shows or hides the top loading bar |
 
@@ -56,6 +56,7 @@ The template is composed of these regions, from top to bottom:
 4. **Code expander** — a collapsible `Expander` containing:
    - A `SelectorBar` for switching between code tabs
    - A `RichTextBlock` for rendered, syntax-highlighted code
+   - A `MarkdownTextBlock` for rendered, formatted markdown text.
 
 > **Note:** The options pane only appears when `OptionsPaneContent` is set.
 

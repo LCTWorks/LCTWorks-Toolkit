@@ -5,7 +5,7 @@
 <clocal:SampleCodePresenter x:Name="Sample"
                             Margin="16"
                             CSharpCodeFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Cs.txt"
-                            Description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pharetra, tellus sit amet congue vulputate, nisi erat iaculis nibh, vitae feugiat sapien ante eget mauris. Aenean sollicitudin imperdiet arcu, v"
+                            Description="Small description of your control/example code."
                             ExpanderHeader="Code here"
                             Header="Some header"
                             MarkdownFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Md.txt"

@@ -1,12 +1,10 @@
 ﻿using ColorCode;
-using CommunityToolkit.Common.Parsers.Markdown;
 using CommunityToolkit.WinUI.UI.Controls;
 using LCTWorks.Core.Extensions;
 using LCTWorks.WinUI.Controls.Internal;
 using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,7 +53,7 @@ public partial class SampleCodePresenter : Control
 
     public static readonly DependencyProperty MarkdownTabHeaderProperty =
         DependencyProperty.Register(nameof(MarkdownTabHeader), typeof(string), typeof(SampleCodePresenter),
-            new PropertyMetadata(default));
+            new PropertyMetadata(default, OnMarkdownHeaderChanged));
 
     public static readonly DependencyProperty MinOptionsPaneWidthProperty =
                 DependencyProperty.Register(nameof(MinOptionsPaneWidth), typeof(double), typeof(SampleCodePresenter),
@@ -201,6 +199,15 @@ public partial class SampleCodePresenter : Control
         }
     }
 
+    private static void OnMarkdownHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SampleCodePresenter control && control._codeSelector != null)
+        {
+            var markdownTab = control._codeSelector.Items.OfType<SelectorBarItem>().FirstOrDefault(i => (SampleCodeType)i.Tag == SampleCodeType.Markdown);
+            markdownTab?.Text = control.GetMarkdownTabHeader();
+        }
+    }
+
     private void CodeSelectorSelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
     {
         var selectedItem = sender.SelectedItem;
@@ -256,6 +263,11 @@ public partial class SampleCodePresenter : Control
         }
     }
 
+    private string GetMarkdownTabHeader()
+        => string.IsNullOrWhiteSpace(MarkdownTabHeader)
+        ? GetEnumDescription(SampleCodeType.Markdown)
+        : MarkdownTabHeader.Trim();
+
     private async Task LoadCodeSnippetsAsync()
     {
         var pathsToLoad = new[] { XamlCodeFilePath, CSharpCodeFilePath, MarkdownFilePath }.Where(v => v != null).ToList();
@@ -302,7 +314,7 @@ public partial class SampleCodePresenter : Control
         }
         if (!string.IsNullOrEmpty(MarkdownFilePath))
         {
-            var header = string.IsNullOrWhiteSpace(MarkdownTabHeader) ? GetEnumDescription(SampleCodeType.Markdown) : MarkdownTabHeader.Trim();
+            var header = GetMarkdownTabHeader();
             selectorItems.Add(new SelectorBarItem { Text = header, Tag = SampleCodeType.Markdown });
         }
         _codeSelector.Items.Clear();
