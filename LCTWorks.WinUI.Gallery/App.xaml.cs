@@ -2,7 +2,6 @@
 using LCTWorks.WinUI.Dialogs;
 using LCTWorks.Workshop.Services;
 using LCTWorks.Workshop.ViewModels;
-using LCTWorks.Workshop.ViewModels.Items;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,9 +35,6 @@ public partial class App : Application, IAppExtended
                //ViewModels:
                .AddSingleton<ShellViewModel>()
                .AddSingleton<SettingsViewModel>()
-               .AddSingleton<HomeViewModel>()
-               .AddSingleton<AdaptiveImageViewModel>()
-               .AddSingleton<SampleCodePresenterViewModel>()
                //Views:
                .AddSingleton<ShellPage>()
                .AddSingleton<SettingsPage>()

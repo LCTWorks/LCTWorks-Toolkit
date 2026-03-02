@@ -1,6 +1,5 @@
 ﻿using LCTWorks.WinUI.Extensions;
 using LCTWorks.Workshop.Models;
-using LCTWorks.Workshop.ViewModels.Items;
 using LCTWorks.Workshop.Items;
 using LCTWorks.WinUI.Navigation;
 using System;
@@ -12,7 +11,7 @@ namespace LCTWorks.Workshop.Services;
 
 public class DocsService
 {
-    private const string IconResKeySuffix = "ViewModel";
+    private const string IconResKeySuffix = "Page";
     private static readonly Dictionary<string, Type> _itemKeyToTypeMap;
     private readonly List<DocItem> _items = [];
 
@@ -20,9 +19,9 @@ public class DocsService
     {
         _itemKeyToTypeMap = new Dictionary<string, Type>
         {
-            { typeof(HomeViewModel).ToString(), typeof(HomePage) },
-            { typeof(AdaptiveImageViewModel).ToString(), typeof(AdaptiveImagePage) },
-            { typeof(SampleCodePresenterViewModel).ToString(), typeof(SampleCodePresenterPage) },
+            { typeof(HomePage).ToString(), typeof(HomePage) },
+            { typeof(AdaptiveImagePage).ToString(), typeof(AdaptiveImagePage) },
+            { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
         };
     }
 

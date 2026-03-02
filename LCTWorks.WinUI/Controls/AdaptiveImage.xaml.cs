@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace LCTWorks.WinUI.Controls;
 
@@ -117,7 +119,7 @@ public partial class AdaptiveImage : Control
     /// </summary>
     public object? Source
     {
-        get => (ImageSource?)GetValue(SourceProperty);
+        get => (object?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
@@ -139,7 +141,11 @@ public partial class AdaptiveImage : Control
         DefaultStyleKey = typeof(AdaptiveImage);
     }
 
+    public event EventHandler? ImageFailed;
+
     public event EventHandler? ImageLoaded;
+
+    public event EventHandler? ImageLoading;
 
     protected override void OnApplyTemplate()
     {
@@ -193,7 +199,19 @@ public partial class AdaptiveImage : Control
     {
         TryRemoveImageHandlers();
         _image?.Source = null;
-        GoToState(UnloadedState);
+        GoToUnloadedState();
+    }
+
+    private void GoToFailedState()
+    {
+        GoToState(FailedState);
+        ImageFailed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void GoToLoadedState()
+    {
+        GoToState(LoadedState);
+        ImageLoaded?.Invoke(this, EventArgs.Empty);
     }
 
     private void GoToState(string stateName)
@@ -204,6 +222,12 @@ public partial class AdaptiveImage : Control
         }
 
         VisualStateManager.GoToState(this, stateName, true);
+    }
+
+    private void GoToUnloadedState()
+    {
+        GoToState(UnloadedState);
+        ImageLoaded?.Invoke(this, EventArgs.Empty);
     }
 
     private async void LoadSourceAsync(object? source)
@@ -219,7 +243,7 @@ public partial class AdaptiveImage : Control
         ClearImageSource();
         if (source is null)
         {
-            GoToState(UnloadedState);
+            GoToUnloadedState();
             return;
         }
 
@@ -237,7 +261,7 @@ public partial class AdaptiveImage : Control
         }
         catch (Exception)
         {
-            VisualStateManager.GoToState(this, FailedState, true);
+            GoToFailedState();
         }
     }
 
@@ -249,7 +273,7 @@ public partial class AdaptiveImage : Control
             var url = source as string ?? source?.ToString();
             if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
             {
-                GoToState(FailedState);
+                GoToFailedState();
                 return;
             }
         }
@@ -261,7 +285,7 @@ public partial class AdaptiveImage : Control
             }
         }
         BitmapImage? bitmapImage = null;
-        if (uri != null)
+        if (uri != null && uri.IsAbsoluteUri)
         {
             if (string.Equals(uri.Scheme, Base64Scheme, StringComparison.OrdinalIgnoreCase))
             {
@@ -270,9 +294,17 @@ public partial class AdaptiveImage : Control
                 var index = src.IndexOf(Base64Prefix);
                 if (index >= 0)
                 {
-                    var bytes = Convert.FromBase64String(src[(index + Base64Prefix.Length)..]);
-                    bitmapImage = new BitmapImage();
-                    await bitmapImage.SetSourceAsync(new MemoryStream(bytes).AsRandomAccessStream());
+                    try
+                    {
+                        var bytes = Convert.FromBase64String(src[(index + Base64Prefix.Length)..]);
+                        bitmapImage = new BitmapImage();
+                        await bitmapImage.SetSourceAsync(new MemoryStream(bytes).AsRandomAccessStream());
+                    }
+                    catch
+                    {
+                        GoToFailedState();
+                        return;
+                    }
                 }
             }
             else
@@ -281,6 +313,31 @@ public partial class AdaptiveImage : Control
                 {
                     CreateOptions = BitmapCreateOptions.IgnoreImageCache
                 };
+            }
+        }
+        if (bitmapImage == null)
+        {
+            IRandomAccessStream? stream = null;
+            if (source is IRandomAccessStream s)
+            {
+                stream = s;
+            }
+            else if (source is StorageFile file)
+            {
+                stream = await file.OpenReadAsync();
+            }
+            if (stream != null)
+            {
+                try
+                {
+                    bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(stream);
+                }
+                catch (Exception)
+                {
+                    GoToFailedState();
+                    return;
+                }
             }
         }
         if (bitmapImage != null && !token.IsCancellationRequested)
@@ -292,17 +349,20 @@ public partial class AdaptiveImage : Control
     private void OnImageFailed(object sender, ExceptionRoutedEventArgs e)
     {
         TryRemoveImageHandlers();
-        GoToState(FailedState);
+        GoToFailedState();
     }
 
     private void OnImageOpened(object sender, RoutedEventArgs e)
     {
         TryRemoveImageHandlers();
-        GoToState(LoadedState);
+        GoToLoadedState();
     }
 
     private void SetImageSource(ImageSource? source)
     {
+        ImageLoading?.Invoke(this, EventArgs.Empty);
+        GoToState(LoadingState);
+
         _image?.Source = source;
         if (source == null)
         {
@@ -312,13 +372,12 @@ public partial class AdaptiveImage : Control
         {
             bitmapImage.ImageOpened += OnImageOpened;
             bitmapImage.ImageFailed += OnImageFailed;
-            //TODO: Loading
         }
         if (source is BitmapSource bitmapSource &&
                  bitmapSource.PixelHeight > 0 &&
                  bitmapSource.PixelWidth > 0)
         {
-            GoToState(LoadedState);
+            GoToLoadedState();
         }
     }
 
@@ -335,7 +394,6 @@ public partial class AdaptiveImage : Control
             return;
         }
 
-        GoToState(LoadingState);
         LoadSourceAsync(newSource);
     }
 
