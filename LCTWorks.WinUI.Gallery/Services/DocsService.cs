@@ -22,6 +22,7 @@ public class DocsService
             { typeof(HomePage).ToString(), typeof(HomePage) },
             { typeof(AdaptiveImagePage).ToString(), typeof(AdaptiveImagePage) },
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
+             { typeof(ItemsViewPage).ToString(), typeof(ItemsViewPage) },
         };
     }
 

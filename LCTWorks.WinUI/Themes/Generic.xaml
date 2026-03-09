@@ -12,6 +12,7 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/NavigationViewItemButton.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveImage.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ItemsView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--  System default overrides  -->

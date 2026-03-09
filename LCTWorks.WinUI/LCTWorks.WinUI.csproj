@@ -53,6 +53,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Page Update="Controls\ItemsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Page Update="Controls\AdaptiveImage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>

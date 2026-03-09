@@ -1,1 +1,10 @@
-﻿
+﻿<c:AdaptiveImage x:Name="S1Img"
+                 Width="640"
+                 Height="480"
+                 Margin="16"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"
+                 ImageFailed="S1ImgImageFailed"
+                 ImageLoaded="S1ImgImageLoaded"
+                 ImageLoading="S1ImgImageLoading"
+                 Source="{x:Bind S1ImageSource, Mode=OneWay}" />

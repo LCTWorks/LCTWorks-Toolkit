@@ -1,0 +1,98 @@
+<c:ObservablePage x:Class="LCTWorks.Workshop.Views.Items.ItemsViewPage"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:c="using:LCTWorks.WinUI.Controls"
+                  xmlns:clocal="using:LCTWorks.Workshop.Controls"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:local="using:LCTWorks.Workshop.Views.Items"
+                  xmlns:m="using:LCTWorks.Workshop.Models"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  mc:Ignorable="d">
+    <c:ObservablePage.Resources>
+        <DataTemplate x:Key="ColorItemTemplate"
+                      x:DataType="m:ColorItem">
+            <Grid MinHeight="64">
+                <Grid.Background>
+                    <SolidColorBrush Color="{x:Bind Color}" />
+                </Grid.Background>
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="Black"
+                           Text="{x:Bind Name}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="RoundedColorItemTemplate"
+                      x:DataType="m:ColorItem">
+            <Grid MinHeight="64"
+                  Margin="2"
+                  CornerRadius="4">
+                <Grid.Background>
+                    <SolidColorBrush Color="{x:Bind Color}" />
+                </Grid.Background>
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="Black"
+                           Text="{x:Bind Name}" />
+            </Grid>
+        </DataTemplate>
+    </c:ObservablePage.Resources>
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
+                <clocal:SampleCodePresenter x:Name="Sample1Control"
+                                            MaxHeight="480"
+                                            Margin="16"
+                                            HorizontalContentAlignment="Stretch"
+                                            Description="Basic items view"
+                                            ExpanderHeader="Code here"
+                                            Header="ItemsView"
+                                            MinOptionsPaneWidth="200">
+                    <clocal:SampleCodePresenter.Content>
+                        <Grid>
+                            <c:ItemsView x:Name="ItemsView"
+                                         HorizontalContentAlignment="Stretch"
+                                         ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
+                                         ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                                         Layout="{x:Bind Layout, Mode=OneWay}" />
+                        </Grid>
+                    </clocal:SampleCodePresenter.Content>
+                    <clocal:SampleCodePresenter.OptionsPaneContent>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <StackPanel Width="320"
+                                        Orientation="Vertical"
+                                        Spacing="8">
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Load colors source"
+                                        Tapped="LoadItemsSourceTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Add colors to source"
+                                        Tapped="AddItemsToSourceTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Change template"
+                                        Tapped="ChangeTemplateTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Change Layout"
+                                        Tapped="ChangeLayoutTapped" />
+                                <MenuFlyoutSeparator />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Bring last item into view"
+                                        Tapped="BringLastItemTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Bring last index into view"
+                                        Tapped="BringLastIndexTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Bring first into view"
+                                        Tapped="BringFirstIndexTapped" />
+                            </StackPanel>
+                        </Grid>
+                    </clocal:SampleCodePresenter.OptionsPaneContent>
+                </clocal:SampleCodePresenter>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</c:ObservablePage>
