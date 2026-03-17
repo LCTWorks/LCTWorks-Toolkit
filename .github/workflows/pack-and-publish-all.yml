@@ -1,0 +1,117 @@
+name: Pack & Publish
+
+on:
+  workflow_call:
+    inputs:
+      TriggerBranch:
+        description: 'Branch prefix that triggered the build (e.g. release/)'
+        required: true
+        type: string
+      ProjectName:
+        description: 'Path to the .csproj file (e.g. LCTWorks.Core/LCTWorks.Core.csproj)'
+        required: true
+        type: string
+      UpdatePackages:
+        description: 'Comma-separated internal package names to update to the extracted version'
+        required: false
+        type: string
+        default: ''
+      Runner:
+        description: 'GitHub-hosted runner label'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
+      UseMSBuild:
+        description: 'Use MSBuild instead of dotnet CLI for build and pack'
+        required: false
+        type: boolean
+        default: false
+      Environment:
+        description: 'GitHub environment for deployment protection rules (empty = no approval)'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      version:
+        description: 'Extracted package version'
+        value: ${{ jobs.build-publish.outputs.version }}
+    secrets:
+      NUGET_API_KEY:
+        required: true
+
+env:
+  DOTNET_VERSION: "9.0.x"
+
+jobs:
+  build-publish:
+    runs-on: ${{ inputs.Runner }}
+    environment: ${{ inputs.Environment || null }}
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup MSBuild
+        if: ${{ inputs.UseMSBuild }}
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Extract version from branch name
+        id: version
+        shell: bash
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          VERSION="${BRANCH#${{ inputs.TriggerBranch }}}"
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update internal package references
+        if: ${{ inputs.UpdatePackages != '' }}
+        shell: pwsh
+        run: |
+          $packages = "${{ inputs.UpdatePackages }}".Split(',', [System.StringSplitOptions]::RemoveEmptyEntries)
+          $version = "${{ steps.version.outputs.value }}"
+          $csproj = "${{ inputs.ProjectName }}"
+          $content = Get-Content $csproj -Raw
+          foreach ($pkg in $packages) {
+            $pkg = $pkg.Trim()
+            $pattern = '(<PackageReference\s+Include="' + [regex]::Escape($pkg) + '"\s+Version=")[^"]*"'
+            $replacement = '${1}' + $version + '"'
+            $content = [regex]::Replace($content, $pattern, $replacement)
+          }
+          Set-Content $csproj $content -NoNewline
+          Write-Host "Updated package references in ${csproj}:"
+          Get-Content $csproj
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.ProjectName }}
+
+      - name: Build
+        if: ${{ !inputs.UseMSBuild }}
+        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore
+
+      - name: Build (MSBuild)
+        if: ${{ inputs.UseMSBuild }}
+        run: msbuild ${{ inputs.ProjectName }} -p:Configuration=Release -p:Platform=AnyCPU -restore:false
+
+      - name: Pack NuGet package
+        if: ${{ !inputs.UseMSBuild }}
+        run: dotnet pack ${{ inputs.ProjectName }} -c Release -p:Version=${{ steps.version.outputs.value }} --no-build --output ./nupkg
+
+      - name: Pack NuGet package (MSBuild)
+        if: ${{ inputs.UseMSBuild }}
+        shell: pwsh
+        run: |
+          $nupkgDir = Join-Path $env:GITHUB_WORKSPACE "nupkg"
+          msbuild ${{ inputs.ProjectName }} -t:Pack -p:Configuration=Release -p:Platform=AnyCPU -p:Version=${{ steps.version.outputs.value }} "-p:PackageOutputPath=$nupkgDir" -restore:false
+
+      - name: Push to NuGet
+        shell: bash
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+ 

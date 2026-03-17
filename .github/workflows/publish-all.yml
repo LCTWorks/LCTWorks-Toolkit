@@ -1,0 +1,81 @@
+name: Publish All NuGet Packages
+
+on:
+  push:
+    branches:
+      - 'release/all/*'
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Tier 0 — LCTWorks.Core (no internal deps)
+  # ──────────────────────────────────────────────
+  publish-core:
+    uses: ./.github/workflows/pack-and-publish-all.yml
+    with:
+      TriggerBranch: "release/"
+      ProjectName: "LCTWorks.Core/LCTWorks.Core.csproj"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ──────────────────────────────────────────────
+  # Tier 2a — LCTWorks.Telemetry (depends on Core)
+  # Pauses for approval via the release-telemetry environment
+  # ──────────────────────────────────────────────
+  publish-telemetry:
+    needs: publish-core
+    uses: ./.github/workflows/pack-and-publish-all.yml
+    with:
+      TriggerBranch: "release/all/"
+      ProjectName: "LCTWorks.Telemetry/LCTWorks.Telemetry.csproj"
+      UpdatePackages: "LCTWorks.Core"
+      Environment: "release-telemetry"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ──────────────────────────────────────────────
+  # Tier 2b — LCTWorks.Web (depends on Core)
+  # Pauses for approval via the release-web environment
+  # ──────────────────────────────────────────────
+  publish-web:
+    needs: publish-core
+    uses: ./.github/workflows/pack-and-publish-all.yml
+    with:
+      TriggerBranch: "release/all/"
+      ProjectName: "LCTWorks.Web/LCTWorks.Web.csproj"
+      UpdatePackages: "LCTWorks.Core"
+      Environment: "release-web"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  # ──────────────────────────────────────────────
+  # Tier 3 — LCTWorks.WinUI (depends on Core + Telemetry)
+  # Pauses for approval via the release-winui environment
+  # ──────────────────────────────────────────────
+  publish-winui:
+    needs: [publish-telemetry, publish-web]
+    uses: ./.github/workflows/pack-and-publish-all.yml
+    with:
+      TriggerBranch: "release/all/"
+      ProjectName: "LCTWorks.WinUI/LCTWorks.WinUI.csproj"
+      UpdatePackages: "LCTWorks.Core,LCTWorks.Telemetry"
+      Runner: "windows-latest"
+      UseMSBuild: true
+      Environment: "release-winui"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+  tag:
+    needs: publish-winui
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v4
+
+     - name: Create and push tag
+       run: |
+         TAG="${{ needs.publish-winui.outputs.version }}"
+         git tag "$TAG"
+         git push origin "$TAG"
