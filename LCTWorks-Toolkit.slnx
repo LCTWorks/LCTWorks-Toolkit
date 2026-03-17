@@ -4,7 +4,9 @@
     <File Path=".github/workflows/build-Telemetry.yml" />
     <File Path=".github/workflows/build-web.yml" />
     <File Path=".github/workflows/build-winui.yml" />
+    <File Path=".github/workflows/pack-and-publish-all.yml" />
     <File Path=".github/workflows/package-publish.yml" />
+    <File Path=".github/workflows/publish-all.yml" />
   </Folder>
   <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
   <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
