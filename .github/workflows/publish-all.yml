@@ -12,7 +12,7 @@ jobs:
   publish-core:
     uses: ./.github/workflows/pack-and-publish-all.yml
     with:
-      TriggerBranch: "release/"
+      TriggerBranch: "release/all/"
       ProjectName: "LCTWorks.Core/LCTWorks.Core.csproj"
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
