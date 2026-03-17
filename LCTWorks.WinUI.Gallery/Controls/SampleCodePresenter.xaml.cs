@@ -1,10 +1,12 @@
 ﻿using ColorCode;
 using CommunityToolkit.WinUI.UI.Controls;
 using LCTWorks.Core.Extensions;
+using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Controls.Internal;
 using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +23,7 @@ namespace LCTWorks.Workshop.Controls;
 [TemplatePart(Name = CodeRichTextBlockPartName, Type = typeof(RichTextBlock))]
 [TemplatePart(Name = ContentLoadingProgressBarPartName, Type = typeof(ProgressBar))]
 [TemplatePart(Name = MdTextBlockPartName, Type = typeof(MarkdownTextBlock))]
+[TemplatePart(Name = ThemeButtonPartName, Type = typeof(ThemedButton))]
 public partial class SampleCodePresenter : Control
 {
     public static readonly DependencyProperty ContentProperty =
@@ -63,8 +66,12 @@ public partial class SampleCodePresenter : Control
             DependencyProperty.Register(nameof(OptionsPaneContent), typeof(object), typeof(SampleCodePresenter),
             new PropertyMetadata(default));
 
+    public static readonly DependencyProperty ShowThemeSwitchProperty =
+        DependencyProperty.Register(nameof(ShowThemeSwitch), typeof(bool), typeof(SampleCodePresenter),
+            new PropertyMetadata(true, OnShowThemeSwitchChanged));
+
     public static readonly DependencyProperty XamlCodeFilePathProperty =
-                DependencyProperty.Register(nameof(XamlCodeFilePath), typeof(string), typeof(SampleCodePresenter),
+                    DependencyProperty.Register(nameof(XamlCodeFilePath), typeof(string), typeof(SampleCodePresenter),
             new PropertyMetadata(default, OnCodePropertyChanged));
 
     private const string CodeContainerPartName = "CodeContainer";
@@ -74,19 +81,25 @@ public partial class SampleCodePresenter : Control
     private const string CodeSelectorPartName = "CodeSelector";
 
     private const string ContentLoadingProgressBarPartName = "ContentLoadingProgressBar";
+
     private const string DescriptionTextPresenterPartName = "DescriptionTextPresenter";
+
     private const string ExpanderPartName = "Expander";
+
     private const string LoadingBorderPartName = "LoadingBorder";
+
     private const string MdTextBlockPartName = "MdTextBlock";
+
+    private const string ThemeButtonPartName = "ThemeButton";
 
     private readonly Dictionary<string, string> codeSnippets = [];
 
     private SelectorBar? _codeSelector;
 
     private Expander? _expander;
-
     private MarkdownTextBlock? _markdownTextBlock;
     private RichTextBlock? _richTextBlock;
+    private ThemedButton? _themeButton;
 
     public SampleCodePresenter()
     {
@@ -154,6 +167,12 @@ public partial class SampleCodePresenter : Control
         set => SetValue(OptionsPaneContentProperty, value);
     }
 
+    public bool ShowThemeSwitch
+    {
+        get => (bool)GetValue(ShowThemeSwitchProperty);
+        set => SetValue(ShowThemeSwitchProperty, value);
+    }
+
     public string XamlCodeFilePath
     {
         get => (string)GetValue(XamlCodeFilePathProperty);
@@ -205,6 +224,14 @@ public partial class SampleCodePresenter : Control
         {
             var markdownTab = control._codeSelector.Items.OfType<SelectorBarItem>().FirstOrDefault(i => (SampleCodeType)i.Tag == SampleCodeType.Markdown);
             markdownTab?.Text = control.GetMarkdownTabHeader();
+        }
+    }
+
+    private static void OnShowThemeSwitchChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SampleCodePresenter control)
+        {
+            control._themeButton?.Visibility = control.ShowThemeSwitch ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
@@ -353,10 +380,14 @@ public partial class SampleCodePresenter : Control
 
     private void ControlLoaded(object sender, RoutedEventArgs e)
     {
-        _expander = GetTemplateChild(ExpanderPartName) as Expander;
         _richTextBlock = GetTemplateChild(CodeRichTextBlockPartName) as RichTextBlock;
         _markdownTextBlock = GetTemplateChild(MdTextBlockPartName) as MarkdownTextBlock;
+        _themeButton = GetTemplateChild(ThemeButtonPartName) as ThemedButton;
+        _themeButton?.Tapped += ThemeButtonTapped;
+        _expander = GetTemplateChild(ExpanderPartName) as Expander;
         _expander?.Expanding += Expander_Expanding;
+
+        SetThemeButtonGlyph();
         SetDescriptionVisibility();
         SetExpanderVisibility();
         SetLoadingBarVisibility();
@@ -374,6 +405,27 @@ public partial class SampleCodePresenter : Control
             _expander?.Expanding -= Expander_Expanding;
             ReloadCodeSnippetsVisualsAsync();
         }
+    }
+
+    private void SetThemeButtonGlyph()
+    {
+        if (_themeButton != null)
+        {
+            var glyph = ActualTheme is ElementTheme.Dark ? "\uE706" : "\uE708";
+            _themeButton.Glyph = glyph;
+        }
+    }
+
+    private void ThemeButtonTapped(object sender, TappedRoutedEventArgs e)
+    {
+        RequestedTheme = ActualTheme switch
+        {
+            ElementTheme.Default => Application.Current.RequestedTheme == ApplicationTheme.Dark ? ElementTheme.Light : ElementTheme.Dark,
+            ElementTheme.Light => ElementTheme.Dark,
+            ElementTheme.Dark => ElementTheme.Light,
+            _ => RequestedTheme
+        };
+        SetThemeButtonGlyph();
     }
 
     #endregion Initial events

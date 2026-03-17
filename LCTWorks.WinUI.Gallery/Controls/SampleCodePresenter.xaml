@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ccui="using:CommunityToolkit.WinUI.UI.Controls"
+                    xmlns:lctwc="using:LCTWorks.WinUI.Controls"
                     xmlns:local="using:LCTWorks.Workshop.Controls">
     <Thickness x:Key="SampleCodePresenterHeaderMargin">8,8,8,4</Thickness>
     <Thickness x:Key="SampleCodePresenterDescriptionMargin">8,0,8,8</Thickness>
@@ -42,6 +43,9 @@
                                    TextAlignment="Justify"
                                    TextWrapping="WrapWholeWords"
                                    Visibility="Collapsed" />
+                        <lctwc:ThemedButton x:Name="ThemeButton"
+                                            Grid.RowSpan="2"
+                                            HorizontalAlignment="Right" />
                         <Grid Grid.Row="2"
                               Background="{ThemeResource LayerFillColorDefaultBrush}"
                               BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"

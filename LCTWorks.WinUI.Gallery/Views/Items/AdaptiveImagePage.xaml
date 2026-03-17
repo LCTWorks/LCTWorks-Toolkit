@@ -69,6 +69,18 @@
                                 <Button HorizontalAlignment="Stretch"
                                         Content="Load image from app resources"
                                         Tapped="S1LoadAppButtonTapped" />
+                                <Rectangle Style="{StaticResource SmoothHorizontalSeparatorRectangleStyle}" />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button HorizontalAlignment="Stretch"
+                                            Content="Load from SVG source" />
+                                    <CheckBox Grid.Column="1"
+                                              Content="Theme aware" />
+                                </Grid>
+
                             </StackPanel>
                             <TextBlock Grid.Row="1"
                                        Margin="16"
