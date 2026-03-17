@@ -52,7 +52,7 @@ jobs:
   # Pauses for approval via the release-winui environment
   # ──────────────────────────────────────────────
   publish-winui:
-    needs: [publish-telemetry, publish-web]
+    needs: publish-telemetry
     uses: ./.github/workflows/pack-and-publish-all.yml
     with:
       TriggerBranch: "release/all/"
