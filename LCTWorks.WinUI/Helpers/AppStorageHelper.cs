@@ -1,6 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using LCTWorks.Core.Helpers;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
@@ -83,6 +84,29 @@ public static class AppStorageHelper
         catch (Exception)
         {
             return string.Empty;
+        }
+    }
+
+    public static async Task<string?> ReadTextOnStorageFileAsync(string? uri)
+    {
+        if (uri == null)
+        {
+            return default;
+        }
+        try
+        {
+            if (uri.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase)
+                || uri.StartsWith("ms-appdata", StringComparison.OrdinalIgnoreCase))
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
+                return await FileIO.ReadTextAsync(file);
+            }
+
+            return await FileHelper.TryReadTextFileAsync(uri);
+        }
+        catch
+        {
+            return default;
         }
     }
 

@@ -1,0 +1,33 @@
+﻿ <!--Sample Xaml Code. This is how a XAML code snippet will render-->
+
+<... xmlns:clocal="using:LCTWorks.Workshop.Controls">
+
+<clocal:SampleCodePresenter x:Name="Sample"
+                            Margin="16"
+                            CSharpCodeFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Cs.txt"
+                            Description="Small description of your control/example code."
+                            ExpanderHeader="Code here"
+                            Header="Some header"
+                            MarkdownFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Md.txt"
+                            MarkdownTabHeader="Documentation"
+                            MinOptionsPaneWidth="240"
+                            XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Xaml.txt">
+    <clocal:SampleCodePresenter.Content>
+        <Border MinWidth="420"
+                MinHeight="240"
+                Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                CornerRadius="16">
+            <TextBlock HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="Sample control goes here" />
+        </Border>
+    </clocal:SampleCodePresenter.Content>
+    <clocal:SampleCodePresenter.OptionsPaneContent>
+        <Border Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                CornerRadius="16">
+            <TextBlock HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="Control options go here" />
+        </Border>
+    </clocal:SampleCodePresenter.OptionsPaneContent>
+</clocal:SampleCodePresenter>

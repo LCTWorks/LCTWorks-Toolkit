@@ -1,25 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.WinUI.Collections;
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
+using LCTWorks.Workshop.Models;
+using LCTWorks.Workshop.Services;
+using System.Collections.ObjectModel;
 
-namespace LCTWorks.WinUI.Gallery.ViewModels;
+namespace LCTWorks.Workshop.ViewModels;
 
 public partial class ShellViewModel : ObservableObject
 {
-    public ShellViewModel()
+    private readonly DocsService _docsService;
+
+    public ShellViewModel(DocsService service)
     {
-        ItemsSource = new AdvancedCollectionView();
-        ItemsSource.Add(typeof(SoftImageViewModel).Name!);
+        _docsService = service;
+        ItemsSource = new ObservableCollection<DocItem>(_docsService.Items);
     }
 
     [ObservableProperty]
     public partial bool IsBackEnabled { get; set; }
 
     [ObservableProperty]
-    public partial AdvancedCollectionView? ItemsSource
+    public partial ObservableCollection<DocItem> ItemsSource
     {
         get; set;
-    }
+    } = new ObservableCollection<DocItem>();
 
     [ObservableProperty]
     public partial object? Selected

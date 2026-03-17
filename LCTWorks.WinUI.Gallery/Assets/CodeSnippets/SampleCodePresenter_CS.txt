@@ -1,0 +1,18 @@
+﻿//Sample CS Code.
+//This is how a CS code snippet will render.
+
+using System;
+
+namespace LCTWorks.Workshop.Controls;
+
+[TemplatePart(Name = CodeContainerPartName, Type = typeof(Grid))]
+public partial class SampleCodePresenter : Control
+{
+	private const string CodeContainerPartName = "CodeContainer";
+
+	public SampleCodePresenter()
+    {
+        DefaultStyleKey = typeof(SampleCodePresenter);
+        Loaded += ControlLoaded;
+    }
+}

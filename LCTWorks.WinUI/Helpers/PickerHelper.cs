@@ -17,6 +17,26 @@ namespace LCTWorks.WinUI.Helpers
             PickerViewMode? viewMode = null,
             object? targetWindowHandler = null)
         {
+            var picker = await BuildPickerAsync(fileTypeFilter, commitButtonText, viewMode, targetWindowHandler);
+            return await picker.PickMultipleFilesAsync();
+        }
+
+        public static async Task<StorageFile> OpenSingleFileAsync(
+            IEnumerable<string> fileTypeFilter,
+            string? commitButtonText = null,
+            PickerViewMode? viewMode = null,
+            object? targetWindowHandler = null)
+        {
+            var picker = await BuildPickerAsync(fileTypeFilter, commitButtonText, viewMode, targetWindowHandler);
+            return await picker.PickSingleFileAsync();
+        }
+
+        private static async Task<FileOpenPicker> BuildPickerAsync(
+            IEnumerable<string> fileTypeFilter,
+            string? commitButtonText = null,
+            PickerViewMode? viewMode = null,
+            object? targetWindowHandler = null)
+        {
             var picker = new FileOpenPicker();
 
             picker.FileTypeFilter.AddRange(fileTypeFilter);
@@ -41,7 +61,7 @@ namespace LCTWorks.WinUI.Helpers
                 }
             }
             SetInteropParameters(targetWindowHandler, picker);
-            return await picker.PickMultipleFilesAsync();
+            return picker;
         }
 
         private static void SetInteropParameters(object? targetWindowHandler, object picker)

@@ -17,18 +17,26 @@ namespace LCTWorks.WinUI.Navigation
             lock (_pages)
             {
                 var key = typeof(VM).FullName!;
+                var type = typeof(V);
+                Configure(key, type);
+            }
+        }
+
+        public static void Configure(string key, Type target)
+        {
+            lock (_pages)
+            {
                 if (_pages.ContainsKey(key))
                 {
                     throw new ArgumentException($"The key {key} is already configured in PageService");
                 }
 
-                var type = typeof(V);
-                if (_pages.ContainsValue(type))
+                if (_pages.ContainsValue(target))
                 {
-                    throw new ArgumentException($"This type is already configured with key {_pages.First(p => p.Value == type).Key}");
+                    throw new ArgumentException($"This type is already configured with key {_pages.First(p => p.Value == target).Key}");
                 }
 
-                _pages.Add(key, type);
+                _pages.Add(key, target);
             }
         }
 

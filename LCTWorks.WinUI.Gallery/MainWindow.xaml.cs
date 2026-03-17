@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using Windows.UI.ViewManagement;
 
-namespace LCTWorks.WinUI.Gallery;
+namespace LCTWorks.Workshop;
 
 public sealed partial class MainWindow : Window
 {

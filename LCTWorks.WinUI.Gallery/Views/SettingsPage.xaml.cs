@@ -1,7 +1,7 @@
-using LCTWorks.WinUI.Gallery.ViewModels;
+using LCTWorks.Workshop.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 
-namespace LCTWorks.WinUI.Gallery.Views;
+namespace LCTWorks.Workshop.Views;
 
 public sealed partial class SettingsPage : Page
 {

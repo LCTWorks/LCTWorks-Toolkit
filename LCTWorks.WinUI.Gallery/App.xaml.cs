@@ -1,18 +1,17 @@
 ﻿using LCTWorks.WinUI.Activation;
 using LCTWorks.WinUI.Dialogs;
-using LCTWorks.WinUI.Gallery.ViewModels;
-using LCTWorks.WinUI.Gallery.ViewModels.Controls;
-using LCTWorks.WinUI.Gallery.Views;
-using LCTWorks.WinUI.Gallery.Views.Controls;
+using LCTWorks.Workshop.Services;
+using LCTWorks.Workshop.ViewModels;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
-using Windows.UI.ApplicationSettings;
+using LCTWorks.WinUI;
+using LCTWorks.Workshop.Views;
 
-namespace LCTWorks.WinUI.Gallery;
+namespace LCTWorks.Workshop;
 
 public partial class App : Application, IAppExtended
 {
@@ -32,10 +31,10 @@ public partial class App : Application, IAppExtended
                .AddSingleton<ActivationService>()
                .AddSingleton<DialogService>()
                .AddSingleton<FrameNavigationService>()
+               .AddSingleton<DocsService>()
                //ViewModels:
                .AddSingleton<ShellViewModel>()
                .AddSingleton<SettingsViewModel>()
-               .AddSingleton<SoftImageViewModel>()
                //Views:
                .AddSingleton<ShellPage>()
                .AddSingleton<SettingsPage>()
@@ -98,8 +97,6 @@ public partial class App : Application, IAppExtended
     private static void InitializePageHelper()
     {
         NavigationPageMap.Configure<SettingsViewModel, SettingsPage>();
-        //Controls:
-        NavigationPageMap.Configure<SoftImageViewModel, SoftImagePage>();
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -114,7 +111,7 @@ public partial class App : Application, IAppExtended
             return;
         }
         var flattenedExceptions = e.Exception.Flatten().InnerExceptions;
-        foreach (var exception in flattenedExceptions)
+        foreach (var _ in flattenedExceptions)
         {
             //Send reports here.
         }
