@@ -26,9 +26,12 @@
                                          Margin="16"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"
+                                         DarkThemeFillColor="#E0E0E0"
+                                         EnableSvgColorOverride="True"
                                          ImageFailed="S1ImgImageFailed"
                                          ImageLoaded="S1ImgImageLoaded"
                                          ImageLoading="S1ImgImageLoading"
+                                         LightThemeFillColor="#1A1A2E"
                                          Source="{x:Bind S1ImageSource, Mode=OneWay}" />
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
@@ -76,11 +79,12 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <Button HorizontalAlignment="Stretch"
-                                            Content="Load from SVG source" />
+                                            Content="Load from SVG source"
+                                            Tapped="S1LoadSvgButtonTapped" />
                                     <CheckBox Grid.Column="1"
-                                              Content="Theme aware" />
+                                              Content="Theme aware"
+                                              IsChecked="{x:Bind SVGThemeAware, Mode=TwoWay}" />
                                 </Grid>
-
                             </StackPanel>
                             <TextBlock Grid.Row="1"
                                        Margin="16"

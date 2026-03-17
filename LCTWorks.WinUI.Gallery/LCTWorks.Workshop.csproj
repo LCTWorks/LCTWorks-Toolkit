@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Remove="Assets\CodeSnippets\AdaptiveImage_1_Xaml.txt" />
     <None Remove="Assets\Icons\SampleCodePresenter.svg" />
+    <None Remove="Assets\Icons\SampleSvg.svg" />
     <None Remove="Assets\Images\Sample800-1.jpg" />
     <None Remove="Styles\Generic.xaml" />
     <None Remove="Views\Items\Homepage.xaml" />

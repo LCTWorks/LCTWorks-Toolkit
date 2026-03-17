@@ -4,8 +4,11 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
@@ -32,8 +35,11 @@ public partial class AdaptiveImage : Control
     private const string RootGridPartName = "RootGrid";
     private const string UnloadedState = "Unloaded";
     private static readonly Duration DefaultAnimationDuration = new(TimeSpan.FromMilliseconds(300));
+    private static readonly Color DefaultDarkFillColor = Color.FromArgb(255, 255, 255, 255);
+    private static readonly Color DefaultLightFillColor = Color.FromArgb(255, 0, 0, 0);
     private Image? _image;
     private bool _isInVisualTree;
+    private string? _svgContent;
 
     #region Dependency Properties
 
@@ -43,6 +49,27 @@ public partial class AdaptiveImage : Control
             typeof(Duration),
             typeof(AdaptiveImage),
             new PropertyMetadata(DefaultAnimationDuration));
+
+    public static readonly DependencyProperty DarkThemeFillColorProperty =
+        DependencyProperty.Register(
+            nameof(DarkThemeFillColor),
+            typeof(Color),
+            typeof(AdaptiveImage),
+            new PropertyMetadata(DefaultDarkFillColor, OnSvgFillColorChanged));
+
+    public static readonly DependencyProperty EnableSvgColorOverrideProperty =
+        DependencyProperty.Register(
+            nameof(EnableSvgColorOverride),
+            typeof(bool),
+            typeof(AdaptiveImage),
+            new PropertyMetadata(true, OnSvgColorOverrideChanged));
+
+    public static readonly DependencyProperty LightThemeFillColorProperty =
+        DependencyProperty.Register(
+            nameof(LightThemeFillColor),
+            typeof(Color),
+            typeof(AdaptiveImage),
+            new PropertyMetadata(DefaultLightFillColor, OnSvgFillColorChanged));
 
     public static readonly DependencyProperty NineGridProperty =
         DependencyProperty.Register(
@@ -88,45 +115,48 @@ public partial class AdaptiveImage : Control
         set => SetValue(AnimationDurationProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the nine-grid region for the main image.
-    /// </summary>
+    public Color DarkThemeFillColor
+    {
+        get => (Color)GetValue(DarkThemeFillColorProperty);
+        set => SetValue(DarkThemeFillColorProperty, value);
+    }
+
+    public bool EnableSvgColorOverride
+    {
+        get => (bool)GetValue(EnableSvgColorOverrideProperty);
+        set => SetValue(EnableSvgColorOverrideProperty, value);
+    }
+
+    public Color LightThemeFillColor
+    {
+        get => (Color)GetValue(LightThemeFillColorProperty);
+        set => SetValue(LightThemeFillColorProperty, value);
+    }
+
     public Thickness NineGrid
     {
         get => (Thickness)GetValue(NineGridProperty);
         set => SetValue(NineGridProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the placeholder image shown while loading or on failure.
-    /// </summary>
     public ImageSource? PlaceholderSource
     {
         get => (ImageSource?)GetValue(PlaceholderSourceProperty);
         set => SetValue(PlaceholderSourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the stretch mode for the placeholder image.
-    /// </summary>
     public Stretch PlaceholderStretch
     {
         get => (Stretch)GetValue(PlaceholderStretchProperty);
         set => SetValue(PlaceholderStretchProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the image source to display.
-    /// </summary>
     public object? Source
     {
         get => (object?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the stretch mode for the main image.
-    /// </summary>
     public Stretch Stretch
     {
         get => (Stretch)GetValue(StretchProperty);
@@ -152,10 +182,25 @@ public partial class AdaptiveImage : Control
     {
         base.OnApplyTemplate();
 
+        ActualThemeChanged -= OnActualThemeChanged;
         _image = GetTemplateChild(ImagePartName) as Image;
         _isInVisualTree = true;
+        ActualThemeChanged += OnActualThemeChanged;
 
         LoadSourceAsync(Source);
+    }
+
+    private static bool IsSvgContent(string content)
+    {
+        var trimmed = content.TrimStart();
+        return trimmed.StartsWith("<svg", StringComparison.OrdinalIgnoreCase) ||
+               (trimmed.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase) &&
+                trimmed.Contains("<svg", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsSvgUri(Uri uri)
+    {
+        return uri.LocalPath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -164,6 +209,48 @@ public partial class AdaptiveImage : Control
         {
             control.SourceChanged(e.NewValue);
         }
+    }
+
+    private static void OnSvgColorOverrideChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AdaptiveImage control && control._svgContent != null)
+        {
+            control.ReapplySvgSource();
+        }
+    }
+
+    private static void OnSvgFillColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AdaptiveImage control && control._svgContent != null && control.EnableSvgColorOverride)
+        {
+            control.ReapplySvgSource();
+        }
+    }
+
+    private static string ReplaceSvgPathFills(string svgContent, Color color)
+    {
+        var colorHex = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        var doc = XDocument.Parse(svgContent);
+
+        foreach (var element in doc.Descendants())
+        {
+            if (string.Equals(element.Name.LocalName, "path", StringComparison.OrdinalIgnoreCase))
+            {
+                var fillAttr = element.Attributes()
+                    .FirstOrDefault(a => string.Equals(a.Name.LocalName, "fill", StringComparison.OrdinalIgnoreCase));
+
+                if (fillAttr != null)
+                {
+                    fillAttr.Value = colorHex;
+                }
+                else
+                {
+                    element.SetAttributeValue("fill", colorHex);
+                }
+            }
+        }
+
+        return doc.ToString(SaveOptions.DisableFormatting);
     }
 
     private void ApplyAnimationDuration()
@@ -196,11 +283,61 @@ public partial class AdaptiveImage : Control
         }
     }
 
+    private async Task ApplySvgSourceAsync(string svgContent, CancellationToken token)
+    {
+        if (_image is null)
+        {
+            return;
+        }
+
+        ImageLoading?.Invoke(this, EventArgs.Empty);
+        GoToState(LoadingState);
+
+        var processedSvg = EnableSvgColorOverride
+            ? ReplaceSvgPathFills(svgContent, GetCurrentThemeFillColor())
+            : svgContent;
+
+        try
+        {
+            var svgSource = new SvgImageSource();
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(processedSvg));
+            var result = await svgSource.SetSourceAsync(stream.AsRandomAccessStream());
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (result == SvgImageSourceLoadStatus.Success)
+            {
+                _image.Source = svgSource;
+                GoToLoadedState();
+            }
+            else
+            {
+                GoToFailedState();
+            }
+        }
+        catch
+        {
+            if (!token.IsCancellationRequested)
+            {
+                GoToFailedState();
+            }
+        }
+    }
+
     private void ClearImageSource()
     {
         TryRemoveImageHandlers();
         _image?.Source = null;
+        _svgContent = null;
         GoToUnloadedState();
+    }
+
+    private Color GetCurrentThemeFillColor()
+    {
+        return ActualTheme == ElementTheme.Dark ? DarkThemeFillColor : LightThemeFillColor;
     }
 
     private void GoToFailedState()
@@ -268,6 +405,13 @@ public partial class AdaptiveImage : Control
 
     private async Task LoadSourceFromUnknownSourceAsync(object? source, CancellationToken token)
     {
+        if (source is string svgString && IsSvgContent(svgString))
+        {
+            _svgContent = svgString;
+            await ApplySvgSourceAsync(svgString, token);
+            return;
+        }
+
         Uri? uri = source as Uri;
         if (uri == null)
         {
@@ -285,6 +429,20 @@ public partial class AdaptiveImage : Control
                 uri = new Uri("ms-appx:///" + uri.OriginalString.TrimStart('/'));
             }
         }
+
+        if (uri != null && uri.IsAbsoluteUri && IsSvgUri(uri))
+        {
+            await LoadSvgFromUriAsync(uri, token);
+            return;
+        }
+
+        if (source is StorageFile svgFile &&
+            string.Equals(svgFile.FileType, ".svg", StringComparison.OrdinalIgnoreCase))
+        {
+            await LoadSvgFromFileAsync(svgFile, token);
+            return;
+        }
+
         BitmapImage? bitmapImage = null;
         if (uri != null && uri.IsAbsoluteUri)
         {
@@ -347,6 +505,61 @@ public partial class AdaptiveImage : Control
         }
     }
 
+    private async Task LoadSvgFromFileAsync(StorageFile file, CancellationToken token)
+    {
+        try
+        {
+            var content = await FileIO.ReadTextAsync(file);
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _svgContent = content;
+            await ApplySvgSourceAsync(content, token);
+        }
+        catch
+        {
+            if (!token.IsCancellationRequested)
+            {
+                GoToFailedState();
+            }
+        }
+    }
+
+    private async Task LoadSvgFromUriAsync(Uri uri, CancellationToken token)
+    {
+        try
+        {
+            StorageFile file;
+            if (string.Equals(uri.Scheme, "file", StringComparison.OrdinalIgnoreCase))
+            {
+                file = await StorageFile.GetFileFromPathAsync(uri.LocalPath);
+            }
+            else
+            {
+                file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            }
+
+            await LoadSvgFromFileAsync(file, token);
+        }
+        catch
+        {
+            if (!token.IsCancellationRequested)
+            {
+                GoToFailedState();
+            }
+        }
+    }
+
+    private void OnActualThemeChanged(FrameworkElement sender, object args)
+    {
+        if (_svgContent != null && EnableSvgColorOverride && _isInVisualTree)
+        {
+            ReapplySvgSource();
+        }
+    }
+
     private void OnImageFailed(object sender, ExceptionRoutedEventArgs e)
     {
         TryRemoveImageHandlers();
@@ -357,6 +570,30 @@ public partial class AdaptiveImage : Control
     {
         TryRemoveImageHandlers();
         GoToLoadedState();
+    }
+
+    private void OnSvgImageFailed(SvgImageSource sender, SvgImageSourceFailedEventArgs args)
+    {
+        TryRemoveImageHandlers();
+        GoToFailedState();
+    }
+
+    private void OnSvgImageOpened(SvgImageSource sender, SvgImageSourceOpenedEventArgs args)
+    {
+        TryRemoveImageHandlers();
+        GoToLoadedState();
+    }
+
+    private void ReapplySvgSource()
+    {
+        if (_svgContent is null || _image is null)
+        {
+            return;
+        }
+
+        _tokenSource?.Cancel();
+        _tokenSource = new CancellationTokenSource();
+        _ = ApplySvgSourceAsync(_svgContent, _tokenSource.Token);
     }
 
     private void SetImageSource(ImageSource? source)
@@ -373,6 +610,11 @@ public partial class AdaptiveImage : Control
         {
             bitmapImage.ImageOpened += OnImageOpened;
             bitmapImage.ImageFailed += OnImageFailed;
+        }
+        if (source is SvgImageSource svgImage)
+        {
+            svgImage.Opened += OnSvgImageOpened;
+            svgImage.OpenFailed += OnSvgImageFailed;
         }
         if (source is BitmapSource bitmapSource &&
                  bitmapSource.PixelHeight > 0 &&
@@ -404,6 +646,11 @@ public partial class AdaptiveImage : Control
         {
             bitmapImage.ImageOpened -= OnImageOpened;
             bitmapImage.ImageFailed -= OnImageFailed;
+        }
+        if (_image?.Source is SvgImageSource svgImage)
+        {
+            svgImage.Opened -= OnSvgImageOpened;
+            svgImage.OpenFailed -= OnSvgImageFailed;
         }
     }
 }
