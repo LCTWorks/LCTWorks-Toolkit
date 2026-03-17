@@ -111,4 +111,13 @@ jobs:
           msbuild ${{ inputs.ProjectName }} -t:Pack -p:Configuration=Release -p:Platform=AnyCPU -p:Version=${{ steps.version.outputs.value }} "-p:PackageOutputPath=$nupkgDir" -restore:false
 
       - name: Push to NuGet
-        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        if: ${{ !inputs.UseMSBuild }}
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Push to NuGet (MSBuild)
+        if: ${{ inputs.UseMSBuild }}
+        shell: pwsh
+        run: |
+          Get-ChildItem (Join-Path $env:GITHUB_WORKSPACE "nupkg" "*.nupkg") | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
