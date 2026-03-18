@@ -183,6 +183,7 @@ public partial class AdaptiveImage : Control
         base.OnApplyTemplate();
 
         ActualThemeChanged -= OnActualThemeChanged;
+        SizeChanged -= OnSizeChanged;
         _image = GetTemplateChild(ImagePartName) as Image;
         _isInVisualTree = true;
         ActualThemeChanged += OnActualThemeChanged;
@@ -300,6 +301,14 @@ public partial class AdaptiveImage : Control
         try
         {
             var svgSource = new SvgImageSource();
+
+            if (ActualWidth > 0 && ActualHeight > 0)
+            {
+                var scale = XamlRoot?.RasterizationScale ?? 1.0;
+                svgSource.RasterizePixelWidth = ActualWidth * scale;
+                svgSource.RasterizePixelHeight = ActualHeight * scale;
+            }
+
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(processedSvg));
             var result = await svgSource.SetSourceAsync(stream.AsRandomAccessStream());
 
@@ -575,6 +584,14 @@ public partial class AdaptiveImage : Control
     {
         TryRemoveImageHandlers();
         GoToLoadedState();
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (_svgContent != null && _isInVisualTree)
+        {
+            ReapplySvgSource();
+        }
     }
 
     private void OnSvgImageFailed(SvgImageSource sender, SvgImageSourceFailedEventArgs args)
