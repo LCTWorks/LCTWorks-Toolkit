@@ -50,9 +50,9 @@ public partial class AdaptiveImage : Control
             typeof(AdaptiveImage),
             new PropertyMetadata(DefaultAnimationDuration));
 
-    public static readonly DependencyProperty DarkThemeFillColorProperty =
+    public static readonly DependencyProperty DarkThemeSVGFillColorProperty =
         DependencyProperty.Register(
-            nameof(DarkThemeFillColor),
+            nameof(DarkThemeSVGFillColor),
             typeof(Color),
             typeof(AdaptiveImage),
             new PropertyMetadata(DefaultDarkFillColor, OnSvgFillColorChanged));
@@ -64,9 +64,9 @@ public partial class AdaptiveImage : Control
             typeof(AdaptiveImage),
             new PropertyMetadata(true, OnSvgColorOverrideChanged));
 
-    public static readonly DependencyProperty LightThemeFillColorProperty =
+    public static readonly DependencyProperty LightThemeSVGFillColorProperty =
         DependencyProperty.Register(
-            nameof(LightThemeFillColor),
+            nameof(LightThemeSVGFillColor),
             typeof(Color),
             typeof(AdaptiveImage),
             new PropertyMetadata(DefaultLightFillColor, OnSvgFillColorChanged));
@@ -115,10 +115,10 @@ public partial class AdaptiveImage : Control
         set => SetValue(AnimationDurationProperty, value);
     }
 
-    public Color DarkThemeFillColor
+    public Color DarkThemeSVGFillColor
     {
-        get => (Color)GetValue(DarkThemeFillColorProperty);
-        set => SetValue(DarkThemeFillColorProperty, value);
+        get => (Color)GetValue(DarkThemeSVGFillColorProperty);
+        set => SetValue(DarkThemeSVGFillColorProperty, value);
     }
 
     public bool EnableSvgColorOverride
@@ -127,10 +127,10 @@ public partial class AdaptiveImage : Control
         set => SetValue(EnableSvgColorOverrideProperty, value);
     }
 
-    public Color LightThemeFillColor
+    public Color LightThemeSVGFillColor
     {
-        get => (Color)GetValue(LightThemeFillColorProperty);
-        set => SetValue(LightThemeFillColorProperty, value);
+        get => (Color)GetValue(LightThemeSVGFillColorProperty);
+        set => SetValue(LightThemeSVGFillColorProperty, value);
     }
 
     public Thickness NineGrid
@@ -337,7 +337,7 @@ public partial class AdaptiveImage : Control
 
     private Color GetCurrentThemeFillColor()
     {
-        return ActualTheme == ElementTheme.Dark ? DarkThemeFillColor : LightThemeFillColor;
+        return ActualTheme == ElementTheme.Dark ? DarkThemeSVGFillColor : LightThemeSVGFillColor;
     }
 
     private void GoToFailedState()

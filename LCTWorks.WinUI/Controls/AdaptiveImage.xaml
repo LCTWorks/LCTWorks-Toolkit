@@ -6,6 +6,10 @@
                 Value="Transparent" />
         <Setter Property="Foreground"
                 Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+        <Setter Property="DarkThemeSVGFillColor"
+                Value="#FFE0E0E0" />
+        <Setter Property="LightThemeSVGFillColor"
+                Value="#FF121212" />
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
