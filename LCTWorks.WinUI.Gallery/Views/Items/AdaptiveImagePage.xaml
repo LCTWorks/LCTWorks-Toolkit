@@ -26,12 +26,10 @@
                                          Margin="16"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"
-                                         DarkThemeFillColor="#E0E0E0"
                                          EnableSvgColorOverride="True"
                                          ImageFailed="S1ImgImageFailed"
                                          ImageLoaded="S1ImgImageLoaded"
                                          ImageLoading="S1ImgImageLoading"
-                                         LightThemeFillColor="#1A1A2E"
                                          Source="{x:Bind S1ImageSource, Mode=OneWay}" />
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
