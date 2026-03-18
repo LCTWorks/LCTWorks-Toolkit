@@ -422,12 +422,17 @@ public partial class AdaptiveImage : Control
                 return;
             }
         }
-        else
+
+        if (uri != null && !uri.IsAbsoluteUri)
         {
-            if (uri.Scheme != "http" && uri.Scheme != "https" && !uri.IsAbsoluteUri)
-            {
-                uri = new Uri("ms-appx:///" + uri.OriginalString.TrimStart('/'));
-            }
+            uri = new Uri("ms-appx:///" + uri.OriginalString.TrimStart('/'));
+        }
+        else if (uri != null && uri.IsAbsoluteUri &&
+                 uri.Scheme != "http" && uri.Scheme != "https" &&
+                 uri.Scheme != "ms-appx" && uri.Scheme != "ms-appdata" &&
+                 uri.Scheme != "file" && uri.Scheme != Base64Scheme)
+        {
+            uri = new Uri("ms-appx:///" + uri.OriginalString.TrimStart('/'));
         }
 
         if (uri != null && uri.IsAbsoluteUri && IsSvgUri(uri))
