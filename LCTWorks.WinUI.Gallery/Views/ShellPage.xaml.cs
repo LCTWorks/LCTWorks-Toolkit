@@ -1,10 +1,10 @@
-using LCTWorks.WinUI.Experimental.Helpers;
 using LCTWorks.WinUI.Extensions;
 using LCTWorks.Workshop.ViewModels;
 using LCTWorks.WinUI.Navigation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using LCTWorks.WinUI.Helpers;
 
 namespace LCTWorks.Workshop.Views;
 
@@ -19,7 +19,7 @@ public sealed partial class ShellPage : Page
 
         navigationService.Frame = NavigationFrame;
         NavigationViewHelper.Configure(navigationService, NavigationViewControl, typeof(SettingsViewModel).FullName!);
-        TitleBarHelperExperimental.Extend(AppTitleBar, NavigationViewControl, navigationService);
+        TitleBarHelper.Extend(AppTitleBar, NavigationViewControl, navigationService);
     }
 
     public string AppDisplayName => "AppDisplayName".GetTextLocalized();

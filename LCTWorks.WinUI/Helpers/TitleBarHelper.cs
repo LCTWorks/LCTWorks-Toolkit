@@ -1,10 +1,11 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using LCTWorks.WinUI.Extensions;
+﻿using LCTWorks.WinUI.Extensions;
+using LCTWorks.WinUI.Navigation;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using System;
+using System.Runtime.InteropServices;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 
@@ -63,6 +64,43 @@ public static class TitleBarHelper
             AppTitleBar = appTitleBarText;
         };
         appTitleBarText.Text = appDisplayName;
+    }
+
+    public static void Extend(
+        TitleBar titleBar,
+        NavigationView navigationView,
+        FrameNavigationService navigationService,
+        IAppExtended? app = null)
+    {
+        if (titleBar == null)
+        {
+            return;
+        }
+        titleBar.BackRequested += (sender, args) =>
+        {
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        };
+        if (navigationView != null)
+        {
+            navigationView.IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
+            navigationView.IsPaneToggleButtonVisible = false;
+
+            titleBar.PaneToggleRequested += (sender, args) =>
+            {
+                navigationView.IsPaneOpen = !navigationView.IsPaneOpen;
+            };
+        }
+
+        app ??= Application.Current.AsAppExtended();
+        if (app == null)
+        {
+            return;
+        }
+        app.MainWindow.ExtendsContentIntoTitleBar = true;
+        app.MainWindow.SetTitleBar(titleBar);
     }
 
     public static void UpdateTitleBar(ElementTheme theme, IAppExtended? app = null)
