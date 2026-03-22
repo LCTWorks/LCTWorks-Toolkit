@@ -1,5 +1,4 @@
 ﻿using LCTWorks.Core.Helpers;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -61,6 +60,29 @@ public static class AppStorageHelper
         }
     }
 
+    public static async Task<string?> ReadTextOnStorageFileAsync(string? uri)
+    {
+        if (uri == null)
+        {
+            return default;
+        }
+        try
+        {
+            if (uri.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase)
+                || uri.StartsWith("ms-appdata", StringComparison.OrdinalIgnoreCase))
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
+                return await FileIO.ReadTextAsync(file);
+            }
+
+            return await FileHelper.TryReadTextFileAsync(uri);
+        }
+        catch
+        {
+            return default;
+        }
+    }
+
     public static async Task<string> ReadTextOnStorageFileAsync(string? folderName, string? fileName)
     {
         var file = await GetStorageFileFromLocalFolderAsync(folderName, fileName);
@@ -87,29 +109,6 @@ public static class AppStorageHelper
         }
     }
 
-    public static async Task<string?> ReadTextOnStorageFileAsync(string? uri)
-    {
-        if (uri == null)
-        {
-            return default;
-        }
-        try
-        {
-            if (uri.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase)
-                || uri.StartsWith("ms-appdata", StringComparison.OrdinalIgnoreCase))
-            {
-                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(uri));
-                return await FileIO.ReadTextAsync(file);
-            }
-
-            return await FileHelper.TryReadTextFileAsync(uri);
-        }
-        catch
-        {
-            return default;
-        }
-    }
-
     public static bool RemoveFromFutureAccessList(string token)
     {
         if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
@@ -127,11 +126,36 @@ public static class AppStorageHelper
             return null;
         }
         var file = await GetStorageFileFromLocalFolderAsync(subFolder, fileName);
+        return await WriteToLocalFolderFileAsync(file, content);
+    }
+
+    public static async Task<StorageFile?> WriteToLocalFolderFileAsync(StorageFile? file, byte[] content)
+    {
         if (file == null)
         {
             return default;
         }
         await FileIO.WriteBytesAsync(file, content);
+        return file;
+    }
+
+    public static async Task<StorageFile?> WriteToLocalFolderFileAsync(string subFolder, string fileName, string content)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) || content == null || content.Length == 0)
+        {
+            return null;
+        }
+        var file = await GetStorageFileFromLocalFolderAsync(subFolder, fileName);
+        return await WriteToLocalFolderFileAsync(file, content);
+    }
+
+    public static async Task<StorageFile?> WriteToLocalFolderFileAsync(StorageFile? file, string content)
+    {
+        if (file == null)
+        {
+            return default;
+        }
+        await FileIO.WriteTextAsync(file, content);
         return file;
     }
 }
