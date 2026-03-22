@@ -121,3 +121,19 @@ jobs:
           Get-ChildItem (Join-Path $env:GITHUB_WORKSPACE "nupkg" "*.nupkg") | ForEach-Object {
             dotnet nuget push $_.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
+
+      - name: Resolve artifact name
+        id: artifact
+        shell: bash
+        run: |
+          # Strip path and extension to get a clean artifact name
+          NAME=$(basename "${{ inputs.ProjectName }}" .csproj)
+          echo "name=nupkg-${NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload .nupkg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.name }}
+          path: ./nupkg/*.nupkg
+          if-no-files-found: error
+          retention-days: 1

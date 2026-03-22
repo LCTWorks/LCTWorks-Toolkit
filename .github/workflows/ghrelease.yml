@@ -1,0 +1,48 @@
+name: Create GitHub Release
+
+on:
+  workflow_call:
+    inputs:
+      TagName:
+        description: 'The tag/version to use for the release (e.g. 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all nupkg artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nupkg-*
+          path: ./release-assets
+          merge-multiple: true
+
+      - name: List release assets
+        run: ls -R ./release-assets
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.TagName }}
+          name: v${{ inputs.TagName }}
+          body: |
+            ## LCTWorks Toolkit v${{ inputs.TagName }}
+
+            ### NuGet Packages
+            | Package | Version |
+            |---------|---------|
+            | LCTWorks.Core | ${{ inputs.TagName }} |
+            | LCTWorks.Telemetry | ${{ inputs.TagName }} |
+            | LCTWorks.Web | ${{ inputs.TagName }} |
+            | LCTWorks.WinUI | ${{ inputs.TagName }} |
+
+            All packages are available on [NuGet.org](https://www.nuget.org/profiles/LCTWorks).
+          files: ./release-assets/*.nupkg
+          fail_on_unmatched_files: true
+          generate_release_notes: true

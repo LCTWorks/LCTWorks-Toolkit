@@ -64,18 +64,29 @@ jobs:
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
-  tag:
-    needs: publish-winui
-    runs-on: ubuntu-latest
+  # tag:
+  #   needs: publish-winui
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+
+  #   steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v4
+
+  #    - name: Create and push tag
+  #      run: |
+  #        TAG="${{ needs.publish-winui.outputs.version }}"
+  #        git tag "$TAG"
+  #        git push origin "$TAG"
+
+  # ──────────────────────────────────────────────
+  # Final — Create GitHub Release with all .nupkg files
+  # ──────────────────────────────────────────────
+  release:
+    needs: [publish-winui]
+    uses: ./.github/workflows/ghrelease.yml
+    with:
+      TagName: ${{ needs.publish-core.outputs.version }}
     permissions:
       contents: write
-
-    steps:
-     - name: Checkout
-       uses: actions/checkout@v4
-
-     - name: Create and push tag
-       run: |
-         TAG="${{ needs.publish-winui.outputs.version }}"
-         git tag "$TAG"
-         git push origin "$TAG"
