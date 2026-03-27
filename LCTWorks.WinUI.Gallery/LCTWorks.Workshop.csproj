@@ -21,7 +21,6 @@
     <None Remove="Assets\Images\Sample800-1.jpg" />
     <None Remove="Styles\Generic.xaml" />
     <None Remove="Views\Items\Homepage.xaml" />
-    <None Remove="Views\Items\ItemsViewPage.xaml" />
     <None Remove="Views\Items\SampleCodePresenterPage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
@@ -51,7 +50,7 @@
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\Items\ItemsViewPage.xaml">
+    <Page Update="Views\Items\AdaptiveViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

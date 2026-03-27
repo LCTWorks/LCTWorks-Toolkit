@@ -1,29 +1,26 @@
-﻿using CommunityToolkit.WinUI;
-using LCTWorks.Core.Collections;
+﻿using LCTWorks.Core.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.ViewManagement;
 
 namespace LCTWorks.WinUI.Controls;
 
 [TemplatePart(Name = ItemsRepeaterPartName, Type = typeof(ItemsRepeater))]
 [TemplatePart(Name = ItemsScrollHostPartName, Type = typeof(ItemsRepeaterScrollHost))]
 [TemplatePart(Name = ItemsScrollPartName, Type = typeof(ScrollViewer))]
-public partial class ItemsView : Control
+public partial class AdaptiveView : Control
 {
     public static readonly DependencyProperty ItemsSourceProperty =
-        DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(ItemsView),
+        DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
     public static readonly DependencyProperty ItemTemplateProperty =
-        DependencyProperty.Register(nameof(ItemTemplate), typeof(object), typeof(ItemsView),
+        DependencyProperty.Register(nameof(ItemTemplate), typeof(object), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
     public static readonly DependencyProperty LayoutProperty =
-            DependencyProperty.Register(nameof(Layout), typeof(Layout), typeof(ItemsView),
+            DependencyProperty.Register(nameof(Layout), typeof(Layout), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
     private const string ItemsRepeaterPartName = "ItemsRepeater";

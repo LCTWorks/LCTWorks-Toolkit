@@ -1,6 +1,5 @@
 using LCTWorks.WinUI.Controls;
 using LCTWorks.Workshop.Models;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -10,11 +9,11 @@ using Windows.UI;
 
 namespace LCTWorks.Workshop.Views.Items;
 
-public sealed partial class ItemsViewPage : ObservablePage
+public sealed partial class AdaptiveViewPage : ObservablePage
 {
     private const int BaseItemCount = 64;
 
-    public ItemsViewPage()
+    public AdaptiveViewPage()
     {
         InitializeComponent();
     }
