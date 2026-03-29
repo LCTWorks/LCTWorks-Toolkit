@@ -127,6 +127,10 @@ public sealed partial class AdaptiveViewPage : ObservablePage
         }
     }
 
+    private void ItemsView_ItemClicked(object sender, AdaptiveViewItemClickedEventArgs e)
+    {
+    }
+
     private void LoadItemsSourceTapped(object _, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs __)
     {
         var template = Resources["ColorItemTemplate"] as DataTemplate;

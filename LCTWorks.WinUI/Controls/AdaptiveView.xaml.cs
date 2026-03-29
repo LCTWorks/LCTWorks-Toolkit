@@ -1,6 +1,7 @@
 ﻿using LCTWorks.Core.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System;
 using System.Threading.Tasks;
 
@@ -11,8 +12,12 @@ namespace LCTWorks.WinUI.Controls;
 [TemplatePart(Name = ItemsScrollPartName, Type = typeof(ScrollViewer))]
 public partial class AdaptiveView : Control
 {
+    public static readonly DependencyProperty IsItemClickEnabledProperty =
+        DependencyProperty.Register(nameof(IsItemClickEnabled), typeof(bool), typeof(AdaptiveView),
+            new PropertyMetadata(false));
+
     public static readonly DependencyProperty ItemsSourceProperty =
-        DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(AdaptiveView),
+            DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
     public static readonly DependencyProperty ItemTemplateProperty =
@@ -31,11 +36,19 @@ public partial class AdaptiveView : Control
     private ScrollViewer? _itemsScroll;
     private ItemsRepeaterScrollHost? _itemsScrollHost;
 
+    public event EventHandler<AdaptiveViewItemClickedEventArgs>? ItemClicked;
+
     public ItemsRepeater? InternalItemsRepeater => _itemsRepeater;
 
     public ItemsRepeaterScrollHost? InternalScrollHost => _itemsScrollHost;
 
     public ScrollViewer? InternalScrollViewer => _itemsScroll;
+
+    public bool IsItemClickEnabled
+    {
+        get => (bool)GetValue(IsItemClickEnabledProperty);
+        set => SetValue(IsItemClickEnabledProperty, value);
+    }
 
     public object ItemsSource
     {
@@ -107,9 +120,37 @@ public partial class AdaptiveView : Control
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
+
+        _itemsRepeater?.Tapped -= OnItemsRepeaterTapped;
+
         _itemsRepeater = GetTemplateChild(ItemsRepeaterPartName) as ItemsRepeater;
         _itemsScroll = GetTemplateChild(ItemsScrollPartName) as ScrollViewer;
         _itemsScrollHost = GetTemplateChild(ItemsScrollHostPartName) as ItemsRepeaterScrollHost;
+
+        _itemsRepeater?.Tapped += OnItemsRepeaterTapped;
+    }
+
+    protected virtual void OnItemClicked(AdaptiveViewItemClickedEventArgs args)
+    {
+        ItemClicked?.Invoke(this, args);
+    }
+
+    private UIElement? FindRepeaterChildFromSource(DependencyObject source)
+    {
+        var current = source;
+        while (current is not null)
+        {
+            if (current is UIElement uiElement)
+            {
+                var parent = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(uiElement);
+                if (parent == _itemsRepeater)
+                {
+                    return uiElement;
+                }
+            }
+            current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+        }
+        return null;
     }
 
     private int GetItemIndex(object item)
@@ -122,4 +163,57 @@ public partial class AdaptiveView : Control
         var items = new TolerantCollection(ItemsSource);
         return items.IndexOf(item);
     }
+
+    private void OnItemsRepeaterTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (!IsItemClickEnabled || _itemsRepeater is null)
+        {
+            return;
+        }
+
+        if (e.OriginalSource is not DependencyObject source)
+        {
+            return;
+        }
+
+        var element = FindRepeaterChildFromSource(source);
+        if (element is null)
+        {
+            return;
+        }
+
+        var index = _itemsRepeater.GetElementIndex(element);
+        if (index < 0)
+        {
+            return;
+        }
+
+        var items = new TolerantCollection(ItemsSource);
+        if (index >= items.Count)
+        {
+            return;
+        }
+
+        var clickedItem = items[index];
+        if (clickedItem is not null)
+        {
+            OnItemClicked(new AdaptiveViewItemClickedEventArgs(clickedItem, element, index));
+        }
+    }
+}
+
+public class AdaptiveViewItemClickedEventArgs : EventArgs
+{
+    public AdaptiveViewItemClickedEventArgs(object clickedItem, UIElement container, int index)
+    {
+        ClickedItem = clickedItem;
+        Container = container;
+        Index = index;
+    }
+
+    public object ClickedItem { get; }
+
+    public UIElement Container { get; }
+
+    public int Index { get; }
 }

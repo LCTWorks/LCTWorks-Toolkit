@@ -52,6 +52,8 @@
                         <Grid>
                             <c:AdaptiveView x:Name="ItemsView"
                                             HorizontalContentAlignment="Stretch"
+                                            IsItemClickEnabled="True"
+                                            ItemClicked="ItemsView_ItemClicked"
                                             ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
                                             ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                                             Layout="{x:Bind Layout, Mode=OneWay}" />
