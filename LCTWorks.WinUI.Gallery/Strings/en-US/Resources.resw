@@ -138,10 +138,10 @@
   <data name="SampleCodePresenter_Description" xml:space="preserve">
     <value>A control to demo control properties and behaviors.</value>
   </data>
-  <data name="ItemsView_Title" xml:space="preserve">
-    <value>ItemsView</value>
+  <data name="AdaptiveView_Title" xml:space="preserve">
+    <value>AdaptiveView</value>
   </data>
-  <data name="ItemsView_Description" xml:space="preserve">
+  <data name="AdaptiveView_Description" xml:space="preserve">
     <value>A lightweight items view based on ItemsRepeater</value>
   </data>
 </root>

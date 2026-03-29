@@ -1,4 +1,4 @@
-<c:ObservablePage x:Class="LCTWorks.Workshop.Views.Items.ItemsViewPage"
+<c:ObservablePage x:Class="LCTWorks.Workshop.Views.Items.AdaptiveViewPage"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:c="using:LCTWorks.WinUI.Controls"
@@ -50,11 +50,14 @@
                                             MinOptionsPaneWidth="200">
                     <clocal:SampleCodePresenter.Content>
                         <Grid>
-                            <c:ItemsView x:Name="ItemsView"
-                                         HorizontalContentAlignment="Stretch"
-                                         ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
-                                         ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                                         Layout="{x:Bind Layout, Mode=OneWay}" />
+                            <c:AdaptiveView x:Name="ItemsView"
+                                            HorizontalContentAlignment="Stretch"
+                                            IsItemClickEnabled="True"
+                                            ItemClicked="ItemsView_ItemClicked"
+                                            ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
+                                            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                                            Layout="{x:Bind Layout, Mode=OneWay}"
+                                            UseSoftAnimations="True" />
                         </Grid>
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
