@@ -5,56 +5,21 @@ on:
     branches:
       - release/winui/*
   workflow_dispatch:
-    inputs:
-      ref:
-        description: 'Branch or tag to build'
-        required: false
-        default: ''
-env:
-  PROJECT: LCTWorks.WinUI/LCTWorks.WinUI.csproj
-  DOTNET_VERSION: "9.0.x"
-  NUPKG_DIR: ${{ github.workspace }}\nupkg
 
 jobs:
-  build-publish:
-    runs-on: windows-latest
-    outputs:
-      version: ${{ steps.version.outputs.value }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Extract version from branch name
-        id: version
-        shell: bash
-        run: |
-          BRANCH="${GITHUB_REF#refs/heads/}"
-          VERSION="${BRANCH#release/winui/}"
-          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT }}
-
-      - name: Build
-        run: msbuild ${{ env.PROJECT }} -p:Configuration=Release -p:Platform=AnyCPU -restore:false
-
-      - name: Pack NuGet package
-        run: msbuild ${{ env.PROJECT }} -t:Pack -p:Configuration=Release -p:Platform=AnyCPU -p:Version=${{ steps.version.outputs.value }} -p:PackageOutputPath=${{ env.NUPKG_DIR }} -restore:false
-
-      - name: Push to NuGet
-        run: dotnet nuget push ${{ env.NUPKG_DIR }}\*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+  publish:
+    uses: ./.github/workflows/pack-and-publish-all.yml
+    with:
+      TriggerBranch: "release/winui/"
+      ProjectName: "LCTWorks.WinUI/LCTWorks.WinUI.csproj"
+      UpdatePackages: "LCTWorks.Core,LCTWorks.Telemetry"
+      Runner: "windows-latest"
+      UseMSBuild: true
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
   tag:
-    needs: build-publish
+    needs: publish
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -65,6 +30,6 @@ jobs:
 
       - name: Create and push tag
         run: |
-          TAG="WinUI-${{ needs.build-publish.outputs.version }}"
+          TAG="WinUI-${{ needs.publish.outputs.version }}"
           git tag "$TAG"
           git push origin "$TAG"
