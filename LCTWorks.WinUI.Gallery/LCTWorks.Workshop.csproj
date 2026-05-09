@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>LCTWorks.Workshop</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;ARM64</Platforms>
-	  <LangVersion>preview</LangVersion>
+	<Platforms>x86;x64;ARM64</Platforms>
+	<LangVersion>preview</LangVersion>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" />
-    <ProjectReference Include="..\LCTWorks.WinUI.Experimental\LCTWorks.WinUI.Experimental.csproj" />
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
   </ItemGroup>
   <ItemGroup>
