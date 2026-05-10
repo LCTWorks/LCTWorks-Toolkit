@@ -30,7 +30,7 @@
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
         <Setter Property="FontSize"
-                Value="{ThemeResource CaptionTextBlockFontSize}" />
+                Value="{StaticResource CaptionTextBlockFontSize}" />
 
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />

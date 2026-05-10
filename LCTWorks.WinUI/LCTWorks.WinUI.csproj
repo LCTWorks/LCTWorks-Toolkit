@@ -99,12 +99,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\Dialogs\FeedbackContentDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-
 	<!-- Pack only the expected library layout files (no recursive nesting) into a single location -->
 	<Target Name="PackLibraryLayout" BeforeTargets="GenerateNuspec" DependsOnTargets="Build">
 		<PropertyGroup>
