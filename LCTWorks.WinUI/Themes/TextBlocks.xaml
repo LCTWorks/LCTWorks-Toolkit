@@ -107,7 +107,7 @@
            BasedOn="{StaticResource SmoothRegularTextBlockStyle}"
            TargetType="TextBlock">
         <Setter Property="FontSize"
-                Value="{StaticResource CaptionTextBlockFontSize}" />
+                Value="{ThemeResource CaptionTextBlockFontSize}" />
         <Setter Property="TextWrapping"
                 Value="WrapWholeWords" />
     </Style>
