@@ -4,6 +4,7 @@
 	</PropertyGroup>
 	<ItemGroup Condition="Exists('$(_LCTWorksWinUILibDir)')">
 		<Content Include="$(_LCTWorksWinUILibDir)**"
+				 Exclude="$(_LCTWorksWinUILibDir)Themes\Generic.xaml"
 				 Link="LCTWorks.WinUI\%(RecursiveDir)%(FileName)%(Extension)"
 				 CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
