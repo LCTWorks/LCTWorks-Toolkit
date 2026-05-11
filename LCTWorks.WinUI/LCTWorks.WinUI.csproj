@@ -50,8 +50,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.251219" />
-		<PackageReference Include="LCTWorks.Core" Version="1.0.2603.9" />
-		<PackageReference Include="LCTWorks.Telemetry" Version="1.0.2603.9" />
+		<PackageReference Include="LCTWorks.Core" Version="1.0.2605.5" />
+		<PackageReference Include="LCTWorks.Telemetry" Version="1.0.2605.5" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
@@ -61,9 +61,7 @@
 
 	<Target Name="IncludePriInNuget" BeforeTargets="_GetPackageFiles">
 		<ItemGroup>
-			<None Include="$(OutputPath)$(AssemblyName).pri"
-				  Pack="true"
-				  PackagePath="lib\$(TargetFramework)" />
+			<None Include="$(OutputPath)$(AssemblyName).pri" Pack="true" PackagePath="lib\$(TargetFramework)" />
 		</ItemGroup>
 	</Target>
 
