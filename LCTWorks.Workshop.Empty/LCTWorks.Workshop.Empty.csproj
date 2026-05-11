@@ -38,7 +38,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LCTWorks.WinUI.Experimental" Version="1.2.10" />
+    <PackageReference Include="LCTWorks.WinUI.Experimental" Version="1.2.17" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.1" />
   </ItemGroup>
