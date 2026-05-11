@@ -1,3 +1,4 @@
+using LCTWorks.WinUI.Experimental.Controls.ContentDialogs;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,13 @@ namespace LCTWorks.Workshop.Empty
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private async void ThemedButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ItemsContentDialog dialog = new ItemsContentDialog();
+            dialog.XamlRoot = this.Content.XamlRoot;
+            await dialog.ShowAsync();
         }
     }
 }
