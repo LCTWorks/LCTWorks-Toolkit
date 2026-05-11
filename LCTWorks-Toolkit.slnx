@@ -17,4 +17,8 @@
     <Deploy />
   </Project>
   <Project Path="LCTWorks.WinUI/LCTWorks.WinUI.csproj" />
+  <Project Path="LCTWorks.Workshop.Empty/LCTWorks.Workshop.Empty.csproj" Id="ed1f2188-c22a-400e-8adf-64632b81ef4a">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
 </Solution>

@@ -1,9 +1,15 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI.Experimental/Themes/FontFamilies.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI.Experimental/Themes/Constants.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI.Experimental/Themes/TextBlocks.xaml" />
+
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI.Experimental/Controls/ThemedButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 
     <Thickness x:Key="ContentDialogSeparatorThickness">0</Thickness>
-
-    <Style x:Key="ExperimentalSmoothChipToggleButtonStyle"
+    <Style x:Key="SmoothChipToggleButtonStyle"
            BasedOn="{StaticResource DefaultToggleButtonStyle}"
            TargetType="ToggleButton">
         <Setter Property="Foreground"

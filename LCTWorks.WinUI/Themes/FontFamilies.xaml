@@ -4,7 +4,7 @@
     <FontFamily x:Key="FluentIconsFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/SegoeFluentIcons.ttf#Segoe Fluent Icons</FontFamily>
     <FontFamily x:Key="MaterialSymbolsFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/MaterialSymbols-Outlined-300.ttf#Material Symbols Outlined Light</FontFamily>
     <FontFamily x:Key="FontAwesomeBrandsFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/FA7Brands-Regular.otf#Font Awesome 7 Brands</FontFamily>
-    <FontFamily x:Key="PoppinsBoldFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/Poppins-Bold.ttf#Poppins</FontFamily>
+    <FontFamily x:Key="PoppinsBoldFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/Poppins-Bold.otf#Poppins</FontFamily>
     <FontFamily x:Key="PoppinsRegularFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/Poppins-Regular.ttf#Poppins</FontFamily>
     <FontFamily x:Key="PoppinsLightFontFamily">ms-appx:///LCTWorks.WinUI/Assets/Fonts/Poppins-Light.ttf#Poppins Light</FontFamily>
 

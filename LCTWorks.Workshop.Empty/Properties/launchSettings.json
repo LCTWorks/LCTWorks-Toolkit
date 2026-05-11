@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LCTWorks.Workshop.Empty (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LCTWorks.Workshop.Empty (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -12,8 +12,6 @@
                     Orientation="Vertical"
                     Spacing="8">
             <TextBlock Text="Home" />
-            <ToggleButton Content="Some toggle"
-                          Style="{StaticResource ExperimentalSmoothChipToggleButtonStyle}" />
         </StackPanel>
     </Grid>
 </Page>
