@@ -8,6 +8,7 @@
     <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;x64;x86;ARM64</Platforms>
+	<EnableMsixTooling>true</EnableMsixTooling>
 	<GenerateLibraryLayout>true</GenerateLibraryLayout>
   </PropertyGroup>
 	
@@ -22,7 +23,6 @@
 		<Description>LCTWorks WinUI library</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/LCTWorks/LCTWorks-Toolkit</RepositoryUrl>
-		<UserSecretsId>1de18002-133c-4fdc-b419-5771450bca90</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -54,12 +54,6 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\AdaptiveView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>
