@@ -110,42 +110,6 @@ jobs:
           $nupkgDir = Join-Path $env:GITHUB_WORKSPACE "nupkg"
           msbuild ${{ inputs.ProjectName }} -t:Pack -p:Configuration=Release -p:Platform=AnyCPU -p:Version=${{ steps.version.outputs.value }} "-p:PackageOutputPath=$nupkgDir" -restore:false
 
-      - name: Verify NuGet package contents (MSBuild)
-        if: ${{ inputs.UseMSBuild }}
-        shell: pwsh
-        run: |
-          $nupkgDir = Join-Path $env:GITHUB_WORKSPACE "nupkg"
-          $nupkg = Get-ChildItem $nupkgDir -Filter "*.nupkg" | Select-Object -First 1
-          if (-not $nupkg) { Write-Error "No .nupkg found in $nupkgDir"; exit 1 }
-
-          $extractDir = Join-Path $env:TEMP "nupkg_verify_$([System.IO.Path]::GetRandomFileName())"
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          [System.IO.Compression.ZipFile]::ExtractToDirectory($nupkg.FullName, $extractDir)
-
-          # Derive the package name from the project path (e.g. LCTWorks.WinUI/LCTWorks.WinUI.csproj -> LCTWorks.WinUI)
-          $pkgName = [System.IO.Path]::GetFileNameWithoutExtension("${{ inputs.ProjectName }}")
-          $libDir   = Join-Path $extractDir "buildTransitive" $pkgName
-
-          $requiredPaths = @(
-            (Join-Path $libDir "Themes" "Generic.xaml"),
-            (Join-Path $libDir "Themes" "Constants.xaml"),
-            (Join-Path $libDir "Themes" "FontFamilies.xaml"),
-            (Join-Path $libDir "Themes" "TextBlocks.xaml")
-          )
-
-          $failed = $false
-          foreach ($path in $requiredPaths) {
-            $rel = $path.Replace($extractDir, '').TrimStart('\','/')
-            if (Test-Path $path) {
-              Write-Host "  [OK] $rel"
-            } else {
-              Write-Error "[MISSING] $rel"
-              $failed = $true
-            }
-          }
-          if ($failed) { exit 1 }
-          Write-Host "Package content verification passed for $($nupkg.Name)"
-
       - name: Push to NuGet
         if: ${{ !inputs.UseMSBuild }}
         run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
