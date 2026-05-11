@@ -7,8 +7,13 @@
       mc:Ignorable="d">
 
     <Grid>
-        <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Text="Home" />
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical"
+                    Spacing="8">
+            <TextBlock Text="Home" />
+            <ToggleButton Content="Some toggle"
+                          Style="{StaticResource ExperimentalSmoothChipToggleButtonStyle}" />
+        </StackPanel>
     </Grid>
 </Page>

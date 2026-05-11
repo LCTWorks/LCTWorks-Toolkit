@@ -7,6 +7,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <XamlControlsResources xmlns="using:LCTWorks.WinUI" />
+                <XamlControlsResources xmlns="using:LCTWorks.WinUI.Experimental" />
                 <ResourceDictionary Source="/Styles/Generic.xaml" />
                 <ResourceDictionary Source="/Controls/SampleCodePresenter.xaml" />
             </ResourceDictionary.MergedDictionaries>

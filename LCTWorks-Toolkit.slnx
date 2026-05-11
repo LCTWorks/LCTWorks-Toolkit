@@ -11,6 +11,7 @@
   <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
   <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
   <Project Path="LCTWorks.Web/LCTWorks.Web.csproj" Id="f407d15d-f3e1-467a-925b-8d21e9fb4e0b" />
+  <Project Path="LCTWorks.WinUI.Experimental/LCTWorks.WinUI.Experimental.csproj" Id="a4d3a125-97d4-40ef-99fe-4b8210b4f71f" />
   <Project Path="LCTWorks.WinUI.Gallery/LCTWorks.Workshop.csproj" Id="916bf107-730c-46f7-ae32-ddfacad7092e">
     <Platform Project="x64" />
     <Deploy />
