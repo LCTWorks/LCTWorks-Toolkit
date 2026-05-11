@@ -1,1 +1,0 @@
-﻿Common tools for WinUI apps development.

@@ -11,17 +11,12 @@
   <Project Path="LCTWorks.Core/LCTWorks.Core.csproj" />
   <Project Path="LCTWorks.Telemetry/LCTWorks.Telemetry.csproj" />
   <Project Path="LCTWorks.Web/LCTWorks.Web.csproj" Id="f407d15d-f3e1-467a-925b-8d21e9fb4e0b" />
-  <Project Path="LCTWorks.WinUI.Experimental/LCTWorks.WinUI.Experimental.csproj" Id="a4d3a125-97d4-40ef-99fe-4b8210b4f71f" />
   <Project Path="LCTWorks.WinUI.Gallery/LCTWorks.Workshop.csproj" Id="916bf107-730c-46f7-ae32-ddfacad7092e">
     <Platform Project="x64" />
     <Deploy />
   </Project>
-  <Project Path="LCTWorks.WinUI/LCTWorks.WinUI.csproj" >
+  <Project Path="LCTWorks.WinUI/LCTWorks.WinUI.csproj">
 <Platform Project="x64" />
     <Deploy />
 </Project>
-  <Project Path="LCTWorks.Workshop.Empty/LCTWorks.Workshop.Empty.csproj" Id="ed1f2188-c22a-400e-8adf-64632b81ef4a">
-    <Platform Project="x64" />
-    <Deploy />
-  </Project>
 </Solution>
