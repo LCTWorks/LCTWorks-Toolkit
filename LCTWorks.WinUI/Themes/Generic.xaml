@@ -8,12 +8,12 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/Constants.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/TextBlocks.xaml" />
 
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />-->
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/NavigationViewItemButton.xaml" />-->
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />-->
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/Chip.xaml" />-->
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveView.xaml" />-->
-        <!--<ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveImage.xaml" />-->
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/ThemedButton.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/NavigationViewItemButton.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/MenuFlyoutHeader.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/Chip.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveView.xaml" />
+        <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveImage.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--  System default overrides  -->

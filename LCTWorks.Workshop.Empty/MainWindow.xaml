@@ -18,9 +18,9 @@
                     VerticalAlignment="Center"
                     Orientation="Vertical"
                     Spacing="8">
-            <!--<lctworks:ThemedButton Content="Themed button"
+            <lctworks:ThemedButton Content="Themed button"
                                    Style="{StaticResource DangerThemedButtonStyle}"
-                                   Tapped="ThemedButton_Tapped" />-->
+                                   Tapped="ThemedButton_Tapped" />
             <TextBlock FontFamily="{StaticResource FluentIconsFontFamily}"
                        Text="Some text here" />
         </StackPanel>

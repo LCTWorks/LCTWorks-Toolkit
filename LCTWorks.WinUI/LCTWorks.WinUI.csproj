@@ -59,4 +59,12 @@
 
 	</ItemGroup>
 
+	<Target Name="IncludePriInNuget" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<None Include="$(OutputPath)$(AssemblyName).pri"
+				  Pack="true"
+				  PackagePath="lib\$(TargetFramework)" />
+		</ItemGroup>
+	</Target>
+
 </Project>
