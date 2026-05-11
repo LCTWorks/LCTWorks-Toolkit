@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.22621</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>LCTWorks.WinUI</RootNamespace>
 		<Nullable>enable</Nullable>
@@ -10,7 +10,8 @@
 		<Platforms>AnyCPU;x64;x86;ARM64</Platforms>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-
+	</PropertyGroup>
+	<PropertyGroup>
 		<!-- NuGet package metadata -->
 		<PackageId>LCTWorks.WinUI</PackageId>
 		<Version>1.0.0</Version>
@@ -24,14 +25,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="Package\Icon-64.png" Pack="true" PackagePath="\" />
-		<None Include="Package\Readme.md" Pack="true" PackagePath="\" />
+		<!--These assets needs to be removed manually, or they will be added as Content by some global default config-->
+		<Content Remove="Package\Icon-64.png" />
+		<Content Remove="Package\Readme.md" />
+
+		<!--Now we can add them back as None with Pack=true to include in the NuGet package without being treated as content files in the library itself-->
+		<None Include="Package\Icon-64.png" Pack="true" PackagePath="" />
+		<None Include="Package\Readme.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Explicit reference and PrivateAssets="all" to avoid native asset conflicts in consuming projects -->
+		<Content Remove="Assets\Fonts\*.ttf" />
+		<Content Remove="Assets\Fonts\*.otf" />
+		<Content Include="Assets\Fonts\*.ttf" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="lib\$(TargetFramework)\LCTWorks.WinUI\Assets\Fonts" />
+		<Content Include="Assets\Fonts\*.otf" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="lib\$(TargetFramework)\LCTWorks.WinUI\Assets\Fonts" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" ExcludeAssets="buildTransitive" PrivateAssets="all" />
 
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.Collections" Version="8.2.251219" />
@@ -47,95 +59,11 @@
 
 	</ItemGroup>
 
-	<ItemGroup>
-		<!-- Pack the .targets file to both build/ and buildTransitive/ -->
-		<None Include="Build\LCTWorks.WinUI.targets" Pack="true" PackagePath="build;buildTransitive" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Controls\AdaptiveView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Controls\AdaptiveImage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Page Update="Controls\MenuFlyoutHeader.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\ThemedButton.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\NavigationViewItemButton.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\Chip.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Themes\Constants.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Themes\FontFamilies.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Themes\TextBlocks.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-	<ItemGroup>
-		<Page Update="Controls\Dialogs\FeedbackContentDialog.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
-	</ItemGroup>
-
-	<!-- Pack only the expected library layout files (no recursive nesting) into a single location -->
-	<Target Name="PackLibraryLayout" BeforeTargets="GenerateNuspec" DependsOnTargets="Build">
-		<PropertyGroup>
-			<_LibLayout>$(OutputPath)LCTWorks.WinUI\</_LibLayout>
-			<_PackDest>buildTransitive\LCTWorks.WinUI\</_PackDest>
-		</PropertyGroup>
+	<Target Name="IncludePriInNuget" BeforeTargets="_GetPackageFiles">
 		<ItemGroup>
-			<!-- Root-level files (e.g. .pri) -->
-			<_PackageFiles Include="$(_LibLayout)*.*">
-				<PackagePath>$(_PackDest)</PackagePath>
-				<BuildAction>None</BuildAction>
-			</_PackageFiles>
-			<!-- Assets -->
-			<_PackageFiles Include="$(_LibLayout)Assets\Fonts\*.*">
-				<PackagePath>$(_PackDest)Assets\Fonts\</PackagePath>
-				<BuildAction>None</BuildAction>
-			</_PackageFiles>
-			<!-- Controls -->
-			<_PackageFiles Include="$(_LibLayout)Controls\*.*">
-				<PackagePath>$(_PackDest)Controls\</PackagePath>
-				<BuildAction>None</BuildAction>
-			</_PackageFiles>
-			<_PackageFiles Include="$(_LibLayout)Controls\ContentDialogs\*.*">
-				<PackagePath>$(_PackDest)Controls\ContentDialogs\</PackagePath>
-				<BuildAction>None</BuildAction>
-			</_PackageFiles>
-			<!-- Themes -->
-			<_PackageFiles Include="$(_LibLayout)Themes\*.*">
-				<PackagePath>$(_PackDest)Themes\</PackagePath>
-				<BuildAction>None</BuildAction>
-			</_PackageFiles>
+			<None Include="$(OutputPath)$(AssemblyName).pri"
+				  Pack="true"
+				  PackagePath="lib\$(TargetFramework)" />
 		</ItemGroup>
 	</Target>
 
