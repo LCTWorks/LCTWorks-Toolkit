@@ -76,9 +76,9 @@ public partial class AdaptiveView : Control
         set => SetValue(ItemTemplateProperty, value);
     }
 
-    public ItemCollectionTransitionProvider ItemTransitionProvider
+    public ItemCollectionTransitionProvider? ItemTransitionProvider
     {
-        get => (ItemCollectionTransitionProvider)GetValue(ItemTransitionProviderProperty);
+        get => (ItemCollectionTransitionProvider?)GetValue(ItemTransitionProviderProperty);
         set => SetValue(ItemTransitionProviderProperty, value);
     }
 
