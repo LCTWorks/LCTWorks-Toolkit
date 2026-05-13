@@ -13,6 +13,7 @@
                                           IsTabStop="False">
                                 <ItemsRepeater x:Name="ItemsRepeater"
                                                ItemTemplate="{TemplateBinding ItemTemplate}"
+                                               ItemTransitionProvider="{TemplateBinding ItemTransitionProvider}"
                                                ItemsSource="{TemplateBinding ItemsSource}"
                                                Layout="{TemplateBinding Layout}" />
                             </ScrollViewer>

@@ -26,8 +26,12 @@ public partial class AdaptiveView : Control
         DependencyProperty.Register(nameof(ItemTemplate), typeof(object), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
+    public static readonly DependencyProperty ItemTransitionProviderProperty =
+        DependencyProperty.Register(nameof(ItemTransitionProvider), typeof(ItemCollectionTransitionProvider), typeof(AdaptiveView),
+            new PropertyMetadata(default));
+
     public static readonly DependencyProperty LayoutProperty =
-            DependencyProperty.Register(nameof(Layout), typeof(Layout), typeof(AdaptiveView),
+                DependencyProperty.Register(nameof(Layout), typeof(Layout), typeof(AdaptiveView),
             new PropertyMetadata(default));
 
     public static readonly DependencyProperty UseSoftAnimationsProperty =
@@ -68,8 +72,14 @@ public partial class AdaptiveView : Control
 
     public object ItemTemplate
     {
-        get => (object)GetValue(ItemTemplateProperty);
+        get => GetValue(ItemTemplateProperty);
         set => SetValue(ItemTemplateProperty, value);
+    }
+
+    public ItemCollectionTransitionProvider ItemTransitionProvider
+    {
+        get => (ItemCollectionTransitionProvider)GetValue(ItemTransitionProviderProperty);
+        set => SetValue(ItemTransitionProviderProperty, value);
     }
 
     public Layout Layout
