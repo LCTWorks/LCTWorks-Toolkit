@@ -71,11 +71,21 @@ public sealed partial class AdaptiveViewPage : ObservablePage
         }
     }
 
+    private void AddOneColorTapped(object _, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs __)
+    {
+        if (ItemsSource is ObservableCollection<ColorItem> collection)
+        {
+            double hue = 360.0 * 0 / (1 + BaseItemCount);
+            Color c = HsvToColor(hue, 1.0, 1.0);
+            collection.Insert(1, new ColorItem($"Color x", c));
+        }
+    }
+
     private void BringFirstIndexTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
         if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
         {
-            ItemsView.BringIntoView(0);
+            //ItemsView.BringIntoView(0);
         }
     }
 
@@ -83,7 +93,7 @@ public sealed partial class AdaptiveViewPage : ObservablePage
     {
         if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
         {
-            ItemsView.BringIntoView(items.Count - 1);
+            //ItemsView.BringIntoView(items.Count - 1);
         }
     }
 
@@ -129,6 +139,11 @@ public sealed partial class AdaptiveViewPage : ObservablePage
 
     private void ItemsView_ItemClicked(object sender, AdaptiveViewItemClickedEventArgs e)
     {
+        var color = e.ClickedItem as ColorItem;
+        if (ItemsSource is ObservableCollection<ColorItem> items && color != null)
+        {
+            items.Remove(color);
+        }
     }
 
     private void LoadItemsSourceTapped(object _, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs __)

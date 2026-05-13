@@ -7,6 +7,7 @@
                   xmlns:local="using:LCTWorks.Workshop.Views.Items"
                   xmlns:m="using:LCTWorks.Workshop.Models"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
                   mc:Ignorable="d">
     <c:ObservablePage.Resources>
         <DataTemplate x:Key="ColorItemTemplate"
@@ -57,7 +58,11 @@
                                             ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
                                             ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                                             Layout="{x:Bind Layout, Mode=OneWay}"
-                                            UseSoftAnimations="True" />
+                                            UseSoftAnimations="True">
+                                <c:AdaptiveView.ItemTransitionProvider>
+                                    <muxc:LinedFlowLayoutItemCollectionTransitionProvider />
+                                </c:AdaptiveView.ItemTransitionProvider>
+                            </c:AdaptiveView>
                         </Grid>
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
@@ -75,6 +80,9 @@
                                 <Button HorizontalAlignment="Stretch"
                                         Content="Add colors to source"
                                         Tapped="AddItemsToSourceTapped" />
+                                <Button HorizontalAlignment="Stretch"
+                                        Content="Add 1 color to index 1"
+                                        Tapped="AddOneColorTapped" />
                                 <Button HorizontalAlignment="Stretch"
                                         Content="Change template"
                                         Tapped="ChangeTemplateTapped" />
