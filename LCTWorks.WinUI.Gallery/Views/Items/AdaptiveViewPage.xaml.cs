@@ -85,7 +85,7 @@ public sealed partial class AdaptiveViewPage : ObservablePage
     {
         if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
         {
-            //ItemsView.BringIntoView(0);
+            ItemsView.BringIntoView(0);
         }
     }
 
@@ -93,7 +93,7 @@ public sealed partial class AdaptiveViewPage : ObservablePage
     {
         if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
         {
-            //ItemsView.BringIntoView(items.Count - 1);
+            ItemsView.BringIntoView(items.Count - 1);
         }
     }
 
