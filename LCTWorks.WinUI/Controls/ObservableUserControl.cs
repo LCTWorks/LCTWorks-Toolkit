@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace LCTWorks.WinUI.Controls;
 
-public partial class ObservablePage : Page, INotifyPropertyChanged, INotifyPropertyChanging
+public partial class ObservableUserControl : UserControl, INotifyPropertyChanged, INotifyPropertyChanging
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 

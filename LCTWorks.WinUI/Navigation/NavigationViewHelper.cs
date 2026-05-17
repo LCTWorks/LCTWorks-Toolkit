@@ -24,15 +24,9 @@ public static class NavigationViewHelper
         get => _navigationService;
         private set
         {
-            if (_navigationService != null)
-            {
-                _navigationService.Navigated -= NavServiceNavigated;
-            }
+            _navigationService?.Navigated -= NavServiceNavigated;
             _navigationService = value;
-            if (_navigationService != null)
-            {
-                _navigationService.Navigated += NavServiceNavigated;
-            }
+            _navigationService?.Navigated += NavServiceNavigated;
         }
     }
 

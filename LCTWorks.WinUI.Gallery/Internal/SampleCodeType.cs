@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace LCTWorks.WinUI.Controls.Internal;
+namespace LCTWorks.Workshop.Internal;
 
 public enum SampleCodeType
 {

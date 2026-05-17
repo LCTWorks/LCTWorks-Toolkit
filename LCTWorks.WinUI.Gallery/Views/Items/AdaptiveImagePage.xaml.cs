@@ -1,6 +1,5 @@
 using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Helpers;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using Windows.Storage;

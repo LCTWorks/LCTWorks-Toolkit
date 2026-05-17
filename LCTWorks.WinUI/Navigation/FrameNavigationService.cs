@@ -2,7 +2,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace LCTWorks.WinUI.Navigation;
@@ -130,17 +129,11 @@ public class FrameNavigationService
 
     private void RegisterFrameEvents()
     {
-        if (_frame != null)
-        {
-            _frame.Navigated += OnNavigated;
-        }
+        _frame?.Navigated += OnNavigated;
     }
 
     private void UnregisterFrameEvents()
     {
-        if (_frame != null)
-        {
-            _frame.Navigated -= OnNavigated;
-        }
+        _frame?.Navigated -= OnNavigated;
     }
 }

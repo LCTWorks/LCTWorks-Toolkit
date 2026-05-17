@@ -2,8 +2,8 @@
 using CommunityToolkit.WinUI.UI.Controls;
 using LCTWorks.Core.Extensions;
 using LCTWorks.WinUI.Controls;
-using LCTWorks.WinUI.Controls.Internal;
 using LCTWorks.WinUI.Helpers;
+using LCTWorks.Workshop.Internal;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
