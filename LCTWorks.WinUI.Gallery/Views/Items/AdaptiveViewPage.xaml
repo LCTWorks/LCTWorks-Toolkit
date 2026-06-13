@@ -19,7 +19,7 @@
                 <TextBlock HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Foreground="Black"
-                           Text="{x:Bind Name}" />
+                           Text="{x:Bind}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="RoundedColorItemTemplate"
@@ -56,7 +56,7 @@
                                             IsItemClickEnabled="True"
                                             ItemClicked="ItemsView_ItemClicked"
                                             ItemTemplate="{x:Bind ItemTemplate, Mode=OneWay}"
-                                            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                                            ItemsSource="{x:Bind View, Mode=OneWay}"
                                             Layout="{x:Bind Layout, Mode=OneWay}"
                                             UseSoftAnimations="True">
                                 <c:AdaptiveView.ItemTransitionProvider>
@@ -99,6 +99,9 @@
                                 <Button HorizontalAlignment="Stretch"
                                         Content="Bring first into view"
                                         Tapped="BringFirstIndexTapped" />
+                                <muxc:Slider Maximum="{x:Bind _colors.Count, Mode=OneWay}"
+                                             Minimum="0"
+                                             Value="{x:Bind FilterCount, Mode=TwoWay}" />
                             </StackPanel>
                         </Grid>
                     </clocal:SampleCodePresenter.OptionsPaneContent>

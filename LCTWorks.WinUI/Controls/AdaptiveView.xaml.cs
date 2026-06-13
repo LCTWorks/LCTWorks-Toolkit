@@ -198,6 +198,14 @@ public partial class AdaptiveView : Control
 
     private static void DetachSoftAnimations(UIElement element)
     {
+        if (GetAnimationData(element) is { } data)
+        {
+            data.Visual.StopAnimation("Translation");
+            data.Visual.Properties.InsertVector3("Translation", Vector3.Zero);
+            data.Visual.StopAnimation("Scale");
+            data.Visual.Scale = Vector3.One;
+        }
+
         element.SetValue(SoftAnimationDataProperty, null);
         element.PointerEntered -= OnItemPointerEntered;
         element.PointerExited -= OnItemPointerExited;

@@ -1,7 +1,10 @@
+using CommunityToolkit.WinUI.Collections;
 using LCTWorks.WinUI.Controls;
 using LCTWorks.Workshop.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,28 +16,41 @@ public sealed partial class AdaptiveViewPage : ObservablePage
 {
     private const int BaseItemCount = 64;
 
+    private readonly ObservableCollection<ColorItem> _colors;
+    private readonly AdvancedCollectionView _viewSource;
+
     public AdaptiveViewPage()
     {
         InitializeComponent();
+        _colors = [];
+        _viewSource = new AdvancedCollectionView(_colors);
     }
 
-    public object? ItemsSource
+    public int FilterCount
     {
-        get => field;
-        set => SetProperty(ref field, value);
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                UpdateFilters();
+            }
+        }
     }
 
     public object? ItemTemplate
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 
     public Layout? Layout
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
+
+    public ICollectionView View => _viewSource;
 
     private static Color HsvToColor(double hue, double saturation, double value)
     {
@@ -59,49 +75,40 @@ public sealed partial class AdaptiveViewPage : ObservablePage
 
     private void AddItemsToSourceTapped(object _, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs __)
     {
-        if (ItemsSource is ObservableCollection<ColorItem> collection)
+        int count = _colors.Count;
+        for (int i = count; i < count + BaseItemCount; i++)
         {
-            int count = collection.Count;
-            for (int i = count; i < count + BaseItemCount; i++)
-            {
-                double hue = 360.0 * i / (count + BaseItemCount);
-                Color c = HsvToColor(hue, 1.0, 1.0);
-                collection.Add(new ColorItem($"Color {i}", c));
-            }
+            double hue = 360.0 * i / (count + BaseItemCount);
+            Color c = HsvToColor(hue, 1.0, 1.0);
+            _colors.Add(new ColorItem($"Color {i}", c, i + 1));
         }
     }
 
     private void AddOneColorTapped(object _, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs __)
     {
-        if (ItemsSource is ObservableCollection<ColorItem> collection)
-        {
-            double hue = 360.0 * 0 / (1 + BaseItemCount);
-            Color c = HsvToColor(hue, 1.0, 1.0);
-            collection.Insert(1, new ColorItem($"Color x", c));
-        }
+        double hue = 360.0 * 0 / (1 + BaseItemCount);
+        Color c = HsvToColor(hue, 1.0, 1.0);
+        _colors.Insert(1, new ColorItem($"Color x", c, _colors.Count + 1));
     }
 
     private void BringFirstIndexTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
-        if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
-        {
-            ItemsView.BringIntoView(0);
-        }
+        ItemsView.BringIntoView(0);
     }
 
     private void BringLastIndexTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
-        if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
+        if (_colors.Count > 0)
         {
-            ItemsView.BringIntoView(items.Count - 1);
+            ItemsView.BringIntoView(_colors.Count - 1);
         }
     }
 
     private void BringLastItemTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
-        if (ItemsSource is ObservableCollection<ColorItem> items && items.Count > 0)
+        if (_colors.Count > 0)
         {
-            var last = items.Last();
+            var last = _colors.Last();
             ItemsView.BringIntoView(last);
         }
     }
@@ -140,9 +147,9 @@ public sealed partial class AdaptiveViewPage : ObservablePage
     private void ItemsView_ItemClicked(object sender, AdaptiveViewItemClickedEventArgs e)
     {
         var color = e.ClickedItem as ColorItem;
-        if (ItemsSource is ObservableCollection<ColorItem> items && color != null)
+        if (color != null)
         {
-            items.Remove(color);
+            _colors.Remove(color);
         }
     }
 
@@ -152,15 +159,30 @@ public sealed partial class AdaptiveViewPage : ObservablePage
         if (template != null)
         {
             ItemTemplate = template;
-            var collection = new ObservableCollection<ColorItem>();
+            _colors.Clear();
             int count = BaseItemCount;
             for (int i = 0; i < count; i++)
             {
                 double hue = 360.0 * i / count;
                 Color c = HsvToColor(hue, 1.0, 1.0);
-                collection.Add(new ColorItem($"Color {i}", c));
+                _colors.Add(new ColorItem($"Color", c, i + 1));
             }
-            ItemsSource = collection;
         }
+    }
+
+    private void UpdateFilters()
+    {
+        _viewSource.Filter = item =>
+        {
+            if (item is ColorItem colorItem)
+            {
+                return colorItem.Index % (FilterCount + 1) == 0;
+            }
+            return false;
+        };
+        // RefreshFilter() already raises a CollectionChanged (Reset) that the ItemsRepeater
+        // reacts to. Re-pushing the same view instance via OnPropertyChanged(nameof(View)) is
+        // redundant and can interrupt the in-flight rearrange, so it is intentionally omitted.
+        _viewSource.RefreshFilter();
     }
 }
