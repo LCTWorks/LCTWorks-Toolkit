@@ -11,12 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace LCTWorks.Workshop.Views.Items;
 
-/// <summary>
-/// A manual test space for <c>SentryTelemetryServiceInternal</c> (via <see cref="ITelemetryService"/>).
-/// Initialize the SDK with a DSN, then trigger logs, breadcrumbs, handled/unhandled errors,
-/// traces and flushing. Each action is echoed to an on-page activity log so behavior is visible
-/// without leaving the app; the actual events are delivered to your Sentry project.
-/// </summary>
 public sealed partial class SentryPage : ObservablePage
 {
     private const string DsnSettingKey = "SentryTestPage.Dsn";
@@ -33,7 +27,6 @@ public sealed partial class SentryPage : ObservablePage
         InitializeComponent();
         _telemetry = App.GetService<ITelemetryService>();
 
-        // Restore the DSN/environment entered in a previous session (MSIX builds only).
         var cachedDsn = LocalSettingsHelper.ReadSetting<string>(DsnSettingKey);
         Dsn = string.IsNullOrWhiteSpace(cachedDsn) ? string.Empty : cachedDsn;
 
@@ -52,25 +45,25 @@ public sealed partial class SentryPage : ObservablePage
 
     public string Dsn
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     } = string.Empty;
 
     public string Environment
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     } = string.Empty;
 
     public string StatusMessage
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     } = string.Empty;
 
     public InfoBarSeverity StatusSeverity
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 
@@ -193,7 +186,7 @@ public sealed partial class SentryPage : ObservablePage
             return;
         }
         var ex = CreateSampleException("Transaction failed in the test page.");
-        //_telemetry!.FinishTrace(_transactionId, TelemetryTraceStatus.InternalError, ex);
+        _telemetry!.FinishTrace(_transactionId, TelemetryTraceStatus.InternalError, ex);
         AppendActivity("Finished transaction with status InternalError + exception.");
         _transactionId = null;
         _childId = null;
@@ -255,7 +248,7 @@ public sealed partial class SentryPage : ObservablePage
 
             _telemetry.Initialize(
                 Dsn.Trim(),
-                //projectName: "Workshop",
+                projectName: "toolkit-lctworks",
                 environment: string.IsNullOrWhiteSpace(Environment) ? "development" : Environment.Trim(),
                 isDebug: true,
                 contextData: contextData);

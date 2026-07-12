@@ -52,8 +52,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.251219" />
-		<PackageReference Include="LCTWorks.Core" Version="1.0.2605.8" />
-		<PackageReference Include="LCTWorks.Telemetry" Version="1.0.2605.8" />
+		<PackageReference Include="LCTWorks.Core" Version="1.0.2607" />
+		<PackageReference Include="LCTWorks.Telemetry" Version="1.0.2607" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />

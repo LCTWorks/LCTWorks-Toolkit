@@ -1,0 +1,25 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Deterministic build (fixes "Non deterministic" warning) -->
+    <Deterministic>true</Deterministic>
+    <!-- Enables deterministic output paths; only true on CI/build servers.
+         Set the CI env var (or -p:ContinuousIntegrationBuild=true on the pack command). -->
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <!-- Source Link + symbols (fixes "Missing symbols" and "Compiler flags: Missing") -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Source Link provider for GitHub -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

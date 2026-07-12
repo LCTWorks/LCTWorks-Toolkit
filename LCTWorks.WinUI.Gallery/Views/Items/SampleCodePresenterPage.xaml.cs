@@ -15,19 +15,19 @@ public sealed partial class SampleCodePresenterPage : ObservablePage
 
     public string CodeExpanderHeader
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 
     public bool IsLoading
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 
     public string MarkdownTabHeader
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 }
