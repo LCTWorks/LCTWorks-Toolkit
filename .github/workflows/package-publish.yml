@@ -48,7 +48,7 @@ jobs:
         run: dotnet restore ${{ inputs.ProjectName }}
 
       - name: Build
-        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore
+        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore -p:ContinuousIntegrationBuild=true
 
       - name: Pack NuGet package
         run: dotnet pack ${{ inputs.ProjectName }} -c Release -p:Version=${{ steps.version.outputs.value }} --no-build --output ./nupkg

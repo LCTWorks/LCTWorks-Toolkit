@@ -93,11 +93,11 @@ jobs:
 
       - name: Build
         if: ${{ !inputs.UseMSBuild }}
-        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore
+        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore -p:ContinuousIntegrationBuild=true
 
       - name: Build (MSBuild)
         if: ${{ inputs.UseMSBuild }}
-        run: msbuild ${{ inputs.ProjectName }} -p:Configuration=Release -p:Platform=AnyCPU -restore:false
+        run: msbuild ${{ inputs.ProjectName }} -p:Configuration=Release -p:Platform=AnyCPU -p:ContinuousIntegrationBuild=true -restore:false
 
       - name: Pack NuGet package
         if: ${{ !inputs.UseMSBuild }}
