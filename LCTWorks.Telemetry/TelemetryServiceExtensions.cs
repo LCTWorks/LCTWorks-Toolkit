@@ -12,6 +12,14 @@ public static class TelemetryServiceExtensions
         return services.AddSingleton<ITelemetryService, SentryTelemetryServiceInternal>();
     }
 
+    /// <summary>
+    /// Adds Sentry's <see cref="SentryHttpMessageHandler"/> to an HttpClient so outbound
+    /// requests are captured as spans and surface in Insights (Requests dashboard).
+    /// Usage: <c>services.AddHttpClient("api").AddSentryTracing();</c>
+    /// </summary>
+    public static IHttpClientBuilder AddSentryTracing(this IHttpClientBuilder builder)
+        => builder.AddHttpMessageHandler(() => new SentryHttpMessageHandler());
+
     public static IServiceCollection AddSentry(this IServiceCollection services, string? sentryDsn, string? projectName, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null)
     {
         var sentryService = new SentryTelemetryServiceInternal();

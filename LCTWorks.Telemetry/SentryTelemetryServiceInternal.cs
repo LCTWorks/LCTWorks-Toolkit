@@ -10,11 +10,21 @@ namespace LCTWorks.Telemetry;
 
 internal class SentryTelemetryServiceInternal : ITelemetryService
 {
+    private const double _debugProfilesSampleRate = 1.0;
+    private const double _debugTracesSampleRate = 1.0;
+    private const double _productionProfilesSampleRate = 0.2;
+    private const double _productionTracesSampleRate = 0.2;
     private static readonly TimeSpan _flushTime = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan _maxSpanAge = TimeSpan.FromMinutes(10);
     private readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
 
     public bool IncludeSerilogIntegration
+    {
+        get;
+        set;
+    }
+
+    public bool IncludeStructuredLogs
     {
         get;
         set;
@@ -116,7 +126,13 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             options.Dsn = sentryDsn;
             options.Environment = environment;
             options.Debug = isDebug;
-            options.TracesSampleRate = 1.0;
+
+            options.TracesSampleRate = isDebug ? _debugTracesSampleRate : _productionTracesSampleRate;
+            options.ProfilesSampleRate = isDebug ? _debugProfilesSampleRate : _productionProfilesSampleRate;
+            options.AddProfilingIntegration();
+
+            options.EnableLogs = true;
+
             options.IsGlobalModeEnabled = true;
             options.AutoSessionTracking = true;
             options.StackTraceMode = StackTraceMode.Original;
@@ -141,9 +157,16 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             });
         });
 
-        if (contextData != null)
+        IncludeStructuredLogs = true;
+
+        SentrySdk.ConfigureScope(scope =>
         {
-            SentrySdk.ConfigureScope(scope =>
+            scope.User = new SentryUser
+            {
+                Id = GetOrCreateInstallationId(contextData?.AppLocalCachePath),
+            };
+
+            if (contextData != null)
             {
                 scope.Contexts.OperatingSystem.Name = contextData.OsName;
                 scope.Contexts.OperatingSystem.Version = contextData.OsVersion;
@@ -151,8 +174,8 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
                 scope.Contexts.Device.DeviceType = contextData.DeviceFamily;
                 scope.Contexts.Device.Model = contextData.DeviceModel;
                 scope.Contexts.Device.Manufacturer = contextData.DeviceManufacturer;
-            });
-        }
+            }
+        });
     }
 
     public virtual void Log(
@@ -184,6 +207,7 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             tags?.ToDictionary(),
             ToBreadCrumbLevel(level));
 
+        LogStructured(level, message, breadcrumbCategory, type, tags);
         LogSerilog(level, message);
     }
 
@@ -327,6 +351,39 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
 
     #region Private
 
+    /// <summary>
+    /// Returns a stable, anonymized per-installation identifier, persisted next to the
+    /// Sentry cache. Falls back to a transient id if no writable cache path is available.
+    /// </summary>
+    private static string GetOrCreateInstallationId(string? cachePath)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(cachePath))
+            {
+                Directory.CreateDirectory(cachePath);
+                var file = Path.Combine(cachePath, "installation-id");
+                if (File.Exists(file))
+                {
+                    var existing = File.ReadAllText(file).Trim();
+                    if (Guid.TryParse(existing, out _))
+                    {
+                        return existing;
+                    }
+                }
+
+                var id = Guid.NewGuid().ToString();
+                File.WriteAllText(file, id);
+                return id;
+            }
+        }
+        catch
+        {
+        }
+
+        return Guid.NewGuid().ToString();
+    }
+
     private static string SerializeException(Exception exception)
     {
         var sb = new StringBuilder();
@@ -360,6 +417,68 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
         }
         var eventLevel = ConvertLogLevel(level);
         logger.Write(eventLevel, text);
+    }
+
+    private void LogStructured(
+        LogLevel level,
+        string message,
+        string? category,
+        string? type,
+        IEnumerable<(string Key, string Value)>? tags)
+    {
+        if (!IncludeStructuredLogs || level == LogLevel.None)
+        {
+            return;
+        }
+
+        void Configure(SentryLog log)
+        {
+            if (!string.IsNullOrEmpty(category))
+            {
+                log.SetAttribute("category", category);
+            }
+            if (!string.IsNullOrEmpty(type))
+            {
+                log.SetAttribute("type", type);
+            }
+            if (tags != null)
+            {
+                foreach (var (Key, Value) in tags)
+                {
+                    if (!string.IsNullOrEmpty(Key) && Value != null)
+                    {
+                        log.SetAttribute(Key, Value);
+                    }
+                }
+            }
+        }
+
+        switch (level)
+        {
+            case LogLevel.Trace:
+                SentrySdk.Logger.LogTrace(Configure, message);
+                break;
+
+            case LogLevel.Debug:
+                SentrySdk.Logger.LogDebug(Configure, message);
+                break;
+
+            case LogLevel.Information:
+                SentrySdk.Logger.LogInfo(Configure, message);
+                break;
+
+            case LogLevel.Warning:
+                SentrySdk.Logger.LogWarning(Configure, message);
+                break;
+
+            case LogLevel.Error:
+                SentrySdk.Logger.LogError(Configure, message);
+                break;
+
+            case LogLevel.Critical:
+                SentrySdk.Logger.LogFatal(Configure, message);
+                break;
+        }
     }
 
     private void SweepStaleSpans()
