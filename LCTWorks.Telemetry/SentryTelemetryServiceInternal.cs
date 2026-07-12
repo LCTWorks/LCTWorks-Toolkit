@@ -55,6 +55,7 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
 
     public void Initialize(
         string sentryDsn,
+        string? projectName,
         string? environment,
         bool isDebug,
         TelemetryEnvironmentContextData? contextData = null)
@@ -66,13 +67,15 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
             options.Debug = isDebug;
             options.TracesSampleRate = 1.0;
             options.IsGlobalModeEnabled = true;
+            options.AutoSessionTracking = true;
             options.StackTraceMode = StackTraceMode.Original;
             options.AttachStacktrace = true;
             options.InitCacheFlushTimeout = TimeSpan.FromSeconds(1);
 
             if (contextData != null)
             {
-                options.Release = $"{contextData.AppDisplayName}@{contextData.AppVersion}";
+                var prefix = !string.IsNullOrWhiteSpace(projectName) ? $"{projectName}@" : string.Empty;
+                options.Release = $"{prefix}{contextData.AppVersion}";
                 options.CacheDirectoryPath = contextData.AppLocalCachePath;
             }
 
@@ -98,6 +101,13 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
                 scope.Contexts.Device.Model = contextData.DeviceModel;
                 scope.Contexts.Device.Manufacturer = contextData.DeviceManufacturer;
             });
+        }
+        try
+        {
+            SentrySdk.CaptureMessage("Sentry initialized");
+        }
+        catch
+        {
         }
     }
 

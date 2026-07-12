@@ -13,7 +13,7 @@ public interface ITelemetryService
 
     void Flush();
 
-    void Initialize(string serviceKey, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
+    void Initialize(string serviceKey, string projectName, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
 
     void Log(string? message = null,
             LogLevel level = LogLevel.Information,

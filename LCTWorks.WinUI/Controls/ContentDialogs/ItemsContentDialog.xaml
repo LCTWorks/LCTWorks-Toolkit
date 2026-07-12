@@ -40,27 +40,27 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock x:Name="FluentGlyphTextBlock"
-                               Grid.RowSpan="2"
                                x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
+                               Grid.RowSpan="2"
                                Style="{StaticResource FluentIconsTextBlockStyle}"
                                Text="{x:Bind IconUri, Mode=OneWay}" />
                     <TextBlock x:Name="MaterialGlyphTextBlock"
-                               Grid.RowSpan="2"
                                x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
+                               Grid.RowSpan="2"
                                FontSize="{StaticResource FluentIconsTextBlockFontSize}"
                                Style="{StaticResource MaterialSymbolsTextBlockStyle}"
                                Text="{x:Bind IconUri, Mode=OneWay}" />
                     <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
-                               Grid.RowSpan="2"
                                x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
+                               Grid.RowSpan="2"
                                FontSize="{StaticResource FluentIconsTextBlockFontSize}"
                                Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
                                Text="{x:Bind IconUri, Mode=OneWay}" />
                     <Image x:Name="IconImage"
+                           x:Load="{x:Bind IsImage, Mode=OneWay}"
                            Grid.RowSpan="2"
                            Width="24"
                            Height="24"
-                           x:Load="{x:Bind IsImage, Mode=OneWay}"
                            Source="{x:Bind IconUri, Mode=OneWay}" />
                     <TextBlock Grid.Column="1"
                                HorizontalAlignment="Left"
@@ -98,27 +98,27 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock x:Name="FluentGlyphTextBlock"
-                                   Grid.RowSpan="2"
                                    x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
+                                   Grid.RowSpan="2"
                                    Style="{StaticResource FluentIconsTextBlockStyle}"
                                    Text="{x:Bind IconUri, Mode=OneWay}" />
                         <TextBlock x:Name="MaterialGlyphTextBlock"
-                                   Grid.RowSpan="2"
                                    x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
+                                   Grid.RowSpan="2"
                                    FontSize="{StaticResource FluentIconsTextBlockFontSize}"
                                    Style="{StaticResource MaterialSymbolsTextBlockStyle}"
                                    Text="{x:Bind IconUri, Mode=OneWay}" />
                         <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
-                                   Grid.RowSpan="2"
                                    x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
+                                   Grid.RowSpan="2"
                                    FontSize="{StaticResource FluentIconsTextBlockFontSize}"
                                    Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
                                    Text="{x:Bind IconUri, Mode=OneWay}" />
                         <Image x:Name="IconImage"
+                               x:Load="{x:Bind IsImage, Mode=OneWay}"
                                Grid.RowSpan="2"
                                Width="24"
                                Height="24"
-                               x:Load="{x:Bind IsImage, Mode=OneWay}"
                                Source="{x:Bind IconUri, Mode=OneWay}" />
                         <TextBlock Grid.Column="1"
                                    HorizontalAlignment="Left"
@@ -148,10 +148,10 @@
         <Rectangle Margin="48,8,48,0"
                    Style="{StaticResource SmoothHorizontalSeparatorRectangleStyle}" />
         <TextBlock x:Name="DescriptionTextBlock"
+                   x:Load="{x:Bind HasDescription, Mode=OneWay}"
                    Grid.Row="1"
                    Margin="32,12"
                    HorizontalAlignment="Center"
-                   x:Load="{x:Bind HasDescription, Mode=OneWay}"
                    Style="{StaticResource SmoothRegularTextBlockStyle}"
                    Text="{x:Bind Description, Mode=OneWay}"
                    TextAlignment="Center"
