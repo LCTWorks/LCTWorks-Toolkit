@@ -1,4 +1,5 @@
-﻿using LCTWorks.WinUI.Activation;
+﻿using LCTWorks.Telemetry;
+using LCTWorks.WinUI.Activation;
 using LCTWorks.WinUI.Dialogs;
 using LCTWorks.Workshop.Services;
 using LCTWorks.Workshop.ViewModels;
@@ -32,6 +33,7 @@ public partial class App : Application, IAppExtended
                .AddSingleton<DialogService>()
                .AddSingleton<FrameNavigationService>()
                .AddSingleton<DocsService>()
+               .AddSentry()//Initialized on demand from the Sentry test page.
                //ViewModels:
                .AddSingleton<ShellViewModel>()
                .AddSingleton<SettingsViewModel>()

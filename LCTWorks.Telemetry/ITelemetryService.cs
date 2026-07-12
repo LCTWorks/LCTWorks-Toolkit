@@ -5,7 +5,7 @@ namespace LCTWorks.Telemetry;
 
 public interface ITelemetryService
 {
-    void AppentToTrace(string id, IEnumerable<(string Key, string Value)> data);
+    void AppendToTrace(string id, IEnumerable<(string Key, string Value)> data);
 
     void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null);
 
@@ -13,7 +13,7 @@ public interface ITelemetryService
 
     void Flush();
 
-    void Initialize(string serviceKey, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
+    void Initialize(string serviceKey, string projectName, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null);
 
     void Log(string? message = null,
             LogLevel level = LogLevel.Information,

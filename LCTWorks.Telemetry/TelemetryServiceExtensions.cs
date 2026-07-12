@@ -12,18 +12,26 @@ public static class TelemetryServiceExtensions
         return services.AddSingleton<ITelemetryService, SentryTelemetryServiceInternal>();
     }
 
-    public static IServiceCollection AddSentry(this IServiceCollection services, string? sentryDsn, string environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null)
+    /// <summary>
+    /// Adds Sentry's <see cref="SentryHttpMessageHandler"/> to an HttpClient so outbound
+    /// requests are captured as spans and surface in Insights (Requests dashboard).
+    /// Usage: <c>services.AddHttpClient("api").AddSentryTracing();</c>
+    /// </summary>
+    public static IHttpClientBuilder AddSentryTracing(this IHttpClientBuilder builder)
+        => builder.AddHttpMessageHandler(() => new SentryHttpMessageHandler());
+
+    public static IServiceCollection AddSentry(this IServiceCollection services, string? sentryDsn, string? projectName, string? environment, bool isDebug, TelemetryEnvironmentContextData? contextData = null)
     {
         var sentryService = new SentryTelemetryServiceInternal();
         if (!string.IsNullOrWhiteSpace(sentryDsn))
         {
-            sentryService.Initialize(sentryDsn, environment, isDebug, contextData);
+            sentryService.Initialize(sentryDsn, projectName, environment, isDebug, contextData);
             services = services.AddSingleton<ITelemetryService>(sentryService);
         }
         return services;
     }
 
-    public static IServiceCollection AddSentryAndSerilog(this IServiceCollection services, string? sentryDsn, string environment, bool isDebug, TelemetryEnvironmentContextData contextData)
+    public static IServiceCollection AddSentryAndSerilog(this IServiceCollection services, string? sentryDsn, string? projectName, string? environment, bool isDebug, TelemetryEnvironmentContextData contextData)
     {
         bool serilogIncluded = false;
         if (contextData.AppLocalCachePath != null)
@@ -37,7 +45,7 @@ public static class TelemetryServiceExtensions
         {
             IncludeSerilogIntegration = serilogIncluded
         };
-        sentryService.Initialize(sentryDsn ?? string.Empty, environment, isDebug, contextData);
+        sentryService.Initialize(sentryDsn ?? string.Empty, projectName, environment, isDebug, contextData);
         services = services.AddSingleton<ITelemetryService>(sentryService);
 
         return services;
