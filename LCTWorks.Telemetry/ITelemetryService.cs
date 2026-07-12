@@ -5,7 +5,7 @@ namespace LCTWorks.Telemetry;
 
 public interface ITelemetryService
 {
-    void AppentToTrace(string id, IEnumerable<(string Key, string Value)> data);
+    void AppendToTrace(string id, IEnumerable<(string Key, string Value)> data);
 
     void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null);
 

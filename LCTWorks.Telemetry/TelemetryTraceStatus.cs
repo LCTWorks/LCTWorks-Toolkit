@@ -8,5 +8,6 @@
         OutOfRange,
         Cancelled,
         UnknownError,
+        InternalError,
     }
 }

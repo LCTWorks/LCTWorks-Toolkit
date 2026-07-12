@@ -12,7 +12,10 @@ public static class TelemetryExtensions
     public static DisposableTrace StartDisposableTrace(this ITelemetryService service, string id, string name, string operation, string? parentId = null, IEnumerable<(string, string)>? data = null, bool finish = false)
     {
         service.StartTrace(id, name, operation, parentId, data, finish);
-        return new DisposableTrace(id, (e) => service.FinishTrace(id, TelemetryTraceStatus.Ok, e));
+        return new DisposableTrace(id, (e) => service.FinishTrace(
+            id,
+            e == null ? TelemetryTraceStatus.Ok : TelemetryTraceStatus.InternalError,
+            e));
     }
 
     #endregion Tracing

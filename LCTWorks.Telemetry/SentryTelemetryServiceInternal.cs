@@ -11,12 +11,21 @@ namespace LCTWorks.Telemetry;
 internal class SentryTelemetryServiceInternal : ITelemetryService
 {
     private static readonly TimeSpan _flushTime = TimeSpan.FromSeconds(2);
-    private static readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
+    private static readonly TimeSpan _maxSpanAge = TimeSpan.FromMinutes(10);
+    private readonly ConcurrentDictionary<string, ISpan> _spansPool = new();
 
     public bool IncludeSerilogIntegration
     {
         get;
         set;
+    }
+
+    public void AppendToTrace(string id, IEnumerable<(string Key, string Value)> data)
+    {
+        if (_spansPool.TryGetValue(id, out var span))
+        {
+            span.SetTags(data.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)));
+        }
     }
 
     public void ConfigureScope(IEnumerable<(string Key, string Value)>? tags = null)
@@ -44,8 +53,50 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
         });
     }
 
+    public void FinishTrace(string id, TelemetryTraceStatus? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null)
+    {
+        if (_spansPool.TryRemove(id, out var span))
+        {
+            if (data != null)
+            {
+                span.SetTags(data.ValidateStringKeyValuePair());
+            }
+
+            var activeChildren = _spansPool.Where(pair => pair.Value.ParentSpanId == span.SpanId).ToList();
+            foreach (var item in activeChildren)
+            {
+                _spansPool.TryRemove(item.Key, out var child);
+                child?.Finish();
+            }
+
+            var finishStatus = status != null ? ConvertStatus(status.Value) : span.Status;
+
+            if (finishStatus != null)
+            {
+                var transaction = span.GetTransaction();
+                if (PropagateStatus(transaction, finishStatus))
+                {
+                    transaction.Status = finishStatus;
+                }
+                if (exception != null)
+                {
+                    span.Finish(exception, finishStatus.Value);
+                }
+                else
+                {
+                    span.Finish(finishStatus.Value);
+                }
+            }
+            else
+            {
+                span.Finish();
+            }
+        }
+    }
+
     public virtual void Flush()
     {
+        SweepStaleSpans();
         SentrySdk.Flush(_flushTime);
         if (IncludeSerilogIntegration)
         {
@@ -101,13 +152,6 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
                 scope.Contexts.Device.Model = contextData.DeviceModel;
                 scope.Contexts.Device.Manufacturer = contextData.DeviceManufacturer;
             });
-        }
-        try
-        {
-            SentrySdk.CaptureMessage("Sentry initialized");
-        }
-        catch
-        {
         }
     }
 
@@ -173,78 +217,6 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
         return id;
     }
 
-    public virtual void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null)
-    {
-        if (exception != null)
-        {
-            exception.Data[Mechanism.HandledKey] = true;
-
-            var sentryEvent = new SentryEvent(exception)
-            {
-                Level = SentryLevel.Error,
-                Message = message,
-            };
-
-            if (tags != null)
-            {
-                sentryEvent.SetTags(tags.ValidateStringKeyValuePair());
-            }
-
-            SentrySdk.CaptureEvent(sentryEvent);
-        }
-    }
-
-    #region Traces
-
-    public void AppentToTrace(string id, IEnumerable<(string Key, string Value)> data)
-    {
-        if (_spansPool.TryGetValue(id, out var span))
-        {
-            span.SetTags(data.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)));
-        }
-    }
-
-    public void FinishTrace(string id, TelemetryTraceStatus? status = null, Exception? exception = null, IEnumerable<(string Key, string Value)>? data = null)
-    {
-        if (_spansPool.TryRemove(id, out var span))
-        {
-            if (data != null)
-            {
-                span.SetTags(data.ValidateStringKeyValuePair());
-            }
-
-            var activeChildren = _spansPool.Where(pair => pair.Value.ParentSpanId == span.SpanId).ToList();
-            foreach (var item in activeChildren)
-            {
-                _spansPool.TryRemove(item.Key, out var child);
-                child?.Finish();
-            }
-
-            var finishStatus = status != null ? ConvertStatus(status.Value) : span.Status;
-
-            if (finishStatus != null)
-            {
-                var transaction = span.GetTransaction();
-                if (PropagateStatus(transaction, finishStatus))
-                {
-                    transaction.Status = finishStatus;
-                }
-                if (exception != null)
-                {
-                    span.Finish(exception, finishStatus.Value);
-                }
-                else
-                {
-                    span.Finish(finishStatus.Value);
-                }
-            }
-            else
-            {
-                span.Finish();
-            }
-        }
-    }
-
     public void StartTrace(string id, string name, string operation, string? parentId = null, IEnumerable<(string Key, string Value)>? data = null, bool finish = false)
     {
         if (parentId == null)
@@ -277,6 +249,54 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
         }
     }
 
+    public virtual void TrackError(Exception exception, IEnumerable<(string Key, string Value)>? tags = null, string? message = null)
+    {
+        if (exception != null)
+        {
+            exception.Data[Mechanism.HandledKey] = true;
+
+            var sentryEvent = new SentryEvent(exception)
+            {
+                Level = SentryLevel.Error,
+                Message = message,
+            };
+
+            if (tags != null)
+            {
+                sentryEvent.SetTags(tags.ValidateStringKeyValuePair());
+            }
+
+            SentrySdk.CaptureEvent(sentryEvent);
+        }
+    }
+
+    #region Traces
+
+    private static LogEventLevel ConvertLogLevel(LogLevel level)
+            => level switch
+            {
+                LogLevel.Trace => LogEventLevel.Verbose,
+                LogLevel.Debug => LogEventLevel.Debug,
+                LogLevel.Information => LogEventLevel.Information,
+                LogLevel.Warning => LogEventLevel.Warning,
+                LogLevel.Error => LogEventLevel.Error,
+                LogLevel.Critical => LogEventLevel.Fatal,
+                _ => LogEventLevel.Information,
+            };
+
+    private static SpanStatus ConvertStatus(TelemetryTraceStatus traceState)
+                => traceState switch
+                {
+                    TelemetryTraceStatus.Ok => SpanStatus.Ok,
+                    TelemetryTraceStatus.AuthorizationError => SpanStatus.PermissionDenied,
+                    TelemetryTraceStatus.InvalidArgument => SpanStatus.InvalidArgument,
+                    TelemetryTraceStatus.OutOfRange => SpanStatus.OutOfRange,
+                    TelemetryTraceStatus.Cancelled => SpanStatus.Cancelled,
+                    TelemetryTraceStatus.UnknownError => SpanStatus.UnknownError,
+                    TelemetryTraceStatus.InternalError => SpanStatus.InternalError,
+                    _ => SpanStatus.UnknownError,
+                };
+
     /// <summary>
     /// This status values are not considered errors.
     /// </summary>
@@ -306,30 +326,6 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
     #endregion Traces
 
     #region Private
-
-    private static LogEventLevel ConvertLogLevel(LogLevel level)
-        => level switch
-        {
-            LogLevel.Trace => LogEventLevel.Verbose,
-            LogLevel.Debug => LogEventLevel.Debug,
-            LogLevel.Information => LogEventLevel.Information,
-            LogLevel.Warning => LogEventLevel.Warning,
-            LogLevel.Error => LogEventLevel.Error,
-            LogLevel.Critical => LogEventLevel.Fatal,
-            _ => LogEventLevel.Information,
-        };
-
-    private static SpanStatus ConvertStatus(TelemetryTraceStatus traceState)
-            => traceState switch
-            {
-                TelemetryTraceStatus.Ok => SpanStatus.Ok,
-                TelemetryTraceStatus.AuthorizationError => SpanStatus.PermissionDenied,
-                TelemetryTraceStatus.InvalidArgument => SpanStatus.InvalidArgument,
-                TelemetryTraceStatus.OutOfRange => SpanStatus.OutOfRange,
-                TelemetryTraceStatus.Cancelled => SpanStatus.Cancelled,
-                TelemetryTraceStatus.UnknownError => SpanStatus.UnknownError,
-                _ => SpanStatus.UnknownError,
-            };
 
     private static string SerializeException(Exception exception)
     {
@@ -364,6 +360,24 @@ internal class SentryTelemetryServiceInternal : ITelemetryService
         }
         var eventLevel = ConvertLogLevel(level);
         logger.Write(eventLevel, text);
+    }
+
+    private void SweepStaleSpans()
+    {
+        if (_spansPool.IsEmpty)
+        {
+            return;
+        }
+
+        var cutoff = DateTimeOffset.UtcNow - _maxSpanAge;
+        foreach (var pair in _spansPool)
+        {
+            if (pair.Value.StartTimestamp <= cutoff
+                && _spansPool.TryRemove(pair.Key, out var span))
+            {
+                span.Finish(SpanStatus.DeadlineExceeded);
+            }
+        }
     }
 
     #endregion Private
