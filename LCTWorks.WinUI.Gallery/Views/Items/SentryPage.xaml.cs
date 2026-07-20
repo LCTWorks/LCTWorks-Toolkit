@@ -1,5 +1,6 @@
 using LCTWorks.Telemetry;
 using LCTWorks.WinUI.Controls;
+using LCTWorks.WinUI.Extensions;
 using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -43,6 +44,8 @@ public sealed partial class SentryPage : ObservablePage
 
     public ObservableCollection<string> Activity { get; } = [];
 
+    public string Description { get; } = "Sentry_LongDescription".GetTextLocalized();
+
     public string Dsn
     {
         get;
@@ -54,6 +57,8 @@ public sealed partial class SentryPage : ObservablePage
         get;
         set => SetProperty(ref field, value);
     } = string.Empty;
+
+    public string Header { get; } = "Sentry_Title".GetTextLocalized();
 
     public string StatusMessage
     {

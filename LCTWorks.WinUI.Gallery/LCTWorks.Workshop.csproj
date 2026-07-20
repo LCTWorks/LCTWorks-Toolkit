@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\CodeSnippets\AdaptiveImage_1_Xaml.txt" />
+    <None Remove="Assets\CodeSnippets\ThemedButton_Md.txt" />
     <None Remove="Assets\Icons\SampleCodePresenter.svg" />
     <None Remove="Assets\Icons\SampleSvg.svg" />
     <None Remove="Assets\Images\Sample800-1.jpg" />
@@ -50,12 +51,20 @@
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\Items\AdaptiveViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Items\SentryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Items\ThemedButtonPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

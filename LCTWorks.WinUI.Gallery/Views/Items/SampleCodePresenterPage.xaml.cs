@@ -30,4 +30,10 @@ public sealed partial class SampleCodePresenterPage : ObservablePage
         get;
         set => SetProperty(ref field, value);
     }
+
+    public bool ShowHeader
+    {
+        get;
+        set => SetProperty(ref field, value);
+    } = true;
 }

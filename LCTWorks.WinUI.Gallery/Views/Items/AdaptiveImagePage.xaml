@@ -14,9 +14,9 @@
                 <clocal:SampleCodePresenter x:Name="Sample1Control"
                                             Margin="16"
                                             HorizontalContentAlignment="Stretch"
-                                            Description="Basic properties and image behavior"
+                                            Description="{x:Bind Description}"
                                             ExpanderHeader="Code here"
-                                            Header="AdaptiveImage"
+                                            Header="{x:Bind Header}"
                                             MinOptionsPaneWidth="200"
                                             XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/AdaptiveImage_1_Xaml.txt">
                     <clocal:SampleCodePresenter.Content>

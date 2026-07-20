@@ -16,9 +16,9 @@
                                             MaxHeight="720"
                                             Margin="16"
                                             HorizontalContentAlignment="Stretch"
-                                            Description="A test space for SentryTelemetryServiceInternal. Initialize the SDK with your DSN, then exercise logs, breadcrumbs, handled and unhandled errors, traces (sessions, Issues, Insights) and flush. Every action is echoed to the activity log below."
+                                            Description="{x:Bind Description}"
                                             ExpanderHeader="Code"
-                                            Header="Sentry telemetry"
+                                            Header="{x:Bind Header}"
                                             MinOptionsPaneWidth="420"
                                             ShowThemeSwitch="False">
                     <clocal:SampleCodePresenter.Content>

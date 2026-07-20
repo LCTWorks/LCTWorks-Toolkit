@@ -1,5 +1,6 @@
 using CommunityToolkit.WinUI.Collections;
 using LCTWorks.WinUI.Controls;
+using LCTWorks.WinUI.Extensions;
 using LCTWorks.Workshop.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -26,6 +27,8 @@ public sealed partial class AdaptiveViewPage : ObservablePage
         _viewSource = new AdvancedCollectionView(_colors);
     }
 
+    public string Description { get; } = "AdaptiveView_Description".GetTextLocalized();
+
     public int FilterCount
     {
         get;
@@ -37,6 +40,8 @@ public sealed partial class AdaptiveViewPage : ObservablePage
             }
         }
     }
+
+    public string Header { get; } = "AdaptiveView_Title".GetTextLocalized();
 
     public object? ItemTemplate
     {

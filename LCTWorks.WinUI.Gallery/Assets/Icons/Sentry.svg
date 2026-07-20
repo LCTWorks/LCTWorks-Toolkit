@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g fill="none"><path fill="url(#SVGsentryA)" d="M16 3a2.5 2.5 0 0 1 2.17 1.25l10.4 18a2.5 2.5 0 0 1-2.17 3.75h-3.55a7.5 7.5 0 0 0-13.9-5.4l-1.9-3.29a11.25 11.25 0 0 1 18.02 4.94h1.33L16 5.75L5.6 23.75h2.02a2.5 2.5 0 0 1 0 2.25H5.6a2.5 2.5 0 0 1-2.17-3.75l10.4-18A2.5 2.5 0 0 1 16 3"/><path fill="url(#SVGsentryB)" d="M16 15.5a7.5 7.5 0 0 1 7.5 7.5a7.5 7.5 0 0 1-7.5 7.5A7.5 7.5 0 0 1 8.5 23a7.5 7.5 0 0 1 7.5-7.5m-3.4 7.9l2.1 2.1l4.1-4.1l-1.4-1.42l-2.7 2.7l-.7-.7z"/><defs><linearGradient id="SVGsentryA" x1="4" x2="26" y1="4" y2="26" gradientUnits="userSpaceOnUse"><stop stop-color="#B57BFF"/><stop offset="1" stop-color="#7A41DC"/></linearGradient><linearGradient id="SVGsentryB" x1="9.5" x2="22.5" y1="16.5" y2="29.5" gradientUnits="userSpaceOnUse"><stop stop-color="#36DFF1"/><stop offset="1" stop-color="#0094F0"/></linearGradient></defs></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 30.3.0, SVG Export Plug-In . SVG Version: 2.1.3 Build 182)  -->
+  <defs>
+    <radialGradient id="radial-gradient" cx="12.59" cy="13.26" fx="12.59" fy="13.26" r="21.91" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c67bf9"/>
+      <stop offset=".92" stop-color="#5f4ce2"/>
+    </radialGradient>
+  </defs>
+  <path d="M17.91,6.51c-.41-.67-1.14-1.09-1.92-1.09s-1.52.41-1.92,1.09l-3.16,5.42c4.91,2.45,8.16,7.33,8.53,12.81h-2.22c-.37-4.7-3.19-8.85-7.43-10.92l-2.93,5.06c2.38,1.07,4.05,3.27,4.44,5.85h-5.1c-.12,0-.23-.08-.29-.19s-.06-.24,0-.35l1.41-2.4c-.48-.4-1.03-.71-1.61-.91l-1.4,2.4c-.29.5-.37,1.11-.22,1.67.15.56.52,1.04,1.03,1.33.33.19.71.29,1.09.29h6.98c.26-3.25-1.19-6.41-3.84-8.32l1.11-1.92c3.34,2.3,5.23,6.19,4.95,10.24h5.91c.28-6.13-2.72-11.95-7.89-15.28l2.24-3.84c.1-.17.33-.23.5-.13.25.14,9.75,16.71,9.93,16.9.06.11.06.25,0,.37-.07.11-.19.18-.32.18h-2.29c.03.61.03,1.22,0,1.83h2.3c.59,0,1.16-.23,1.57-.64s.65-.98.65-1.57c0-.39-.1-.76-.3-1.1L17.91,6.51Z" fill="url(#radial-gradient)"/>
+</svg>

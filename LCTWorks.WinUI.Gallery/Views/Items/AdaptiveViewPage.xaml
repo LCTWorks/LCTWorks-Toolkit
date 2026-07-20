@@ -45,9 +45,9 @@
                                             MaxHeight="480"
                                             Margin="16"
                                             HorizontalContentAlignment="Stretch"
-                                            Description="Basic items view"
+                                            Description="{x:Bind Description}"
                                             ExpanderHeader="Code here"
-                                            Header="ItemsView"
+                                            Header="{x:Bind Header}"
                                             MinOptionsPaneWidth="200">
                     <clocal:SampleCodePresenter.Content>
                         <Grid>

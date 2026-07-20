@@ -46,6 +46,10 @@ public partial class SampleCodePresenter : Control
                     DependencyProperty.Register(nameof(Header), typeof(string), typeof(SampleCodePresenter),
             new PropertyMetadata(default));
 
+    public static readonly DependencyProperty HeaderVisibilityProperty =
+        DependencyProperty.Register(nameof(HeaderVisibility), typeof(Visibility), typeof(SampleCodePresenter),
+            new PropertyMetadata(default));
+
     public static readonly DependencyProperty IsLoadingBarVisibleProperty =
         DependencyProperty.Register(nameof(IsLoadingBarVisible), typeof(bool), typeof(SampleCodePresenter),
             new PropertyMetadata(default, OnLoadingPropertyChanged));
@@ -97,8 +101,11 @@ public partial class SampleCodePresenter : Control
     private SelectorBar? _codeSelector;
 
     private Expander? _expander;
+
     private MarkdownTextBlock? _markdownTextBlock;
+
     private RichTextBlock? _richTextBlock;
+
     private ThemedButton? _themeButton;
 
     public SampleCodePresenter()
@@ -135,6 +142,12 @@ public partial class SampleCodePresenter : Control
     {
         get => (string)GetValue(HeaderProperty);
         set => SetValue(HeaderProperty, value);
+    }
+
+    public Visibility HeaderVisibility
+    {
+        get => (Visibility)GetValue(HeaderVisibilityProperty);
+        set => SetValue(HeaderVisibilityProperty, value);
     }
 
     public bool IsLoadingBarVisible

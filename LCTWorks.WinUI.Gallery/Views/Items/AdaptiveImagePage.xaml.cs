@@ -1,4 +1,5 @@
 using LCTWorks.WinUI.Controls;
+using LCTWorks.WinUI.Extensions;
 using LCTWorks.WinUI.Helpers;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
@@ -19,6 +20,10 @@ public sealed partial class AdaptiveImagePage : ObservablePage
         S1ImageSource = S1AppImageUri;
         SVGThemeAware = true;
     }
+
+    public string Description { get; } = "AdaptiveImage_Description".GetTextLocalized();
+
+    public string Header { get; } = "AdaptiveImage_Title".GetTextLocalized();
 
     public object? S1ImageSource
     {

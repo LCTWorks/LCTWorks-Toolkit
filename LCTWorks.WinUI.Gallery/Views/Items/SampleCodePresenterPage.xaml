@@ -17,6 +17,7 @@
                                             Description="Small description of your control/example code."
                                             ExpanderHeader="{x:Bind CodeExpanderHeader, Mode=OneWay}"
                                             Header="Some header"
+                                            HeaderVisibility="{x:Bind ShowHeader, Mode=OneWay}"
                                             IsLoadingBarVisible="{x:Bind IsLoading, Mode=OneWay}"
                                             MarkdownFilePath="ms-appx:///Assets/CodeSnippets/SampleCodePresenter_Md.txt"
                                             MarkdownTabHeader="{x:Bind MarkdownTabHeader, Mode=OneWay}"
@@ -40,6 +41,9 @@
                             <ToggleSwitch IsOn="{x:Bind IsLoading, Mode=TwoWay}"
                                           OffContent="Show loading indicator"
                                           OnContent="Show loading indicator" />
+                            <ToggleSwitch IsOn="{x:Bind ShowHeader, Mode=TwoWay}"
+                                          OffContent="Show Header"
+                                          OnContent="Show Header" />
                         </StackPanel>
                     </clocal:SampleCodePresenter.OptionsPaneContent>
                 </clocal:SampleCodePresenter>

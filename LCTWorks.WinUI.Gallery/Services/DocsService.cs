@@ -23,6 +23,7 @@ public class DocsService
             { typeof(AdaptiveImagePage).ToString(), typeof(AdaptiveImagePage) },
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
              { typeof(AdaptiveViewPage).ToString(), typeof(AdaptiveViewPage) },
+            { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
         };
     }

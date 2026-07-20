@@ -144,10 +144,19 @@
   <data name="AdaptiveView_Description" xml:space="preserve">
     <value>A lightweight items view based on ItemsRepeater</value>
   </data>
+  <data name="ThemedButton_Title" xml:space="preserve">
+    <value>ThemedButton</value>
+  </data>
+  <data name="ThemedButton_Description" xml:space="preserve">
+    <value>A Button with a glyph, per-state brushes and ready-made semantic styles</value>
+  </data>
   <data name="Sentry_Title" xml:space="preserve">
     <value>Sentry</value>
   </data>
   <data name="Sentry_Description" xml:space="preserve">
     <value>Test space for the Sentry telemetry service</value>
+  </data>
+  <data name="Sentry_LongDescription" xml:space="preserve">
+    <value>A test space for SentryTelemetryServiceInternal. Initialize the SDK with your DSN, then exercise logs, breadcrumbs, handled and unhandled errors, traces (sessions, Issues, Insights) and flush. Every action is echoed to the activity log below.</value>
   </data>
 </root>

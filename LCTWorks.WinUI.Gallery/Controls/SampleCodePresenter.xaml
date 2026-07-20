@@ -26,27 +26,36 @@
                           IsTabStop="False">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="HeaderTextPresenter"
-                                   Margin="{StaticResource SampleCodePresenterHeaderMargin}"
-                                   Style="{ThemeResource SampleCodePresenterHeaderTextBlockStyle}"
-                                   Text="{TemplateBinding Header}" />
-                        <TextBlock x:Name="DescriptionTextPresenter"
-                                   Grid.Row="1"
-                                   Margin="{StaticResource SampleCodePresenterDescriptionMargin}"
-                                   MaxLines="0"
-                                   Style="{ThemeResource SampleCodePresenterDescriptionTextBlockStyle}"
-                                   Text="{TemplateBinding Description}"
-                                   TextAlignment="Justify"
-                                   TextWrapping="WrapWholeWords"
-                                   Visibility="Collapsed" />
-                        <lctwc:ThemedButton x:Name="ThemeButton"
-                                            Grid.RowSpan="2"
-                                            HorizontalAlignment="Right" />
-                        <Grid Grid.Row="2"
+                        <Grid Margin="0,4"
+                              Padding="16"
+                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                              CornerRadius="{StaticResource SampleCodePresenterCornerRadius}"
+                              Visibility="{TemplateBinding HeaderVisibility}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="HeaderTextPresenter"
+                                       Style="{ThemeResource SampleCodePresenterHeaderTextBlockStyle}"
+                                       Text="{TemplateBinding Header}" />
+                            <TextBlock x:Name="DescriptionTextPresenter"
+                                       Grid.Row="1"
+                                       MaxLines="0"
+                                       Style="{ThemeResource SampleCodePresenterDescriptionTextBlockStyle}"
+                                       Text="{TemplateBinding Description}"
+                                       TextAlignment="Justify"
+                                       TextWrapping="WrapWholeWords"
+                                       Visibility="Collapsed" />
+
+                            <lctwc:ThemedButton x:Name="ThemeButton"
+                                                Grid.RowSpan="2"
+                                                HorizontalAlignment="Right" />
+                        </Grid>
+
+                        <Grid Grid.Row="1"
                               Background="{ThemeResource LayerFillColorDefaultBrush}"
                               BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
                               BorderThickness="{StaticResource SampleCodePresenterBorderThickness}"
