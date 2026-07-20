@@ -1,7 +1,9 @@
 using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Extensions;
+using LCTWorks.WinUI.Xaml.Extensions;
 using LCTWorks.Workshop.Models;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,8 +113,10 @@ public sealed partial class ThemedButtonPage : ObservablePage
 
     private void StyleNameTextBlockGotFocus(object sender, RoutedEventArgs e)
     {
-        ControlExtensions.
-        InfoBar.Message = "Resource name copied to clipboard";
-        InfoBar.IsOpen = true;
+        if (sender is TextBlock tb && TextBlockExtensions.GetCopyOnFocus(tb))
+        {
+            InfoBar.Message = "Resource name copied to clipboard";
+            InfoBar.IsOpen = true;
+        }
     }
 }
