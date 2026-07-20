@@ -1,1 +1,140 @@
-﻿Themed button .md content
+﻿# ThemedButton
+
+`LCTWorks.WinUI.Controls.ThemedButton` is a `sealed` control that derives from `Microsoft.UI.Xaml.Controls.Button`. It extends the standard button with an optional leading glyph, per‑visual‑state brush overrides (pointer‑over, pressed, disabled), and automatic spacing between the glyph and the content.
+
+Because it inherits from `Button`, all standard `Button`/`ContentControl` members (`Content`, `Command`, `CommandParameter`, `Padding`, `CornerRadius`, `Background`, `Foreground`, `BorderBrush`, `BorderThickness`, `Click`, etc.) remain available. The members below are what `ThemedButton` adds or relies on.
+
+---
+
+## Properties
+
+All properties below are dependency properties (each has a matching `...Property` static field), so they support binding, styling, and animation.
+
+### State brush overrides
+
+The standard `Button` only exposes a single `Background`/`Foreground`/`BorderBrush`. `ThemedButton` adds explicit brushes for the pointer‑over, pressed, and disabled visual states, which its control template swaps in via the `CommonStates` visual‑state group.
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `BackgroundPointerOver` | `Brush` | `ButtonBackgroundPointerOver` (theme resource) | Background applied while the pointer is over the button. |
+| `BackgroundPressed` | `Brush` | `ButtonBackgroundPressed` (theme resource) | Background applied while the button is pressed. |
+| `BackgroundDisabled` | `Brush` | `ButtonBackgroundDisabled` (theme resource) | Background applied when the button is disabled. |
+| `ForegroundPointerOver` | `Brush` | `ButtonForegroundPointerOver` (theme resource) | Foreground (content + glyph) while the pointer is over the button. |
+| `ForegroundPressed` | `Brush` | `ButtonForegroundPressed` (theme resource) | Foreground (content + glyph) while the button is pressed. |
+| `ForegroundDisabled` | `Brush` | `ButtonForegroundDisabled` (theme resource) | Foreground (content + glyph) when the button is disabled. |
+| `BorderBrushPointerOver` | `Brush` | `ButtonBorderBrushPointerOver` (theme resource) | Border brush while the pointer is over the button. |
+| `BorderBrushPressed` | `Brush` | `ButtonBorderBrushPressed` (theme resource) | Border brush while the button is pressed. |
+| `BorderBrushDisabled` | `Brush` | `ButtonBorderBrushDisabled` (theme resource) | Border brush when the button is disabled. |
+
+The `Normal` state uses the inherited `Background`, `Foreground`, and `BorderBrush`.
+
+### Glyph
+
+A `TextBlock` placed in the first (auto‑width) column, before the content, renders an optional icon glyph.
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the content (e.g. a Segoe Fluent Icons code point). Changing it recalculates the glyph/content separation. |
+| `ShowGlyph` | `bool` | `true` | Whether the glyph is shown. When `false`, the glyph `TextBlock` is collapsed and no separation margin is applied. Changing it recalculates the separation. |
+| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. |
+| `GlyphFontSize` | `double` | `20` (`ThemedButtonGlyphFontSize`) | Font size of the glyph. |
+
+### Layout / spacing
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ThemedButtonSeparationMargin`) | The margin placed between the glyph and the content — but only when both a glyph and content are present. Changing it recalculates the applied separation. |
+
+**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the content presenter actually binds to. Whenever `Glyph`, `ShowGlyph`, `SeparationMargin`, or the `Content` changes, `UpdateSeparation()` runs: if there is a visible glyph **and** non‑empty content, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the content when the button is glyph‑only or text‑only.
+
+### Inherited members worth noting
+
+These are not new, but the default `ThemedButton` style sets them:
+
+| Property | Default set by style | Description |
+|---|---|---|
+| `FontFamily` | `ContentControlThemeFontFamily` | Content font. |
+| `Padding` | `11,5,11,6` (`ThemedButtonPadding`) | Inner padding of the button. |
+
+---
+
+## Control template overview
+
+The default style is `BasedOn` `DefaultButtonStyle` and defines a custom `ControlTemplate`:
+
+- A root `Border` (`BackgroundElement`) carries the background, border, corner radius, and padding, with an 83 ms `BrushTransition` on its background for smooth hover/press color changes.
+- Inside, a two‑column `Grid`: column 0 (auto) holds the glyph `TextBlock`; column 1 holds the `ContentPresenter`.
+- The glyph is vertically centered and uses `TextLineBounds="TrimToCapHeight"`; the content uses `TextLineBounds="Tight"`. The glyph's visibility is bound to `ShowGlyph` through a `BoolToVisibilityConverter`.
+- The `CommonStates` visual‑state group (`Normal`, `PointerOver`, `Pressed`, `Disabled`) swaps the background, border brush, and foreground (for both content and glyph) to the corresponding state brushes listed above.
+
+---
+
+## Available styles (in Generic.xaml)
+
+`Generic.xaml` merges `Controls/ThemedButton.xaml`, so all of the following are available application‑wide. There is one implicit default style plus six named (keyed) style variants. The named variants only change the color scheme (Background/Foreground and their pointer‑over/pressed brushes); everything else is inherited from the default `ThemedButton` template.
+
+| Style key | Applies to | Background | Foreground | Notes |
+|---|---|---|---|---|
+| *(implicit default)* | every `ThemedButton` automatically | inherited `Button` background | inherited | Based on `DefaultButtonStyle`; defines the template, glyph defaults, padding, separation, and the default state brushes. Applied when no `Style` is set. |
+| `DangerThemedButtonStyle` | opt‑in via `Style=` | red `#CE2732` | light `#EEEEEE` | Pointer‑over uses the red brush at 0.9 opacity; pressed at 0.7 opacity, foreground at 0.7 opacity. |
+| `WarningThemedButtonStyle` | opt‑in via `Style=` | yellow `#EFEA5A` | dark `#111111` | Pointer‑over yellow at 0.9 opacity; pressed yellow at 0.7, foreground at 0.7 opacity. |
+| `SuccessThemedButtonStyle` | opt‑in via `Style=` | green `#06DBA2` | dark `#111111` | Pointer‑over green at 0.9 opacity; pressed green at 0.7, foreground at 0.7 opacity. |
+| `AccentThemedButtonStyle` | opt‑in via `Style=` | `AccentButtonBackground` (system accent) | `AccentButtonForeground` | Full accent treatment: also sets `BorderBrush`, `BackgroundSizing="OuterBorderEdge"`, and pointer‑over/pressed/border brushes from the system `AccentButton*` theme resources. |
+| `DarkGrayThemedButtonStyle` | opt‑in via `Style=` | dark gray `#2E2E2E` | light `#EEEEEE` | Pointer‑over gray at 0.9 opacity; pressed gray at 0.7 opacity. |
+| `WhiteThemedButtonStyle` | opt‑in via `Style=` | white `#F0F0F0` | dark `#111111` | Pointer‑over white at 0.9 opacity; pressed white at 0.7 opacity. |
+
+### Supporting resources defined alongside the styles
+
+These keys are declared in `ThemedButton.xaml` and are what the styles above reference:
+
+**Opacities:** `ThemedPressedForegroundOpacity` = 0.7, `ThemedPointerOverBackgroundOpacity` = 0.9, `ThemedPressedBackgroundOpacity` = 0.7.
+
+**Accent colors:** `ThemedLightForegroundColor` `#EEEEEE`, `ThemedDarkForegroundColor` `#111111`, `ThemedRedAccentColor` `#CE2732`, `ThemedYellowAccentColor` `#EFEA5A`, `ThemedGreenAccentColor` `#06DBA2`, `ThemedGrayAccentColor` `#2E2E2E`, `ThemedWhiteAccentColor` `#F0F0F0`.
+
+**Foreground brushes:** `ThemedWhiteForegroundBrush`, `ThemedWhiteForegroundPressedBrush` (0.7 opacity), `ThemedBlackForegroundBrush`, `ThemedBlackForegroundPressedBrush` (0.7 opacity).
+
+**Per‑theme background brushes** (each with a base, a `...PointerOverBrush` at 0.9 opacity, and a `...PressedBrush` at 0.7 opacity): `ThemedRedButtonBackground*`, `ThemedYellowButtonBackground*`, `ThemedGreenButtonBackground*`, `ThemedDarkGrayButtonBackground*`, `ThemedWhiteButtonBackground*`.
+
+**Layout resources:** `ThemedButtonSeparationMargin` = `6,0,0,0`, `ThemedButtonGlyphFontSize` = 20, `ThemedButtonPadding` = `11,5,11,6`, `ThemedButtonGlyphVerticalAlignment` = `Center`, `ThemedButtonGlyphTextLineBounds` = `TrimToCapHeight`, `ThemedButtonContentTextLineBounds` = `Tight`.
+
+---
+
+## Usage examples
+
+Default button with a glyph and text:
+
+```xml
+<controls:ThemedButton Glyph="&#xE710;"
+                       Content="Add item" />
+```
+
+A destructive action using the Danger variant:
+
+```xml
+<controls:ThemedButton Style="{StaticResource DangerThemedButtonStyle}"
+                       Glyph="&#xE74D;"
+                       Content="Delete" />
+```
+
+Glyph‑only button (no separation margin is applied because there is no content):
+
+```xml
+<controls:ThemedButton Glyph="&#xE72B;"
+                       Content="" />
+```
+
+Text‑only button (hide the glyph slot):
+
+```xml
+<controls:ThemedButton ShowGlyph="False"
+                       Content="Continue" />
+```
+
+Custom state colors without a predefined variant:
+
+```xml
+<controls:ThemedButton Content="Custom"
+                       Background="{ThemeResource ControlFillColorDefaultBrush}"
+                       BackgroundPointerOver="{ThemeResource ControlFillColorSecondaryBrush}"
+                       BackgroundPressed="{ThemeResource ControlFillColorTertiaryBrush}" />
+```

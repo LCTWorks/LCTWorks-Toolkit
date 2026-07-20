@@ -3,8 +3,10 @@
                     xmlns:ccui="using:CommunityToolkit.WinUI.UI.Controls"
                     xmlns:lctwc="using:LCTWorks.WinUI.Controls"
                     xmlns:local="using:LCTWorks.Workshop.Controls">
-    <Thickness x:Key="SampleCodePresenterHeaderMargin">8,8,8,4</Thickness>
-    <Thickness x:Key="SampleCodePresenterDescriptionMargin">8,0,8,8</Thickness>
+    <Thickness x:Key="SampleCodePresenterHeaderPadding">16</Thickness>
+    <Thickness x:Key="SampleCodePresenterHeaderMargin">0,4</Thickness>
+    <Thickness x:Key="SampleCodePresenterContentPadding">12</Thickness>
+    <Thickness x:Key="SampleCodePresenterOptionsPanePadding">12</Thickness>
     <Thickness x:Key="SampleCodePresenterBorderThickness">1</Thickness>
     <CornerRadius x:Key="SampleCodePresenterCornerRadius">8</CornerRadius>
     <CornerRadius x:Key="SampleCodePresenterExpanderCornerRadius">0,0,8,8</CornerRadius>
@@ -29,9 +31,11 @@
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid Margin="0,4"
-                              Padding="16"
-                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        <Grid Margin="{StaticResource SampleCodePresenterHeaderMargin}"
+                              Padding="{StaticResource SampleCodePresenterHeaderPadding}"
+                              Background="{ThemeResource LayerFillColorAltBrush}"
+                              BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                              BorderThickness="{StaticResource SampleCodePresenterBorderThickness}"
                               CornerRadius="{StaticResource SampleCodePresenterCornerRadius}"
                               Visibility="{TemplateBinding HeaderVisibility}">
                             <Grid.RowDefinitions>
@@ -70,7 +74,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ContentPresenter x:Name="ContentControlPresenter"
-                                              Padding="12"
+                                              Padding="{StaticResource SampleCodePresenterContentPadding}"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Stretch"
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -85,7 +89,7 @@
                             <ContentPresenter x:Name="OptionsControlPresenter"
                                               Grid.Column="1"
                                               MinWidth="{TemplateBinding MinOptionsPaneWidth}"
-                                              Padding="12"
+                                              Padding="{StaticResource SampleCodePresenterOptionsPanePadding}"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Stretch"
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"

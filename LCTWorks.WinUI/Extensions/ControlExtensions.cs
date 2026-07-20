@@ -8,7 +8,7 @@ using Windows.UI;
 
 namespace LCTWorks.WinUI.Extensions;
 
-public static class TextBlockExtensions
+public static class ControlExtensions
 {
     public static void ToAnimatedForeground(this TextBlock textBlock, Color toColor, TimeSpan duration, bool autoReverse = true)
     {

@@ -42,7 +42,7 @@
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <clocal:SampleCodePresenter x:Name="Sample1Control"
-                                            MaxHeight="480"
+                                            MaxHeight="520"
                                             Margin="16"
                                             HorizontalContentAlignment="Stretch"
                                             Description="{x:Bind Description}"
