@@ -78,7 +78,6 @@
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Style="{ThemeResource SmoothItemTitleTextBlockStyle}"
                                Text="Resource name" />
@@ -94,9 +93,7 @@
                     <TextBlock Grid.Column="4"
                                Style="{ThemeResource SmoothItemTitleTextBlockStyle}"
                                Text="Disabled" />
-                    <TextBlock Grid.Column="5"
-                               Style="{ThemeResource SmoothItemTitleTextBlockStyle}"
-                               Text="Details" />
+
                     <ItemsRepeater Grid.Row="1"
                                    Grid.ColumnSpan="6"
                                    ItemsSource="{x:Bind Styles, Mode=OneWay}">
@@ -109,18 +106,26 @@
                                         <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
                                     <MenuFlyoutSeparator Grid.ColumnSpan="6"
                                                          Margin="0,-16"
                                                          VerticalAlignment="Top" />
-                                    <TextBlock Margin="16,0"
-                                               VerticalAlignment="Center"
-                                               xaml:TextBlockExtensions.CopyOnFocus="{x:Bind ValidStyle, Mode=OneWay}"
-                                               GotFocus="StyleNameTextBlockGotFocus"
-                                               IsTextSelectionEnabled="True"
-                                               Style="{StaticResource CodeStyleTextBlock}"
-                                               Text="{x:Bind ResourceName}" />
+                                    <Grid Margin="16,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center"
+                                                   IsTextSelectionEnabled="True"
+                                                   Style="{StaticResource CodeStyleTextBlock}"
+                                                   Text="{x:Bind ResourceName}" />
+                                        <c:ThemedButton Grid.Column="1"
+                                                        Glyph="&#xE8C8;"
+                                                        Tag="{x:Bind}"
+                                                        Tapped="CopyTapped"
+                                                        ToolTipService.ToolTip="Copy style name"
+                                                        Visibility="{x:Bind ValidStyle}" />
+                                    </Grid>
                                     <c:ThemedButton Grid.Column="1"
                                                     Content="Themed Button"
                                                     Style="{x:Bind Style}" />
@@ -147,9 +152,10 @@
             </StackPanel>
         </ScrollViewer>
         <InfoBar x:Name="InfoBar"
+                 Margin="24"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Bottom"
-                 Background="{ThemeResource SmokeFillColorDefaultBrush}"
+                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
                  IsOpen="False"
                  Severity="Informational" />
     </Grid>

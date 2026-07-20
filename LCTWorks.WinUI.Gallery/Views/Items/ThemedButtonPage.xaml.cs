@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace LCTWorks.Workshop.Views.Items;
 
@@ -75,6 +76,28 @@ public sealed partial class ThemedButtonPage : ObservablePage
         return entry;
     }
 
+    private void CopyTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is ThemedButtonStyleEntry entry && entry.ValidStyle)
+        {
+            try
+            {
+                var package = new DataPackage
+                {
+                    RequestedOperation = DataPackageOperation.Copy
+                };
+                package.SetText(entry.ResourceName);
+                Clipboard.SetContent(package);
+
+                InfoBar.Message = "Resource name copied to clipboard";
+                InfoBar.IsOpen = true;
+            }
+            catch
+            {
+            }
+        }
+    }
+
     private void InitProperties()
     {
         ButtonContent = "Content";
@@ -109,14 +132,5 @@ public sealed partial class ThemedButtonPage : ObservablePage
             }
         }
         FontFamilyWarningTextBlock.Visibility = Visibility.Visible;
-    }
-
-    private void StyleNameTextBlockGotFocus(object sender, RoutedEventArgs e)
-    {
-        if (sender is TextBlock tb && TextBlockExtensions.GetCopyOnFocus(tb))
-        {
-            InfoBar.Message = "Resource name copied to clipboard";
-            InfoBar.IsOpen = true;
-        }
     }
 }
