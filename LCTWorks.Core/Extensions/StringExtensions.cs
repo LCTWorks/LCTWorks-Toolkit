@@ -4,8 +4,43 @@ public static class StringExtensions
 {
     public const string DefaultCommentPrefix = "#";
 
+    /// <summary>
+    /// Uppercases the first letter of each whitespace-delimited word.
+    /// Returns the same instance if no change is needed.
+    /// </summary>
+    public static string Capitalize(this string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
+
+        if (!NeedsCapitalization(value))
+            return value;
+
+        return string.Create(value.Length, value, static (span, source) =>
+        {
+            source.AsSpan().CopyTo(span);
+            Capitalize(span);
+        });
+    }
+
+    /// <summary>
+    /// Uppercases the first letter of each whitespace-delimited word.
+    /// Returns the same instance if no change is needed.
+    /// </summary>
+    public static void Capitalize(this Span<char> value)
+    {
+        bool atWordStart = true;
+        for (int i = 0; i < value.Length; i++)
+        {
+            char c = value[i];
+            if (atWordStart)
+                value[i] = char.ToUpperInvariant(c);
+            atWordStart = char.IsWhiteSpace(c);
+        }
+    }
+
     public static string? EmptyIfNull(this string? value)
-               => value ?? string.Empty;
+                       => value ?? string.Empty;
 
     public static string? NullIfEmpty(this string? value)
                    => string.IsNullOrWhiteSpace(value) ? null : value;
@@ -37,12 +72,10 @@ public static class StringExtensions
         while (pos < len)
         {
             int lineStart = pos;
-            // Find end of line
             while (pos < len && span[pos] != '\r' && span[pos] != '\n')
                 pos++;
             int lineEnd = pos;
 
-            // Move past line ending
             if (pos < len && span[pos] == '\r') pos++;
             if (pos < len && span[pos] == '\n') pos++;
 
@@ -57,7 +90,6 @@ public static class StringExtensions
         if (count == 0)
             return [];
 
-        // Second pass: fill result array
         string[] result = new string[count];
         int idx = 0;
         pos = 0;
@@ -80,5 +112,18 @@ public static class StringExtensions
         }
 
         return result;
+    }
+
+    private static bool NeedsCapitalization(ReadOnlySpan<char> value)
+    {
+        bool atWordStart = true;
+        for (int i = 0; i < value.Length; i++)
+        {
+            char c = value[i];
+            if (atWordStart && c != char.ToUpperInvariant(c))
+                return true;
+            atWordStart = char.IsWhiteSpace(c);
+        }
+        return false;
     }
 }
