@@ -1,0 +1,50 @@
+# Chip
+
+`LCTWorks.WinUI.Controls.Chip` is a `sealed` control that derives from `Microsoft.UI.Xaml.Controls.Control`. It renders a compact, rounded label — typically used for tags, filters, or status indicators — with an optional leading glyph and automatic spacing between the glyph and the text.
+
+Unlike `ThemedButton`, `Chip` is not a `ContentControl`: it exposes a simple `Text` string rather than arbitrary `Content`, and it has no interaction states (no pointer‑over, pressed, or disabled visuals). Standard `Control` members (`Padding`, `CornerRadius`, `Background`, `Foreground`, `BorderBrush`, `BorderThickness`, `FontFamily`, `FontSize`, `HorizontalContentAlignment`, `VerticalContentAlignment`, etc.) remain available. The members below are what `Chip` adds or relies on.
+
+---
+
+## Properties
+
+All properties below are dependency properties (each has a matching `...Property` static field), so they support binding, styling, and animation.
+
+### Text
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `Text` | `string` | `string.Empty` | The label displayed by the chip. Rendered by a `TextBlock` that inherits the control's `FontFamily`, `FontSize`, and `Foreground`. Changing it recalculates the glyph/text separation. |
+
+### Glyph
+
+A `TextBlock` placed in the first (auto‑width) column, before the text, renders an optional icon glyph.
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the text (e.g. a Segoe Fluent Icons code point). Changing it recalculates the glyph/text separation. |
+| `ShowGlyph` | `bool` | `true` | Whether the glyph is shown. When `false`, the glyph `TextBlock` is collapsed and no separation margin is applied. Changing it recalculates the separation. |
+| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. |
+| `GlyphFontSize` | `double` | `12` (`ChipGlyphFontSize`) | Font size of the glyph. Sized to sit alongside caption‑sized text; raise it if you increase `FontSize`. |
+
+### Layout / spacing
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ChipSeparationMargin`) | The margin placed between the glyph and the text — but only when both a glyph and text are present. Changing it recalculates the applied separation. |
+
+**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the text `TextBlock` actually binds to. Whenever `Glyph`, `ShowGlyph`, `SeparationMargin`, or `Text` changes, `UpdateSeparation()` runs: if there is a visible glyph **and** non‑empty text, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the text when the chip is glyph‑only or text‑only.
+
+### Inherited members worth noting
+
+These are not new, but the default `Chip` style sets them:
+
+| Property | Default set by style | Description |
+|---|---|---|
+| `Padding` | `12,8` (`ChipPadding`) | Inner padding of the chip. |
+| `CornerRadius` | `12` (`ChipCornerRadius`) | Rounded corners; combined with the default padding this yields a pill shape for single‑line text. |
+| `Background` | `CardBackgroundFillColorDefaultBrush` | Subtle card‑style fill that adapts to the current theme. |
+| `FontSize` | `CaptionTextBlockFontSize` | Caption‑sized text. |
+| `HorizontalContentAlignment` / `VerticalContentAlignment` | `Center` | Centers the glyph + text group inside the chip. |
+
+---

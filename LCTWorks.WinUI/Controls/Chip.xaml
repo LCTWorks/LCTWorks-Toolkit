@@ -1,13 +1,19 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
                     xmlns:local="using:LCTWorks.WinUI.Controls">
 
+    <converters:BoolToVisibilityConverter x:Key="ChipBoolToVisibility" />
     <Thickness x:Key="ChipPadding">12,8</Thickness>
+    <Thickness x:Key="ChipSeparationMargin">6,0,0,0</Thickness>
+    <x:Double x:Key="ChipGlyphFontSize">12</x:Double>
+    <VerticalAlignment x:Key="ChipGlyphVerticalAlignment">Center</VerticalAlignment>
+    <TextLineBounds x:Key="ChipGlyphTextLineBounds">TrimToCapHeight</TextLineBounds>
     <TextAlignment x:Key="ChipTextAlignment">Center</TextAlignment>
     <TextAlignment x:Key="ChipVerticalAlignment">Center</TextAlignment>
     <TextAlignment x:Key="ChipHorizontalTextAlignment">Center</TextAlignment>
     <SolidColorBrush x:Key="ChipBackgroundBrush" />
-    <CornerRadius x:Key="ChipCornerRadius">12</CornerRadius>
+    <CornerRadius x:Key="ChipCornerRadius">8</CornerRadius>
 
     <Style TargetType="local:Chip">
         <Setter Property="Padding"
@@ -22,6 +28,12 @@
                 Value="Center" />
         <Setter Property="FontSize"
                 Value="{StaticResource CaptionTextBlockFontSize}" />
+        <Setter Property="GlyphFontSize"
+                Value="{ThemeResource ChipGlyphFontSize}" />
+        <Setter Property="GlyphFontFamily"
+                Value="{ThemeResource SymbolThemeFontFamily}" />
+        <Setter Property="SeparationMargin"
+                Value="{StaticResource ChipSeparationMargin}" />
 
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
@@ -33,15 +45,33 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                        <TextBlock HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                   FontFamily="{TemplateBinding FontFamily}"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   Foreground="{TemplateBinding Foreground}"
-                                   HorizontalTextAlignment="{StaticResource ChipHorizontalTextAlignment}"
-                                   Text="{TemplateBinding Text}"
-                                   TextAlignment="{StaticResource ChipTextAlignment}"
-                                   TextLineBounds="Tight" />
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="GlyphTextBlock"
+                                       VerticalAlignment="{StaticResource ChipGlyphVerticalAlignment}"
+                                       FontFamily="{TemplateBinding GlyphFontFamily}"
+                                       FontSize="{TemplateBinding GlyphFontSize}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Text="{TemplateBinding Glyph}"
+                                       TextLineBounds="{StaticResource ChipGlyphTextLineBounds}"
+                                       Visibility="{Binding ShowGlyph, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ChipBoolToVisibility}}" />
+
+                            <TextBlock Grid.Column="1"
+                                       Margin="{TemplateBinding SeparationMarginInternal}"
+                                       VerticalAlignment="Center"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       HorizontalTextAlignment="{StaticResource ChipHorizontalTextAlignment}"
+                                       Text="{TemplateBinding Text}"
+                                       TextAlignment="{StaticResource ChipTextAlignment}"
+                                       TextLineBounds="Tight" />
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

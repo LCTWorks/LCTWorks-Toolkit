@@ -57,5 +57,3 @@ These are not new, but the default `ThemedButton` style sets them:
 | `Padding` | `11,5,11,6` (`ThemedButtonPadding`) | Inner padding of the button. |
 
 ---
-
-*Built with ❤️ as part of the LCTWorks Toolkit.*

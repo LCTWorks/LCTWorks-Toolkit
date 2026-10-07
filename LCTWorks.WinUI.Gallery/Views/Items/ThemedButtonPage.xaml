@@ -39,6 +39,7 @@
                                             Content="{x:Bind ButtonContent, Mode=OneWay}"
                                             Glyph="{x:Bind Glyph, Mode=OneWay}"
                                             GlyphFontSize="{x:Bind GlyphFontSize, Mode=OneWay}"
+                                            SeparationMargin="{x:Bind SeparationMargin, Mode=OneWay}"
                                             ShowGlyph="{x:Bind ShowGlyph, Mode=OneWay}" />
                         </Grid>
                     </clocal:SampleCodePresenter.Content>
@@ -62,7 +63,26 @@
                                            Visibility="Collapsed" />
                                 <TextBox Header="Glyph"
                                          IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
-                                         Text="{x:Bind Glyph, Mode=OneWay}" />
+                                         PlaceholderText=", &amp;#xE705; or a character"
+                                         Text="{x:Bind GlyphText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <MenuFlyoutSeparator />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <NumberBox Header="Horizontal separation"
+                                               IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                               Minimum="0"
+                                               SpinButtonPlacementMode="Compact"
+                                               Value="{x:Bind SeparationHorizontal, Mode=TwoWay}" />
+                                    <NumberBox Grid.Column="1"
+                                               Header="Vertical separation"
+                                               IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                               Minimum="0"
+                                               SpinButtonPlacementMode="Compact"
+                                               Value="{x:Bind SeparationVertical, Mode=TwoWay}" />
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </clocal:SampleCodePresenter.OptionsPaneContent>

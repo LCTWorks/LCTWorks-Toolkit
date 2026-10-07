@@ -19,19 +19,64 @@
                                             Description="{x:Bind Description}"
                                             ExpanderHeader="Documentation and code snippets"
                                             Header="{x:Bind Header}"
+                                            MarkdownFilePath="ms-appx:///Assets/CodeSnippets/Chip_Md.txt"
                                             MarkdownTabHeader="Documentation"
-                                            MinOptionsPaneWidth="320">
+                                            MinOptionsPaneWidth="320"
+                                            XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/Chip_Xaml.txt">
                     <clocal:SampleCodePresenter.Content>
                         <Grid>
-                            <c:Chip HorizontalAlignment="Center"
+                            <c:Chip x:Name="SampleChip"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="Text" />
+                                    FontFamily="{StaticResource SmoothRegularFontFamily}"
+                                    Glyph="{x:Bind Glyph, Mode=OneWay}"
+                                    GlyphFontSize="{x:Bind GlyphFontSize, Mode=OneWay}"
+                                    SeparationMargin="{x:Bind SeparationMargin, Mode=OneWay}"
+                                    ShowGlyph="{x:Bind ShowGlyph, Mode=OneWay}"
+                                    Text="{x:Bind ChipText, Mode=OneWay}" />
                         </Grid>
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
                         <Grid>
                             <StackPanel Orientation="Vertical"
-                                        Spacing="8" />
+                                        Spacing="8">
+                                <TextBox Header="Text"
+                                         Text="{x:Bind ChipText, Mode=TwoWay}" />
+                                <MenuFlyoutSeparator />
+                                <ToggleSwitch IsOn="{x:Bind ShowGlyph, Mode=TwoWay}"
+                                              OffContent="Show glyph"
+                                              OnContent="Show glyph" />
+                                <AutoSuggestBox x:Name="GlyphFontFamilySelector"
+                                                Header="Glyph Font Family"
+                                                IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                                Text="{x:Bind GlyphFontFamily, Mode=TwoWay}" />
+                                <TextBlock x:Name="FontFamilyWarningTextBlock"
+                                           Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                                           Text="We couldn't resolve the provided Font Family."
+                                           Visibility="Collapsed" />
+                                <TextBox Header="Glyph"
+                                         IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                         PlaceholderText=", &amp;#xE705; or a character"
+                                         Text="{x:Bind GlyphText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <MenuFlyoutSeparator />
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <NumberBox Header="Horizontal separation"
+                                               IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                               Minimum="0"
+                                               SpinButtonPlacementMode="Compact"
+                                               Value="{x:Bind SeparationHorizontal, Mode=TwoWay}" />
+                                    <NumberBox Grid.Column="1"
+                                               Header="Vertical separation"
+                                               IsEnabled="{x:Bind ShowGlyph, Mode=OneWay}"
+                                               Minimum="0"
+                                               SpinButtonPlacementMode="Compact"
+                                               Value="{x:Bind SeparationVertical, Mode=TwoWay}" />
+                                </Grid>
+                            </StackPanel>
                         </Grid>
                     </clocal:SampleCodePresenter.OptionsPaneContent>
                 </clocal:SampleCodePresenter>

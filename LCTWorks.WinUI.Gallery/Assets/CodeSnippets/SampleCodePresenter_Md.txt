@@ -98,5 +98,3 @@ You can also override the text styles:
 - `SampleCodePresenterDescriptionTextBlockStyle` — based on `SmoothItemCaptionTextBlockStyle`
 
 ---
-
-*Built with ❤️ as part of the LCTWorks Toolkit.*

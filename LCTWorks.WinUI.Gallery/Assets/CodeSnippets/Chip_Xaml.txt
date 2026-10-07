@@ -1,0 +1,9 @@
+﻿<c:Chip x:Name="SampleChip"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        FontFamily="{StaticResource SmoothRegularFontFamily}"
+        Glyph="{x:Bind Glyph, Mode=OneWay}"
+        GlyphFontSize="{x:Bind GlyphFontSize, Mode=OneWay}"
+        SeparationMargin="{x:Bind SeparationMargin, Mode=OneWay}"
+        ShowGlyph="{x:Bind ShowGlyph, Mode=OneWay}"
+        Text="{x:Bind ChipText, Mode=OneWay}" />

@@ -1,6 +1,7 @@
 using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Extensions;
 using LCTWorks.WinUI.Xaml.Extensions;
+using LCTWorks.Workshop.Internal;
 using LCTWorks.Workshop.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,7 +39,19 @@ public sealed partial class ThemedButtonPage : ObservablePage
     public string? Glyph
     {
         get;
-        set => SetProperty(ref field, value);
+        private set => SetProperty(ref field, value);
+    }
+
+    public string? GlyphText
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                Glyph = GlyphParser.Parse(value);
+            }
+        }
     }
 
     public string? GlyphFontFamily
@@ -60,6 +73,32 @@ public sealed partial class ThemedButtonPage : ObservablePage
     }
 
     public string Header { get; } = "ThemedButton_Title".GetTextLocalized();
+
+    public double SeparationHorizontal
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(SeparationMargin));
+            }
+        }
+    }
+
+    public Thickness SeparationMargin => new(SeparationHorizontal, SeparationVertical, 0, 0);
+
+    public double SeparationVertical
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(SeparationMargin));
+            }
+        }
+    }
 
     public bool ShowGlyph
     {
@@ -101,9 +140,11 @@ public sealed partial class ThemedButtonPage : ObservablePage
     private void InitProperties()
     {
         ButtonContent = "Content";
-        Glyph = "\uE7C5";
+        GlyphText = "\\uE7C5";
         GlyphFontSize = 20;
         ShowGlyph = true;
+        SeparationHorizontal = 6;
+        SeparationVertical = 0;
         GlyphFontFamilySelector.ItemsSource = GlyphFontFamilies.Keys.ToList();
         GlyphFontFamily = GlyphFontFamilies.First().Key;
 

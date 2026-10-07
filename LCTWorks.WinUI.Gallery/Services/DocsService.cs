@@ -22,10 +22,10 @@ public class DocsService
             { typeof(HomePage).ToString(), typeof(HomePage) },
             { typeof(AdaptiveImagePage).ToString(), typeof(AdaptiveImagePage) },
             { typeof(AdaptiveViewPage).ToString(), typeof(AdaptiveViewPage) },
+            { typeof(ChipPage).ToString(), typeof(ChipPage) },
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
             { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
-            { typeof(ChipPage).ToString(), typeof(ChipPage) },
         };
     }
 
