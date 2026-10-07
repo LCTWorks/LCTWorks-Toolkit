@@ -38,7 +38,7 @@
         </DataTemplate>
     </c:ObservablePage.Resources>
 
-    <Grid>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <clocal:SampleCodePresenter x:Name="Sample1Control"

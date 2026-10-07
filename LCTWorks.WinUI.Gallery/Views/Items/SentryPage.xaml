@@ -9,7 +9,7 @@
                   xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
                   mc:Ignorable="d">
 
-    <Grid>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <clocal:SampleCodePresenter x:Name="Sample"

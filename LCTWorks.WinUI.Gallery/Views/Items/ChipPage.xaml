@@ -1,0 +1,41 @@
+<c:ObservablePage x:Class="LCTWorks.Workshop.Views.Items.ChipPage"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:c="using:LCTWorks.WinUI.Controls"
+                  xmlns:clocal="using:LCTWorks.Workshop.Controls"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:local="using:LCTWorks.Workshop.Views.Items"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          RequestedTheme="{Binding RequestedTheme, ElementName=Sample1Control, Mode=OneWay}">
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical"
+                        Spacing="24">
+                <clocal:SampleCodePresenter x:Name="Sample1Control"
+                                            Margin="16"
+                                            HorizontalContentAlignment="Stretch"
+                                            Description="{x:Bind Description}"
+                                            ExpanderHeader="Documentation and code snippets"
+                                            Header="{x:Bind Header}"
+                                            MarkdownTabHeader="Documentation"
+                                            MinOptionsPaneWidth="320">
+                    <clocal:SampleCodePresenter.Content>
+                        <Grid>
+                            <c:Chip HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Text="Text" />
+                        </Grid>
+                    </clocal:SampleCodePresenter.Content>
+                    <clocal:SampleCodePresenter.OptionsPaneContent>
+                        <Grid>
+                            <StackPanel Orientation="Vertical"
+                                        Spacing="8" />
+                        </Grid>
+                    </clocal:SampleCodePresenter.OptionsPaneContent>
+                </clocal:SampleCodePresenter>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</c:ObservablePage>

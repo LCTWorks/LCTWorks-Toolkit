@@ -22,6 +22,7 @@
     <None Remove="Assets\Icons\SampleSvg.svg" />
     <None Remove="Assets\Images\Sample800-1.jpg" />
     <None Remove="Styles\Generic.xaml" />
+    <None Remove="Views\Items\ChipPage.xaml" />
     <None Remove="Views\Items\Homepage.xaml" />
     <None Remove="Views\Items\SampleCodePresenterPage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
@@ -49,6 +50,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" />
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Items\ChipPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />

@@ -25,6 +25,7 @@ public class DocsService
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
             { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
+            { typeof(ChipPage).ToString(), typeof(ChipPage) },
         };
     }
 

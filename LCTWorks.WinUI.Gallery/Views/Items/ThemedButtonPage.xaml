@@ -17,8 +17,9 @@
                     Value="Cascadia Code" />
         </Style>
     </c:ObservablePage.Resources>
-    <Grid RequestedTheme="{Binding RequestedTheme, ElementName=Sample1Control, Mode=OneWay}">
-        <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          RequestedTheme="{Binding RequestedTheme, ElementName=Sample1Control, Mode=OneWay}">
+        <ScrollViewer>
             <StackPanel Orientation="Vertical"
                         Spacing="24">
                 <clocal:SampleCodePresenter x:Name="Sample1Control"
