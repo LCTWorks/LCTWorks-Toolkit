@@ -88,21 +88,42 @@ public sealed partial class ThemedButton : Button
         nameof(Glyph),
         typeof(string),
         typeof(ThemedButton),
-        new PropertyMetadata(string.Empty, OnSeparationPropertyChanged));
+        new PropertyMetadata(string.Empty, OnLeadingVisualPropertyChanged));
+
+    public static readonly DependencyProperty IconProperty =
+        DependencyProperty.Register(
+        nameof(Icon),
+        typeof(IconElement),
+        typeof(ThemedButton),
+        new PropertyMetadata(null, OnLeadingVisualPropertyChanged));
 
     public static readonly DependencyProperty SeparationMarginProperty =
         DependencyProperty.Register(
         nameof(SeparationMargin),
         typeof(Thickness),
         typeof(ThemedButton),
-        new PropertyMetadata(new Thickness(0), OnSeparationPropertyChanged));
+        new PropertyMetadata(new Thickness(0), OnLeadingVisualPropertyChanged));
 
     public static readonly DependencyProperty ShowGlyphProperty =
         DependencyProperty.Register(
         nameof(ShowGlyph),
         typeof(bool),
         typeof(ThemedButton),
-        new PropertyMetadata(true, OnSeparationPropertyChanged));
+        new PropertyMetadata(true, OnLeadingVisualPropertyChanged));
+
+    private static readonly DependencyProperty GlyphVisibilityInternalProperty =
+        DependencyProperty.Register(
+            nameof(GlyphVisibilityInternal),
+            typeof(Visibility),
+            typeof(ThemedButton),
+            new PropertyMetadata(Visibility.Visible));
+
+    private static readonly DependencyProperty IconVisibilityInternalProperty =
+        DependencyProperty.Register(
+            nameof(IconVisibilityInternal),
+            typeof(Visibility),
+            typeof(ThemedButton),
+            new PropertyMetadata(Visibility.Collapsed));
 
     private static readonly DependencyProperty SeparationMarginInternalProperty =
         DependencyProperty.Register(
@@ -170,10 +191,24 @@ public sealed partial class ThemedButton : Button
         set => SetValue(ForegroundPressedProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the glyph character(s) to display before the content.
+    /// Ignored when <see cref="Icon"/> is set.
+    /// </summary>
     public string Glyph
     {
         get => (string)GetValue(GlyphProperty);
         set => SetValue(GlyphProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets an <see cref="IconElement"/> to display before the content.
+    /// When set, it replaces the <see cref="Glyph"/> text block.
+    /// </summary>
+    public IconElement? Icon
+    {
+        get => (IconElement?)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
     }
 
     public FontFamily GlyphFontFamily
@@ -194,10 +229,25 @@ public sealed partial class ThemedButton : Button
         set => SetValue(SeparationMarginProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets whether the leading visual (<see cref="Glyph"/> or <see cref="Icon"/>) is shown.
+    /// </summary>
     public bool ShowGlyph
     {
         get => (bool)GetValue(ShowGlyphProperty);
         set => SetValue(ShowGlyphProperty, value);
+    }
+
+    private Visibility GlyphVisibilityInternal
+    {
+        get => (Visibility)GetValue(GlyphVisibilityInternalProperty);
+        set => SetValue(GlyphVisibilityInternalProperty, value);
+    }
+
+    private Visibility IconVisibilityInternal
+    {
+        get => (Visibility)GetValue(IconVisibilityInternalProperty);
+        set => SetValue(IconVisibilityInternalProperty, value);
     }
 
     private Thickness SeparationMarginInternal
@@ -209,18 +259,24 @@ public sealed partial class ThemedButton : Button
     protected override void OnContentChanged(object oldContent, object newContent)
     {
         base.OnContentChanged(oldContent, newContent);
-        UpdateSeparation();
+        UpdateLeadingVisual();
     }
 
-    private static void OnSeparationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnLeadingVisualPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        ((ThemedButton)d).UpdateSeparation();
+        ((ThemedButton)d).UpdateLeadingVisual();
     }
 
-    private void UpdateSeparation()
+    private void UpdateLeadingVisual()
     {
-        bool hasGlyph = ShowGlyph && !string.IsNullOrEmpty(Glyph);
+        bool hasIcon = Icon is not null;
+        bool hasGlyph = !hasIcon && !string.IsNullOrEmpty(Glyph);
         bool hasContent = Content is not null && (Content as string)?.Length != 0;
-        SeparationMarginInternal = (hasGlyph && hasContent) ? SeparationMargin : new Thickness(0);
+
+        IconVisibilityInternal = ShowGlyph && hasIcon ? Visibility.Visible : Visibility.Collapsed;
+        GlyphVisibilityInternal = ShowGlyph && !hasIcon ? Visibility.Visible : Visibility.Collapsed;
+
+        bool hasLeadingVisual = ShowGlyph && (hasIcon || hasGlyph);
+        SeparationMarginInternal = hasLeadingVisual && hasContent ? SeparationMargin : new Thickness(0);
     }
 }

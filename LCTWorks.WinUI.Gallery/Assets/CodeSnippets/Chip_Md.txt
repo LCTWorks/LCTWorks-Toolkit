@@ -18,22 +18,36 @@ All properties below are dependency properties (each has a matching `...Property
 
 ### Glyph
 
-A `TextBlock` placed in the first (auto‑width) column, before the text, renders an optional icon glyph.
+The first (auto‑width) column, before the text, hosts an optional leading visual. There are two ways to supply it: a font glyph via `Glyph`, or any `IconElement` via `Icon`. When `Icon` is set it takes precedence and the glyph `TextBlock` is collapsed.
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the text (e.g. a Segoe Fluent Icons code point). Changing it recalculates the glyph/text separation. |
-| `ShowGlyph` | `bool` | `true` | Whether the glyph is shown. When `false`, the glyph `TextBlock` is collapsed and no separation margin is applied. Changing it recalculates the separation. |
-| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. |
-| `GlyphFontSize` | `double` | `12` (`ChipGlyphFontSize`) | Font size of the glyph. Sized to sit alongside caption‑sized text; raise it if you increase `FontSize`. |
+| `Icon` | `IconElement` | `null` | An icon element (`FontIcon`, `SymbolIcon`, `PathIcon`, `BitmapIcon`, `ImageIcon`, or a third‑party icon such as FluentIcons.WinUI's `SymbolIcon`) displayed before the text. Hosted in a `ContentPresenter` whose `Foreground` is bound to the chip's `Foreground`. The element sizes itself; use its own `FontSize`/`Width`/`Height` to control size. |
+| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the text (e.g. a Segoe Fluent Icons code point). Ignored while `Icon` is set. Changing it recalculates the separation. |
+| `ShowGlyph` | `bool` | `true` | Whether the leading visual (glyph **or** icon) is shown. When `false`, both are collapsed and no separation margin is applied. Changing it recalculates the separation. |
+| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. Not applied to `Icon`. |
+| `GlyphFontSize` | `double` | `12` (`ChipGlyphFontSize`) | Font size of the glyph. Sized to sit alongside caption‑sized text; raise it if you increase `FontSize`. Not applied to `Icon`. |
+
+```xml
+<c:Chip Text="Draft" Glyph="&#xE70F;" />
+
+<c:Chip Text="Draft">
+    <c:Chip.Icon>
+        <FontIcon FontSize="12" Glyph="&#xE70F;" />
+    </c:Chip.Icon>
+</c:Chip>
+
+<!-- FluentIcons.WinUI -->
+<c:Chip Text="Draft" Icon="{icx:SymbolIcon Symbol=Edit, FontSize=12}" />
+```
 
 ### Layout / spacing
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ChipSeparationMargin`) | The margin placed between the glyph and the text — but only when both a glyph and text are present. Changing it recalculates the applied separation. |
+| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ChipSeparationMargin`) | The margin placed between the leading visual and the text — but only when both are present. Changing it recalculates the applied separation. |
 
-**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the text `TextBlock` actually binds to. Whenever `Glyph`, `ShowGlyph`, `SeparationMargin`, or `Text` changes, `UpdateSeparation()` runs: if there is a visible glyph **and** non‑empty text, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the text when the chip is glyph‑only or text‑only.
+**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the text `TextBlock` actually binds to. Whenever `Glyph`, `Icon`, `ShowGlyph`, `SeparationMargin`, or `Text` changes, `UpdateLeadingVisual()` runs: if there is a visible leading visual (an `Icon`, or a non‑empty `Glyph`) **and** non‑empty text, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the text when the chip is icon‑only or text‑only. The same pass also computes which of the glyph `TextBlock` / icon `ContentPresenter` is visible.
 
 ### Inherited members worth noting
 

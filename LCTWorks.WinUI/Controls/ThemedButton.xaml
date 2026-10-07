@@ -1,9 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
                     xmlns:local="using:LCTWorks.WinUI.Controls">
 
-    <converters:BoolToVisibilityConverter x:Key="BoolToVisibility" />
     <Thickness x:Key="ThemedButtonSeparationMargin">6,0,0,0</Thickness>
     <x:Double x:Key="ThemedButtonGlyphFontSize">20</x:Double>
     <VerticalAlignment x:Key="ThemedButtonGlyphVerticalAlignment">Center</VerticalAlignment>
@@ -134,7 +132,13 @@
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Glyph}"
                                        TextLineBounds="{StaticResource ThemedButtonGlyphTextLineBounds}"
-                                       Visibility="{Binding ShowGlyph, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
+                                       Visibility="{TemplateBinding GlyphVisibilityInternal}" />
+
+                            <ContentPresenter x:Name="IconPresenter"
+                                              VerticalAlignment="{StaticResource ThemedButtonGlyphVerticalAlignment}"
+                                              Content="{TemplateBinding Icon}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              Visibility="{TemplateBinding IconVisibilityInternal}" />
 
                             <ContentPresenter x:Name="ContentPresenter"
                                               Grid.Column="1"
@@ -174,6 +178,11 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{Binding ForegroundPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPointerOver, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
 
@@ -199,6 +208,11 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{Binding ForegroundPressed, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconPresenter"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundPressed, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
 
@@ -220,6 +234,11 @@
                                                                     Value="{Binding ForegroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GlyphTextBlock"
+                                                                       Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{Binding ForegroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconPresenter"
                                                                        Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{Binding ForegroundDisabled, RelativeSource={RelativeSource TemplatedParent}}" />

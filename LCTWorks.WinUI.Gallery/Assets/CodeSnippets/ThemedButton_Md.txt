@@ -28,24 +28,38 @@ The standard `Button` only exposes a single `Background`/`Foreground`/`BorderBru
 
 The `Normal` state uses the inherited `Background`, `Foreground`, and `BorderBrush`.
 
-### Glyph
+### Leading visual (glyph or icon)
 
-A `TextBlock` placed in the first (auto‑width) column, before the content, renders an optional icon glyph.
+The first (auto‑width) column, before the content, hosts an optional leading visual. There are two ways to supply it: a font glyph via `Glyph`, or any `IconElement` via `Icon`. When `Icon` is set it takes precedence and the glyph `TextBlock` is collapsed.
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the content (e.g. a Segoe Fluent Icons code point). Changing it recalculates the glyph/content separation. |
-| `ShowGlyph` | `bool` | `true` | Whether the glyph is shown. When `false`, the glyph `TextBlock` is collapsed and no separation margin is applied. Changing it recalculates the separation. |
-| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. |
-| `GlyphFontSize` | `double` | `20` (`ThemedButtonGlyphFontSize`) | Font size of the glyph. |
+| `Icon` | `IconElement` | `null` | An icon element (`FontIcon`, `SymbolIcon`, `PathIcon`, `BitmapIcon`, `ImageIcon`, or a third‑party icon such as FluentIcons.WinUI's `SymbolIcon`) displayed before the content. Hosted in a `ContentPresenter` whose `Foreground` follows the button's visual states, so icons that respect inherited foreground recolor on pointer‑over / pressed / disabled. The element sizes itself; use its own `FontSize`/`Width`/`Height` to control size. |
+| `Glyph` | `string` | `string.Empty` | The glyph character(s) to display before the content (e.g. a Segoe Fluent Icons code point). Ignored while `Icon` is set. Changing it recalculates the separation. |
+| `ShowGlyph` | `bool` | `true` | Whether the leading visual (glyph **or** icon) is shown. When `false`, both are collapsed and no separation margin is applied. Changing it recalculates the separation. |
+| `GlyphFontFamily` | `FontFamily` | `SymbolThemeFontFamily` (theme resource) | Font family used to render the glyph. Not applied to `Icon`. |
+| `GlyphFontSize` | `double` | `20` (`ThemedButtonGlyphFontSize`) | Font size of the glyph. Not applied to `Icon`. |
+
+```xml
+<c:ThemedButton Content="Save" Glyph="&#xE74E;" />
+
+<c:ThemedButton Content="Save">
+    <c:ThemedButton.Icon>
+        <FontIcon Glyph="&#xE74E;" />
+    </c:ThemedButton.Icon>
+</c:ThemedButton>
+
+<!-- FluentIcons.WinUI -->
+<c:ThemedButton Content="Save" Icon="{icx:SymbolIcon Symbol=Save}" />
+```
 
 ### Layout / spacing
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ThemedButtonSeparationMargin`) | The margin placed between the glyph and the content — but only when both a glyph and content are present. Changing it recalculates the applied separation. |
+| `SeparationMargin` | `Thickness` | `6,0,0,0` (`ThemedButtonSeparationMargin`) | The margin placed between the leading visual and the content — but only when both are present. Changing it recalculates the applied separation. |
 
-**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the content presenter actually binds to. Whenever `Glyph`, `ShowGlyph`, `SeparationMargin`, or the `Content` changes, `UpdateSeparation()` runs: if there is a visible glyph **and** non‑empty content, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the content when the button is glyph‑only or text‑only.
+**How separation works:** the control tracks an internal (private) `SeparationMarginInternal` thickness that the content presenter actually binds to. Whenever `Glyph`, `Icon`, `ShowGlyph`, `SeparationMargin`, or the `Content` changes, `UpdateLeadingVisual()` runs: if there is a visible leading visual (an `Icon`, or a non‑empty `Glyph`) **and** non‑empty content, it applies `SeparationMargin`; otherwise it applies `Thickness(0)`. This prevents a stray left margin on the content when the button is icon‑only or text‑only. The same pass also computes which of the glyph `TextBlock` / icon `ContentPresenter` is visible.
 
 ### Inherited members worth noting
 

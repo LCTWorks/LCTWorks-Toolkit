@@ -2,6 +2,7 @@ using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Extensions;
 using LCTWorks.Workshop.Internal;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,6 @@ public sealed partial class ChipPage : ObservablePage
     public ChipPage()
     {
         InitializeComponent();
-
         InitProperties();
     }
 
@@ -36,18 +36,6 @@ public sealed partial class ChipPage : ObservablePage
     {
         get;
         private set => SetProperty(ref field, value);
-    }
-
-    public string? GlyphText
-    {
-        get;
-        set
-        {
-            if (SetProperty(ref field, value))
-            {
-                Glyph = GlyphParser.Parse(value);
-            }
-        }
     }
 
     public string? GlyphFontFamily
@@ -66,6 +54,18 @@ public sealed partial class ChipPage : ObservablePage
     {
         get;
         set => SetProperty(ref field, value);
+    }
+
+    public string? GlyphText
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                Glyph = GlyphParser.Parse(value);
+            }
+        }
     }
 
     public string Header { get; } = "Chip_Title".GetTextLocalized();

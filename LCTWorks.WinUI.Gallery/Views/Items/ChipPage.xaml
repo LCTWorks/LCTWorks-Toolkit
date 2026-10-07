@@ -4,6 +4,7 @@
                   xmlns:c="using:LCTWorks.WinUI.Controls"
                   xmlns:clocal="using:LCTWorks.Workshop.Controls"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:ficons="using:FluentIcons.WinUI.Markup"
                   xmlns:local="using:LCTWorks.Workshop.Views.Items"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   mc:Ignorable="d">
@@ -24,7 +25,8 @@
                                             MinOptionsPaneWidth="320"
                                             XamlCodeFilePath="ms-appx:///Assets/CodeSnippets/Chip_Xaml.txt">
                     <clocal:SampleCodePresenter.Content>
-                        <Grid>
+                        <StackPanel VerticalAlignment="Center"
+                                    Spacing="8">
                             <c:Chip x:Name="SampleChip"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
@@ -34,7 +36,17 @@
                                     SeparationMargin="{x:Bind SeparationMargin, Mode=OneWay}"
                                     ShowGlyph="{x:Bind ShowGlyph, Mode=OneWay}"
                                     Text="{x:Bind ChipText, Mode=OneWay}" />
-                        </Grid>
+
+                            <c:Chip HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{StaticResource SmoothRegularFontFamily}"
+                                    Icon="{ficons:FluentIcon Icon=Premium,
+                                                             FontSize=20,
+                                                             IconVariant=Color}"
+                                    SeparationMargin="{x:Bind SeparationMargin, Mode=OneWay}"
+                                    ShowGlyph="{x:Bind ShowGlyph, Mode=OneWay}"
+                                    Text="{x:Bind ChipText, Mode=OneWay}" />
+                        </StackPanel>
                     </clocal:SampleCodePresenter.Content>
                     <clocal:SampleCodePresenter.OptionsPaneContent>
                         <Grid>
