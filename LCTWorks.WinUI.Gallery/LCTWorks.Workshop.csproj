@@ -22,11 +22,13 @@
     <None Remove="Assets\CodeSnippets\ThemedButton_Md.txt" />
     <None Remove="Assets\Icons\SampleCodePresenter.svg" />
     <None Remove="Assets\Icons\SampleSvg.svg" />
+    <None Remove="Assets\Icons\TextResources.svg" />
     <None Remove="Assets\Images\Sample800-1.jpg" />
     <None Remove="Styles\Generic.xaml" />
     <None Remove="Views\Items\ChipPage.xaml" />
     <None Remove="Views\Items\Homepage.xaml" />
     <None Remove="Views\Items\SampleCodePresenterPage.xaml" />
+    <None Remove="Views\Items\TextResourcesPage.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>
@@ -53,6 +55,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LCTWorks.Web\LCTWorks.Web.csproj" />
     <ProjectReference Include="..\LCTWorks.WinUI\LCTWorks.WinUI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Items\TextResourcesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Items\ChipPage.xaml">

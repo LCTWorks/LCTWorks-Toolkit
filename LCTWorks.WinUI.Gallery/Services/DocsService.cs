@@ -12,20 +12,23 @@ namespace LCTWorks.Workshop.Services;
 public class DocsService
 {
     private const string IconResKeySuffix = "Page";
-    private static readonly Dictionary<string, Type> _itemKeyToTypeMap;
+    private static readonly Dictionary<string, Type?> _itemKeyToTypeMap;
     private readonly List<DocItem> _items = [];
 
     static DocsService()
     {
-        _itemKeyToTypeMap = new Dictionary<string, Type>
+        _itemKeyToTypeMap = new Dictionary<string, Type?>
         {
             { typeof(HomePage).ToString(), typeof(HomePage) },
+            { $"ControlsHeader", null },
             { typeof(AdaptiveImagePage).ToString(), typeof(AdaptiveImagePage) },
             { typeof(AdaptiveViewPage).ToString(), typeof(AdaptiveViewPage) },
             { typeof(ChipPage).ToString(), typeof(ChipPage) },
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
             { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
+            { $"ResourcesHeader", null },
+            { typeof(TextResourcesPage).ToString(), typeof(TextResourcesPage) },
         };
     }
 
@@ -60,12 +63,19 @@ public class DocsService
     {
         foreach (var item in _itemKeyToTypeMap)
         {
-            NavigationPageMap.Configure(item.Key, item.Value);
             var resKey = GetResourceKey(item.Key);
             var title = $"{resKey}_Title".GetTextLocalized();
-            var description = $"{resKey}_Description".GetTextLocalized();
-            var icon = $"ms-appx:///Assets/Icons/{resKey}.svg";
-            _items.Add(new DocItem(title, description, icon, item.Key));
+            string description = string.Empty;
+            string icon = string.Empty;
+            string navigationKey = string.Empty;
+            if (item.Value != null)
+            {
+                NavigationPageMap.Configure(item.Key, item.Value);
+                description = $"{resKey}_Description".GetTextLocalized();
+                icon = $"ms-appx:///Assets/Icons/{resKey}.svg";
+                navigationKey = item.Key;
+            }
+            _items.Add(new DocItem(title, description, icon, navigationKey));
         }
     }
 }

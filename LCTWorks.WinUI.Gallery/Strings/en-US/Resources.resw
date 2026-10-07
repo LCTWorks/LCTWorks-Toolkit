@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Workshop</value>
+    <value>LCTWorks Workshop</value>
   </data>
   <data name="Home_Description" xml:space="preserve">
     <value>Start here</value>
@@ -164,5 +164,17 @@
   </data>
   <data name="Chip_Description" xml:space="preserve">
     <value>A Chip control</value>
+  </data>
+  <data name="ControlsHeader_Title" xml:space="preserve">
+    <value>Controls</value>
+  </data>
+  <data name="ResourcesHeader_Title" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="TextResources_Description" xml:space="preserve">
+    <value>Various text XAML resources</value>
+  </data>
+  <data name="TextResources_Title" xml:space="preserve">
+    <value>Text resources</value>
   </data>
 </root>

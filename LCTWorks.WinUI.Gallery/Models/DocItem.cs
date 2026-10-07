@@ -1,3 +1,8 @@
 ﻿namespace LCTWorks.Workshop.Models;
 
-public record class DocItem(string Title, string Description, string IconPath, string NavigationKey);
+public record class DocItem(string Title, string Description, string IconPath, string NavigationKey)
+{
+    public DocItem() : this(string.Empty, string.Empty, string.Empty, string.Empty)
+    {
+    }
+}
