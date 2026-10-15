@@ -27,6 +27,7 @@ public class DocsService
             { typeof(SampleCodePresenterPage).ToString(), typeof(SampleCodePresenterPage) },
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
             { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
+            { typeof(DialogsPage).ToString(), typeof(DialogsPage) },
             { $"ResourcesHeader", null },
             { typeof(TextResourcesPage).ToString(), typeof(TextResourcesPage) },
         };

@@ -32,6 +32,8 @@
                 Value="{ThemeResource SymbolThemeFontFamily}" />
         <Setter Property="SeparationMargin"
                 Value="{StaticResource ChipSeparationMargin}" />
+        <Setter Property="FontFamily"
+                Value="{StaticResource PoppinsRegularFontFamily}" />
 
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />

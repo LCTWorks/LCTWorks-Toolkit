@@ -15,6 +15,25 @@
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveView.xaml" />
         <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Controls/AdaptiveImage.xaml" />
     </ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="ItemsContentDialogHighlightBorderBrush"
+                            ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="ItemsContentDialogCaptionForegroundBrush"
+                            ResourceKey="TextFillColorPrimaryBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <StaticResource x:Key="ItemsContentDialogHighlightBorderBrush"
+                            ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="ItemsContentDialogCaptionForegroundBrush"
+                            ResourceKey="TextFillColorPrimaryBrush" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!--  Controls  -->
+    <Style x:Key="ItemsContentDialogPrimaryButtonStyle"
+           BasedOn="{StaticResource DefaultButtonStyle}"
+           TargetType="Button" />
 
     <!--  System default overrides  -->
     <StaticResource x:Key="ContentControlThemeFontFamily"

@@ -11,4 +11,10 @@
     <CornerRadius x:Key="SmoothChipToggleButtonCornerRadius">16</CornerRadius>
     <Thickness x:Key="SmoothChipToggleButtonPadding">16,12</Thickness>
     <TextLineBounds x:Key="SmoothChipToggleButtonTextLineBounds">Tight</TextLineBounds>
+    <!--  ItemsContentDialog  -->
+    <Thickness x:Key="ItemsContentDialogLayoutMargin">16,0</Thickness>
+    <Thickness x:Key="ItemsContentDialogItemPadding">16,8</Thickness>
+    <CornerRadius x:Key="ItemsContentDialogHighlightCornerRadius">8</CornerRadius>
+    <CornerRadius x:Key="ItemsContentDialogIconContainerCornerRadius">16</CornerRadius>
+    <Thickness x:Key="ItemsContentDialogIconContainerBorderThickness">1</Thickness>
 </ResourceDictionary>

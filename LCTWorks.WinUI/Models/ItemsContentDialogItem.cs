@@ -11,6 +11,10 @@ public partial class ItemsContentDialogItem : ObservableObject
     private bool _showOpenExternal = true;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasCaption))]
+    public partial string Caption { get; set; }
+
+    [ObservableProperty]
     public partial ICommand? Command { get; set; }
 
     [ObservableProperty]
@@ -18,6 +22,8 @@ public partial class ItemsContentDialogItem : ObservableObject
 
     [ObservableProperty]
     public partial string Description { get; set; }
+
+    public bool HasCaption => !string.IsNullOrWhiteSpace(Caption);
 
     public ItemsContentDialogIconType IconType
     {
@@ -42,6 +48,9 @@ public partial class ItemsContentDialogItem : ObservableObject
         get => _iconUri;
         set => SetProperty(ref _iconUri, value);
     }
+
+    [ObservableProperty]
+    public partial bool IsHighlighted { get; set; }
 
     public bool ShowOpenExternalIcon
     {

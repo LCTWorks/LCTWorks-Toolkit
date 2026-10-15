@@ -1,6 +1,25 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  ItemsContentDialog  -->
+    <!--<ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="ItemsContentDialogHighlightBorderBrush">Purple</SolidColorBrush>
+            <SolidColorBrush x:Key="ItemsContentDialogCaptionForegroundBrush">Purple</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="ItemsContentDialogHighlightBorderBrush">Violet</SolidColorBrush>
+            <SolidColorBrush x:Key="ItemsContentDialogCaptionForegroundBrush">Violet</SolidColorBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+    <CornerRadius x:Key="ItemsContentDialogHighlightCornerRadius">8</CornerRadius>
+
+    <Style x:Key="ItemsContentDialogPrimaryButtonStyle"
+           BasedOn="{StaticResource AccentButtonStyle}"
+           TargetType="Button">
+        <Setter Property="MinHeight"
+                Value="42" />
+    </Style>-->
+
     <Style x:Key="CardBorder1Style"
            TargetType="Border">
         <Setter Property="Background"

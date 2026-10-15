@@ -1,78 +1,113 @@
 <ContentDialog x:Class="LCTWorks.WinUI.Controls.ContentDialogs.ItemsContentDialog"
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:controls="using:LCTWorks.WinUI.Controls"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:internal="using:LCTWorks.WinUI.Controls.Internal"
                xmlns:local="using:LCTWorks.WinUI.Controls.ContentDialogs"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:models="using:LCTWorks.WinUI.Models"
+               PrimaryButtonStyle="{StaticResource ItemsContentDialogPrimaryButtonStyle}"
                Style="{StaticResource SmoothContentDialogStyle}"
                mc:Ignorable="d">
 
     <ContentDialog.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///LCTWorks.WinUI/Themes/Generic.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+
             <x:Double x:Key="ContentDialogMaxWidth">480</x:Double>
             <x:Double x:Key="ContentDialogMaxHeight">920</x:Double>
             <Thickness x:Key="SmoothContentDialogCommandsPadding">32,24,32,32</Thickness>
             <Thickness x:Key="ContentDialogPadding">0</Thickness>
             <Thickness x:Key="ContentDialogTitleMargin">32,32,32,0</Thickness>
-            <Thickness x:Key="ItemsContentDialogLayoutMargin">16,0</Thickness>
-            <Thickness x:Key="ItemsContentDialogItemPadding">16,8</Thickness>
-            <internal:ItemsContentDialogItemDataTemplateSelector x:Key="ItemsContentDialogItemSelector"
-                                                                 InteractiveTemplate="{StaticResource InteractiveItemsContentDialogItemItemDataTemplate}"
-                                                                 NonInteractiveTemplate="{StaticResource ItemsContentDialogItemItemDataTemplate}" />
-            <DataTemplate x:Key="ItemsContentDialogItemItemDataTemplate"
-                          x:DataType="models:ItemsContentDialogItem">
-                <Grid Margin="0,4"
-                      Padding="{StaticResource ItemsContentDialogItemPadding}"
-                      ColumnSpacing="16"
-                      RowSpacing="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="FluentGlyphTextBlock"
-                               x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
-                               Grid.RowSpan="2"
-                               Style="{StaticResource FluentIconsTextBlockStyle}"
-                               Text="{x:Bind IconUri, Mode=OneWay}" />
-                    <TextBlock x:Name="MaterialGlyphTextBlock"
-                               x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
-                               Grid.RowSpan="2"
-                               FontSize="{StaticResource FluentIconsTextBlockFontSize}"
-                               Style="{StaticResource MaterialSymbolsTextBlockStyle}"
-                               Text="{x:Bind IconUri, Mode=OneWay}" />
-                    <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
-                               x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
-                               Grid.RowSpan="2"
-                               FontSize="{StaticResource FluentIconsTextBlockFontSize}"
-                               Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
-                               Text="{x:Bind IconUri, Mode=OneWay}" />
-                    <Image x:Name="IconImage"
-                           x:Load="{x:Bind IsImage, Mode=OneWay}"
-                           Grid.RowSpan="2"
-                           Width="24"
-                           Height="24"
-                           Source="{x:Bind IconUri, Mode=OneWay}" />
-                    <TextBlock Grid.Column="1"
-                               HorizontalAlignment="Left"
-                               Style="{StaticResource SmoothItemTitleTextBlockStyle}"
-                               Text="{x:Bind Title, Mode=OneWay}" />
-                    <TextBlock Grid.Row="1"
-                               Grid.Column="1"
-                               Style="{StaticResource SmoothCaptionTextBlockStyle}"
-                               Text="{x:Bind Description, Mode=OneWay}" />
+            <internal:ItemsContentDialogItemDataTemplateSelector x:Key="ItemsContentDialogItemSelector"
+                                                                 InteractiveTemplate="{StaticResource InteractiveItemDataTemplate}"
+                                                                 NonInteractiveTemplate="{StaticResource ItemDataTemplate}" />
+            <DataTemplate x:Key="ItemDataTemplate"
+                          x:DataType="models:ItemsContentDialogItem">
+                <Grid Margin="0,4">
+                    <Border HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            BorderBrush="{ThemeResource ItemsContentDialogHighlightBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
+                            Visibility="{x:Bind IsHighlighted, Mode=OneWay}" />
+                    <Grid Margin="0,4"
+                          Padding="{StaticResource ItemsContentDialogItemPadding}"
+                          ColumnSpacing="16"
+                          RowSpacing="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.RowSpan="2"
+                              Width="48"
+                              Height="48"
+                              VerticalAlignment="Top"
+                              BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                              BorderThickness="{StaticResource ItemsContentDialogIconContainerBorderThickness}"
+                              CornerRadius="{StaticResource ItemsContentDialogIconContainerCornerRadius}">
+                            <TextBlock x:Name="FluentGlyphTextBlock"
+                                       x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource FluentIconsTextBlockStyle}"
+                                       Text="{x:Bind IconUri, Mode=OneWay}" />
+                            <TextBlock x:Name="MaterialGlyphTextBlock"
+                                       x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="{StaticResource FluentIconsTextBlockFontSize}"
+                                       Style="{StaticResource MaterialSymbolsTextBlockStyle}"
+                                       Text="{x:Bind IconUri, Mode=OneWay}" />
+                            <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
+                                       x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="{StaticResource FluentIconsTextBlockFontSize}"
+                                       Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
+                                       Text="{x:Bind IconUri, Mode=OneWay}" />
+
+                            <Image x:Name="IconImage"
+                                   x:Load="{x:Bind IsImage, Mode=OneWay}"
+                                   Width="24"
+                                   Height="24"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Source="{x:Bind IconUri, Mode=OneWay}" />
+                        </Grid>
+
+                        <TextBlock Grid.Column="1"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource SmoothItemTitleTextBlockStyle}"
+                                   Text="{x:Bind Title, Mode=OneWay}" />
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource SmoothCaptionTextBlockStyle}"
+                                   Text="{x:Bind Description, Mode=OneWay}" />
+                        <Border Grid.Column="2"
+                                Padding="12,2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource CardBackgroundFillColorTertiaryBrush}"
+                                CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
+                                Visibility="{x:Bind HasCaption, Mode=OneWay}">
+                            <TextBlock Foreground="{ThemeResource ItemsContentDialogCaptionForegroundBrush}"
+                                       Style="{StaticResource SmoothCaptionTextBlockStyle}"
+                                       Text="{x:Bind Caption, Mode=OneWay}" />
+                        </Border>
+                    </Grid>
                 </Grid>
             </DataTemplate>
-            <DataTemplate x:Key="InteractiveItemsContentDialogItemItemDataTemplate"
+            <DataTemplate x:Key="InteractiveItemDataTemplate"
                           x:DataType="models:ItemsContentDialogItem">
                 <Button Margin="0,4"
                         Padding="0"
@@ -84,54 +119,79 @@
                         PointerExited="OnPointerExited"
                         Style="{StaticResource SmoothTransparentButtonStyle}"
                         Tapped="ItemCommandTapped">
-                    <Grid Padding="{StaticResource ItemsContentDialogItemPadding}"
-                          ColumnSpacing="16"
-                          RowSpacing="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Border HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                BorderBrush="{ThemeResource ItemsContentDialogHighlightBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}" />
+                        <Grid Padding="{StaticResource ItemsContentDialogItemPadding}"
+                              ColumnSpacing="16"
+                              RowSpacing="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock x:Name="FluentGlyphTextBlock"
-                                   x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
-                                   Grid.RowSpan="2"
-                                   Style="{StaticResource FluentIconsTextBlockStyle}"
-                                   Text="{x:Bind IconUri, Mode=OneWay}" />
-                        <TextBlock x:Name="MaterialGlyphTextBlock"
-                                   x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
-                                   Grid.RowSpan="2"
-                                   FontSize="{StaticResource FluentIconsTextBlockFontSize}"
-                                   Style="{StaticResource MaterialSymbolsTextBlockStyle}"
-                                   Text="{x:Bind IconUri, Mode=OneWay}" />
-                        <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
-                                   x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
-                                   Grid.RowSpan="2"
-                                   FontSize="{StaticResource FluentIconsTextBlockFontSize}"
-                                   Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
-                                   Text="{x:Bind IconUri, Mode=OneWay}" />
-                        <Image x:Name="IconImage"
-                               x:Load="{x:Bind IsImage, Mode=OneWay}"
-                               Grid.RowSpan="2"
-                               Width="24"
-                               Height="24"
-                               Source="{x:Bind IconUri, Mode=OneWay}" />
-                        <TextBlock Grid.Column="1"
-                                   HorizontalAlignment="Left"
-                                   Style="{StaticResource SmoothItemTitleTextBlockStyle}"
-                                   Text="{x:Bind Title, Mode=OneWay}" />
-                        <TextBlock Grid.Row="1"
-                                   Grid.Column="1"
-                                   Style="{StaticResource SmoothCaptionTextBlockStyle}"
-                                   Text="{x:Bind Description, Mode=OneWay}" />
-                        <TextBlock Grid.RowSpan="2"
-                                   Grid.Column="2"
-                                   Style="{StaticResource FluentIconsItemTextBlockStyle}"
-                                   Text="&#xE8A7;" />
+                            <Grid Grid.RowSpan="2"
+                                  Width="48"
+                                  Height="48"
+                                  VerticalAlignment="Top"
+                                  BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                  BorderThickness="{StaticResource ItemsContentDialogIconContainerBorderThickness}"
+                                  CornerRadius="{StaticResource ItemsContentDialogIconContainerCornerRadius}">
+                                <TextBlock x:Name="FluentGlyphTextBlock"
+                                           x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
+                                           Style="{StaticResource FluentIconsTextBlockStyle}"
+                                           Text="{x:Bind IconUri, Mode=OneWay}" />
+                                <TextBlock x:Name="MaterialGlyphTextBlock"
+                                           x:Load="{x:Bind IsMaterialSymbol, Mode=OneWay}"
+                                           FontSize="{StaticResource FluentIconsTextBlockFontSize}"
+                                           Style="{StaticResource MaterialSymbolsTextBlockStyle}"
+                                           Text="{x:Bind IconUri, Mode=OneWay}" />
+                                <TextBlock x:Name="FontAwesomeBrandsGlyphTextBlock"
+                                           x:Load="{x:Bind IsFontAwesomeBrand, Mode=OneWay}"
+                                           FontSize="{StaticResource FluentIconsTextBlockFontSize}"
+                                           Style="{StaticResource FontAwesomeBrandsTextBlockStyle}"
+                                           Text="{x:Bind IconUri, Mode=OneWay}" />
+                                <Image x:Name="IconImage"
+                                       x:Load="{x:Bind IsImage, Mode=OneWay}"
+                                       Grid.RowSpan="2"
+                                       Width="24"
+                                       Height="24"
+                                       Source="{x:Bind IconUri, Mode=OneWay}" />
+                            </Grid>
+
+                            <TextBlock Grid.Column="1"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource SmoothItemTitleTextBlockStyle}"
+                                       Text="{x:Bind Title, Mode=OneWay}" />
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Grid.ColumnSpan="2"
+                                       Style="{StaticResource SmoothCaptionTextBlockStyle}"
+                                       Text="{x:Bind Description, Mode=OneWay}" />
+                            <!--<TextBlock Grid.Column="2"
+                                       FontSize="12"
+                                       Style="{StaticResource FluentIconsItemTextBlockStyle}"
+                                       Text="&#xE8A7;" />-->
+                            <Border Grid.Column="2"
+                                    Padding="12,2"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorTertiaryBrush}"
+                                    CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
+                                    Visibility="{x:Bind HasCaption, Mode=OneWay}">
+                                <TextBlock Foreground="{ThemeResource ItemsContentDialogCaptionForegroundBrush}"
+                                           Style="{StaticResource SmoothCaptionTextBlockStyle}"
+                                           Text="{x:Bind Caption, Mode=OneWay}" />
+                            </Border>
+                        </Grid>
                     </Grid>
                 </Button>
             </DataTemplate>
@@ -150,7 +210,7 @@
         <TextBlock x:Name="DescriptionTextBlock"
                    x:Load="{x:Bind HasDescription, Mode=OneWay}"
                    Grid.Row="1"
-                   Margin="32,12"
+                   Margin="32,8,32,0"
                    HorizontalAlignment="Center"
                    Style="{StaticResource SmoothRegularTextBlockStyle}"
                    Text="{x:Bind Description, Mode=OneWay}"
@@ -158,7 +218,7 @@
                    TextWrapping="WrapWholeWords" />
 
         <ListView Grid.Row="2"
-                  Margin="0,16"
+                  Margin="0,8,0,8"
                   Padding="0"
                   IsItemClickEnabled="False"
                   ItemTemplateSelector="{StaticResource ItemsContentDialogItemSelector}"
@@ -169,7 +229,7 @@
             </ListView.ItemContainerTransitions>
         </ListView>
         <Rectangle Grid.Row="3"
-                   Margin="48,8"
+                   Margin="48,0"
                    VerticalAlignment="Top"
                    Style="{StaticResource SmoothHorizontalSeparatorRectangleStyle}" />
     </Grid>
