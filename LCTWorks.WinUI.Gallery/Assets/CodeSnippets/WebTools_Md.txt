@@ -2,7 +2,7 @@
 
 `LCTWorks.Web` generates link previews (title, description, site name, icon and thumbnail) from a URL. It has two layers:
 
-- **`WebPreviewer`** (`LCTWorks.Web.Previews`) — the high‑level API. Tries site‑specific providers first, then crawls the HTML, then fills in fallbacks so a card can always be rendered.
+- **`WebPreviewer`** (`LCTWorks.Web`) — the high‑level API. Tries site‑specific providers first, then crawls the HTML, then fills in fallbacks so a card can always be rendered.
 - **`WebCrawler`** (`LCTWorks.Web.Tools`) — the low‑level HTML fetcher/parser used by the previewer. Use it directly when you need raw meta tags, JSON‑LD data or every image on a page.
 
 ---
@@ -60,14 +60,14 @@ Results are cached per URL (`CacheDuration`, or `FailedCacheDuration` for blocke
 
 | Provider | Handles | Source | Authoritative |
 |---|---|---|---|
-| `YouTubePreviewProvider` | youtube.com, youtu.be, shorts, embeds | `i.ytimg.com` thumbnails (maxres → hq) + YouTube oEmbed | No |
-| `RedditPreviewProvider` | reddit.com, redd.it, share links | JSON API (posts, galleries, subreddits) → old.reddit.com HTML | Yes |
-| `AmazonPreviewProvider` | amazon.* product pages, amzn.to, a.co | `/dp/{ASIN}` page DOM → legacy ASIN image endpoint | Yes |
-| `OEmbedPreviewProvider` | X/Twitter, Vimeo, TikTok, Spotify, SoundCloud, Flickr, Dailymotion | Public oEmbed endpoints; extend with `AddEndpoint` | No |
+| YouTube | youtube.com, youtu.be, shorts, embeds | `i.ytimg.com` thumbnails (maxres → hq) + YouTube oEmbed | No |
+| Reddit | reddit.com, redd.it, share links | JSON API (posts, galleries, subreddits) → old.reddit.com HTML | Yes |
+| Amazon | amazon.* product pages, amzn.to, a.co | `/dp/{ASIN}` page DOM → legacy ASIN image endpoint | Yes |
+| oEmbed | X/Twitter, Vimeo, TikTok, Spotify, SoundCloud, Flickr, Dailymotion | Public oEmbed endpoints | No |
 
-Implement `IPreviewProvider` (`Name`, `IsAuthoritative`, `CanHandle`, `GetPreviewAsync`) to add your own, and insert it into `Providers`.
+The built‑in providers are internal; implement `IPreviewProvider` (`Name`, `IsAuthoritative`, `CanHandle`, `GetPreviewAsync`) to add your own, and insert it into `Providers` (or remove entries to disable built‑in ones).
 
-> **Note:** Reddit's API rules require a unique User‑Agent (`<platform>:<app id>:<version> (by /u/<username>)`), and requests from cloud/datacenter IPs are often refused. Amazon's legacy image endpoint is undocumented and best‑effort; for reliable product data use the Product Advertising API.
+> **Note:** Reddit requests from cloud/datacenter IPs are often refused. Amazon's legacy image endpoint is undocumented and best‑effort; for reliable product data use the Product Advertising API.
 
 ---
 
@@ -92,7 +92,24 @@ Implement `IPreviewProvider` (`Name`, `IsAuthoritative`, `CanHandle`, `GetPrevie
 
 ---
 
+## Bot challenges and WebView2PageFetcher
+
+Sites behind Cloudflare, Akamai and similar fingerprint the TLS/HTTP2 connection and run JavaScript challenges, so .NET's `HttpClient` gets blocked regardless of headers. `BlockedPageFetcher` is the escape hatch: it receives the blocked URL and returns rendered HTML.
+
+This sample plugs in `WebView2PageFetcher` (Gallery, `LCTWorks.Workshop.Services`), which loads the page in a hidden `WebView2` — a real Edge browser — waits until the automatic challenge passes and returns `document.documentElement.outerHTML`.
+
+| Member | Description |
+|---|---|
+| `WebView2PageFetcher(WebView2)` | The WebView2 must be in the visual tree (it can be 1×1 with `Opacity="0"`). |
+| `FetchHtmlAsync(uri, ct)` | Matches `BlockedPageFetcher`. Thread‑safe (marshals to the UI thread, one page at a time). Returns `null` on timeout, network error or interactive challenge. |
+| `Timeout` | Maximum wait, including the challenge. Default 20 s. |
+| `SettleDelay` | Extra wait after load for scripts that inject meta tags. Default 500 ms. |
+| `LastResult` | Diagnostics for the last fetch: final URL, success, note (`Loaded`, `Passed bot challenge`, `Timed out`...) and elapsed time. |
+
+> **Note:** It only handles *automatic* checks. Interactive challenges (Turnstile/captcha) are meant to be solved by a person and are not bypassed; the preview falls back to the domain + icon card.
+
+---
+
 ## Limitations
 
-- Sites that fingerprint the TLS/HTTP2 connection (Cloudflare Bot Management, Akamai) can still block .NET's `HttpClient` regardless of headers. Use `BlockedPageFetcher` or rely on the fallback card.
 - JavaScript‑only pages (e.g. X/Twitter) expose little HTML metadata; providers cover the most common ones.

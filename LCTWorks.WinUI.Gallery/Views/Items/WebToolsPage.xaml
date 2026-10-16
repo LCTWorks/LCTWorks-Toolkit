@@ -235,16 +235,20 @@
 
                                 <ToggleSwitch Header="Cache"
                                               IsOn="{x:Bind BypassCache, Mode=TwoWay}"
-                                              OffContent="Use WebPreviewer cache"
-                                              OnContent="Bypass cache (clear before each run)" />
+                                              OffContent="Bypass cache"
+                                              OnContent="Bypass cache" />
                                 <ToggleSwitch Header="Blocked pages"
                                               IsOn="{x:Bind RetryAsPreviewBot, Mode=TwoWay}"
-                                              OffContent="Don't retry"
+                                              OffContent="Retry as preview bot"
                                               OnContent="Retry as preview bot" />
                                 <ToggleSwitch Header="Images"
                                               IsOn="{x:Bind ValidateImages, Mode=TwoWay}"
-                                              OffContent="Don't validate images"
+                                              OffContent="Validate images (slower)"
                                               OnContent="Validate images (slower)" />
+                                <ToggleSwitch Header="Bot challenges"
+                                              IsOn="{x:Bind UseWebViewFallback, Mode=TwoWay}"
+                                              OffContent="Load blocked pages in WebView2"
+                                              OnContent="Load blocked pages in WebView2" />
 
                                 <Rectangle Style="{StaticResource SmoothHorizontalSeparatorRectangleStyle}" />
 
@@ -266,6 +270,17 @@
                 </clocal:SampleCodePresenter>
             </StackPanel>
         </ScrollViewer>
+
+        <!--  Hidden browser used by WebView2PageFetcher. Must be in the tree to initialize; kept 1x1 and invisible.  -->
+        <WebView2 x:Name="FetcherWebView"
+                  Width="1"
+                  Height="1"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  AutomationProperties.AccessibilityView="Raw"
+                  IsHitTestVisible="False"
+                  IsTabStop="False"
+                  Opacity="0" />
 
         <!--  Report  -->
         <ContentDialog x:Name="ReportDialog"

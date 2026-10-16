@@ -1,4 +1,4 @@
-﻿using LCTWorks.Web.Previews;
+﻿using LCTWorks.Web;
 using LCTWorks.Web.Tools;
 
 // 1. Link preview (providers → HTML crawl → fallbacks), cached.
@@ -17,25 +17,24 @@ ThumbnailSource = preview.ImageUrl;
 IconSource = preview.IconUrl;
 
 // 2. Custom configuration.
+// Hidden WebView2 (real Edge) for pages behind automatic bot checks, e.g. Cloudflare's "Just a moment...".
+// FetcherWebView must be in the visual tree (1x1, Opacity="0").
+var webViewFetcher = new WebView2PageFetcher(FetcherWebView);
+
 var options = new WebPreviewerOptions
 {
     RetryAsPreviewBot = true,
     CacheDuration = TimeSpan.FromHours(1),
     FallbackIconUrlTemplate = null, // don't send domains to Google's favicon service
-    // Optional last resort for bot-protected pages (e.g. Playwright):
-    BlockedPageFetcher = async (uri, ct) => await headlessBrowser.GetHtmlAsync(uri, ct),
+    BlockedPageFetcher = webViewFetcher.FetchHtmlAsync,
 };
 
-// Reddit asks for a unique, descriptive User-Agent.
-options.Providers.Remove(options.Providers.OfType<RedditPreviewProvider>().First());
-options.Providers.Insert(0, new RedditPreviewProvider("windows:MyApp:1.0 (by /u/myuser)"));
-
-// Extra oEmbed endpoint.
-options.Providers.OfType<OEmbedPreviewProvider>().First()
-    .AddEndpoint(["giphy.com"], "https://giphy.com/services/oembed?url={0}", "GIPHY");
+// Your own site-specific provider runs before the built-in ones.
+options.Providers.Insert(0, new MyIntranetPreviewProvider());
 
 var previewer = new WebPreviewer(options);
-var custom = await previewer.GetPreviewAsync("reddit.com/r/dotnet", cancellationToken);
+var custom = await previewer.GetPreviewAsync("stackoverflow.com/questions/11227809", cancellationToken);
+Debug.WriteLine(webViewFetcher.LastResult?.Note); // e.g. "Passed bot challenge"
 
 // 3. Raw crawler: meta tags, JSON-LD, images.
 var crawler = await WebCrawler.FromUrlAsync("https://github.com/dotnet/runtime", cancellationToken);
@@ -53,3 +52,27 @@ if (crawler.IsLoaded)
 // Parse HTML you already have.
 var fromHtml = WebCrawler.FromHtml(html, sourceUrl: "https://example.com/blog/post");
 var thumbnail = fromHtml.GetPreviewImage(); // relative URLs resolved against the source URL
+
+// Custom provider.
+public sealed class MyIntranetPreviewProvider : IPreviewProvider
+{
+    public string Name => "Intranet";
+
+    public bool IsAuthoritative => true; // skip the generic crawl when this returns a result
+
+    public bool CanHandle(Uri uri) => uri.Host.EndsWith(".contoso.local", StringComparison.OrdinalIgnoreCase);
+
+    public async Task<WebPreview?> GetPreviewAsync(Uri uri, HttpClient client, CancellationToken cancellationToken)
+    {
+        var doc = await intranetApi.GetDocumentAsync(uri, cancellationToken);
+        return doc == null ? null : new WebPreview
+        {
+            Url = uri.AbsoluteUri,
+            Title = doc.Title,
+            Description = doc.Summary,
+            ImageUrl = doc.ThumbnailUrl,
+            SiteName = "Contoso Intranet",
+            Provider = Name,
+        };
+    }
+}

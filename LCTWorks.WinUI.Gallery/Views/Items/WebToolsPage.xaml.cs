@@ -13,6 +13,7 @@ using LCTWorks.Web.Tools;
 using LCTWorks.WinUI.Controls;
 using LCTWorks.WinUI.Extensions;
 using LCTWorks.Workshop.Models;
+using LCTWorks.Workshop.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Windows.ApplicationModel.DataTransfer;
@@ -25,10 +26,12 @@ public sealed partial class WebToolsPage : ObservablePage
     private CancellationTokenSource? _cts;
     private bool _isReportOpen;
     private WebPreviewer? _previewer;
+    private readonly WebView2PageFetcher _webViewFetcher;
 
     public WebToolsPage()
     {
         InitializeComponent();
+        _webViewFetcher = new WebView2PageFetcher(FetcherWebView);
     }
 
     public bool BypassCache
@@ -102,6 +105,21 @@ public sealed partial class WebToolsPage : ObservablePage
         new("BBC News", "https://www.bbc.com/news", "ms-appx:///Assets/Icons/Brands/bbc.svg"),
         new("Image link", "https://picsum.photos/800", "ms-appx:///Assets/Icons/Brands/image.svg"),
     ];
+
+    /// <summary>
+    /// Load blocked pages (e.g. Cloudflare "Just a moment...") in a hidden WebView2 and parse the rendered HTML.
+    /// </summary>
+    public bool UseWebViewFallback
+    {
+        get;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                _previewer = null; // options changed, rebuild on next run
+            }
+        }
+    } = true;
 
     public string? StatusText
     {
@@ -263,6 +281,7 @@ public sealed partial class WebToolsPage : ObservablePage
         => _previewer ??= new WebPreviewer(new WebPreviewerOptions
         {
             RetryAsPreviewBot = RetryAsPreviewBot,
+            BlockedPageFetcher = UseWebViewFallback ? _webViewFetcher.FetchHtmlAsync : null,
         });
 
     private async void OpenFinalUrlClick(object sender, RoutedEventArgs e)
@@ -342,6 +361,7 @@ public sealed partial class WebToolsPage : ObservablePage
         try
         {
             var previewer = GetPreviewer();
+            _webViewFetcher.LastResult = null;
             if (BypassCache)
             {
                 previewer.ClearCache();
@@ -359,9 +379,27 @@ public sealed partial class WebToolsPage : ObservablePage
             AddRows(PreviewRows, preview, includeEmpty: true);
 
             var crawler = await crawlerTask;
-            var crawlElapsed = stopwatch.Elapsed;
             token.ThrowIfCancellationRequested();
 
+            // Same fallback for the raw crawler: reuse the WebView2 result from the previewer, or fetch now
+            // (e.g. when a provider answered and the previewer never needed the HTML).
+            var fetchedVia = "HttpClient";
+            if (crawler.IsBlocked && UseWebViewFallback)
+            {
+                if (_webViewFetcher.LastResult == null)
+                {
+                    await _webViewFetcher.FetchHtmlAsync(new Uri(NormalizeUrl(url)), token);
+                    token.ThrowIfCancellationRequested();
+                }
+                if (_webViewFetcher.LastResult is { Success: true, Html: { } html } webResult)
+                {
+                    crawler = WebCrawler.FromHtml(html, webResult.FinalUrl ?? NormalizeUrl(url));
+                    fetchedVia = "WebView2";
+                }
+            }
+            var crawlElapsed = stopwatch.Elapsed;
+
+            CrawlerRows.Add(new PropertyRow("Fetched via", fetchedVia));
             FillCrawlerRows(crawler);
             AddRows(MetaRows, crawler.GetMetaTags());
             MetaHeader = $"Meta tags ({MetaRows.Count})";
@@ -374,6 +412,10 @@ public sealed partial class WebToolsPage : ObservablePage
                     + (crawler.IsBlocked ? $" (blocked: {crawler.BlockReason})" : string.Empty),
                 $"Crawl: {crawlElapsed.TotalMilliseconds:N0} ms",
             });
+            if (_webViewFetcher.LastResult is { } web)
+            {
+                StatusText += $"  ·  WebView2: {web.Note} ({web.Elapsed.TotalMilliseconds:N0} ms)";
+            }
 
             ImagesHeader = "Images (loading…)";
             var images = await crawler.GetAllImagesAsync(validateImages: ValidateImages, cancellationToken: token);
