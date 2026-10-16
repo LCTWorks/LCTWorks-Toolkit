@@ -12,8 +12,8 @@
     if you want a package to build against a different published version.
   -->
   <ItemGroup Label="LCTWorks">
-    <PackageVersion Include="LCTWorks.Core" Version="1.0.2610.1" />
-    <PackageVersion Include="LCTWorks.Telemetry" Version="1.0.2610.1" />
+    <PackageVersion Include="LCTWorks.Core" Version="1.0.2610.5" />
+    <PackageVersion Include="LCTWorks.Telemetry" Version="1.0.2610.5" />
   </ItemGroup>
 
   <!-- Applied to every project (replaces the PackageReference that used to live in Directory.Build.props). -->
