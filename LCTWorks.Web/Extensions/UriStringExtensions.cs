@@ -15,7 +15,7 @@ public static class UriStringExtensions
             return false;
         }
         var path = uri.Value;
-        return imageExtensions.Any(path.EndsWith);
+        return imageExtensions.Any(ext => path.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>

@@ -26,7 +26,9 @@ public partial class UriString : IEquatable<UriString>, IEquatable<string>
         }
         else
         {
-            _value = value.ToLowerInvariant();
+            // Don't lowercase the whole string: paths and queries are case-sensitive (e.g. YouTube video ids).
+            // Validate() normalizes the scheme and host (the case-insensitive parts) through UriBuilder.
+            _value = value;
             if (validate)
             {
                 Validate();
