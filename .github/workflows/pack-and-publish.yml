@@ -1,0 +1,121 @@
+name: Pack & Publish (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      ProjectName:
+        description: 'Path to the .csproj file (e.g. LCTWorks.Core/LCTWorks.Core.csproj)'
+        required: true
+        type: string
+      PackageId:
+        description: 'NuGet package id (used to name the uploaded artifact)'
+        required: true
+        type: string
+      Version:
+        description: 'Version to pack and publish'
+        required: true
+        type: string
+      DependencyVersions:
+        description: >
+          Comma-separated Id=Version overrides for internal packages built earlier in the same run
+          (e.g. LCTWorks.Core=1.0.2610.2). Empty = use the versions committed in Directory.Packages.props.
+        required: false
+        type: string
+        default: ''
+      Runner:
+        description: 'GitHub-hosted runner label'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
+      UseMSBuild:
+        description: 'Use MSBuild instead of dotnet CLI for build and pack'
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      NUGET_API_KEY:
+        required: true
+
+env:
+  DOTNET_VERSION: "9.0.x"
+  NUGET_SOURCE: "https://api.nuget.org/v3/index.json"
+
+jobs:
+  build-publish:
+    runs-on: ${{ inputs.Runner }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup MSBuild
+        if: ${{ inputs.UseMSBuild }}
+        uses: microsoft/setup-msbuild@v2
+
+      # Packages built earlier in this run. Restoring from here means we don't have to wait
+      # for nuget.org to index them.
+      - name: Download upstream packages
+        if: ${{ inputs.DependencyVersions != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nupkg-*
+          path: upstream
+          merge-multiple: true
+
+      - name: Use upstream package versions
+        if: ${{ inputs.DependencyVersions != '' }}
+        shell: pwsh
+        run: ./.github/scripts/Set-PackageVersions.ps1 -Versions "${{ inputs.DependencyVersions }}"
+
+      - name: Restore dependencies
+        shell: pwsh
+        run: |
+          $sources = @('--source', $env:NUGET_SOURCE)
+          $upstream = Join-Path $env:GITHUB_WORKSPACE 'upstream'
+          if (Test-Path $upstream) {
+            Write-Host "Using local upstream packages:"
+            Get-ChildItem $upstream -Filter *.nupkg | ForEach-Object { Write-Host "  $($_.Name)" }
+            $sources += @('--source', $upstream)
+          }
+          dotnet restore "${{ inputs.ProjectName }}" @sources
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build
+        if: ${{ !inputs.UseMSBuild }}
+        run: dotnet build ${{ inputs.ProjectName }} -c Release --no-restore -p:ContinuousIntegrationBuild=true
+
+      - name: Build (MSBuild)
+        if: ${{ inputs.UseMSBuild }}
+        run: msbuild ${{ inputs.ProjectName }} -p:Configuration=Release -p:Platform=AnyCPU -p:ContinuousIntegrationBuild=true -restore:false
+
+      - name: Pack NuGet package
+        if: ${{ !inputs.UseMSBuild }}
+        run: dotnet pack ${{ inputs.ProjectName }} -c Release -p:Version=${{ inputs.Version }} --no-build --output ./nupkg
+
+      - name: Pack NuGet package (MSBuild)
+        if: ${{ inputs.UseMSBuild }}
+        shell: pwsh
+        run: |
+          $nupkgDir = Join-Path $env:GITHUB_WORKSPACE "nupkg"
+          msbuild ${{ inputs.ProjectName }} -t:Pack -p:Configuration=Release -p:Platform=AnyCPU -p:Version=${{ inputs.Version }} "-p:PackageOutputPath=$nupkgDir" -restore:false
+
+      - name: Push to NuGet
+        shell: pwsh
+        run: |
+          Get-ChildItem (Join-Path $env:GITHUB_WORKSPACE "nupkg") -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key "${{ secrets.NUGET_API_KEY }}" --source $env:NUGET_SOURCE --skip-duplicate
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Upload package for downstream jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-${{ inputs.PackageId }}
+          path: nupkg/
+          if-no-files-found: error
+          overwrite: true
