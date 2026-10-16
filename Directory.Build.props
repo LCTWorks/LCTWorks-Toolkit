@@ -17,9 +17,6 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Source Link provider for GitHub -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-  </ItemGroup>
+  <!-- Source Link provider for GitHub is added to every project as a GlobalPackageReference in Directory.Packages.props. -->
 
 </Project>

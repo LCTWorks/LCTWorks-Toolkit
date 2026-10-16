@@ -1,0 +1,52 @@
+<Project>
+
+  <!-- Central Package Management: every PackageReference in the repo gets its version from here. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!--
+    Internal LCTWorks packages.
+    These are the versions currently published on NuGet that the other packages build against.
+    The release workflow updates them automatically after a successful release; edit manually only
+    if you want a package to build against a different published version.
+  -->
+  <ItemGroup Label="LCTWorks">
+    <PackageVersion Include="LCTWorks.Core" Version="1.0.2610.5" />
+    <PackageVersion Include="LCTWorks.Telemetry" Version="1.0.2610.5" />
+  </ItemGroup>
+
+  <!-- Applied to every project (replaces the PackageReference that used to live in Directory.Build.props). -->
+  <ItemGroup Label="Global">
+    <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
+  </ItemGroup>
+
+  <ItemGroup Label="Third party">
+    <PackageVersion Include="ColorCode.WinUI" Version="2.0.15" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Collections" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Converters" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
+    <PackageVersion Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
+    <PackageVersion Include="FluentIcons.WinUI" Version="2.2.343" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.12.4" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
+    <!-- LCTWorks.WinUI.Gallery uses VersionOverride for newer versions of these two. -->
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.1" />
+    <PackageVersion Include="Sentry" Version="6.6.0" />
+    <PackageVersion Include="Sentry.Profiling" Version="6.6.0" />
+    <PackageVersion Include="Serilog" Version="4.4.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
