@@ -115,6 +115,7 @@
                         HorizontalContentAlignment="Stretch"
                         Command="{x:Bind Command}"
                         CommandParameter="{x:Bind CommandParameter}"
+                        CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
                         PointerEntered="OnPointerEntered"
                         PointerExited="OnPointerExited"
                         Style="{StaticResource SmoothTransparentButtonStyle}"
@@ -124,27 +125,22 @@
                                 VerticalAlignment="Stretch"
                                 BorderBrush="{ThemeResource ItemsContentDialogHighlightBorderBrush}"
                                 BorderThickness="1"
-                                CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}" />
+                                CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
+                                Visibility="{x:Bind IsHighlighted, Mode=OneWay}" />
                         <Grid Padding="{StaticResource ItemsContentDialogItemPadding}"
-                              ColumnSpacing="16"
-                              RowSpacing="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
+                              ColumnSpacing="16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.RowSpan="2"
-                                  Width="48"
+                            <Grid Width="48"
                                   Height="48"
                                   VerticalAlignment="Top"
                                   BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
                                   BorderThickness="{StaticResource ItemsContentDialogIconContainerBorderThickness}"
                                   CornerRadius="{StaticResource ItemsContentDialogIconContainerCornerRadius}">
+
                                 <TextBlock x:Name="FluentGlyphTextBlock"
                                            x:Load="{x:Bind IsFluentIcon, Mode=OneWay}"
                                            Style="{StaticResource FluentIconsTextBlockStyle}"
@@ -161,36 +157,42 @@
                                            Text="{x:Bind IconUri, Mode=OneWay}" />
                                 <Image x:Name="IconImage"
                                        x:Load="{x:Bind IsImage, Mode=OneWay}"
-                                       Grid.RowSpan="2"
                                        Width="24"
                                        Height="24"
                                        Source="{x:Bind IconUri, Mode=OneWay}" />
                             </Grid>
 
-                            <TextBlock Grid.Column="1"
-                                       HorizontalAlignment="Left"
-                                       Style="{StaticResource SmoothItemTitleTextBlockStyle}"
-                                       Text="{x:Bind Title, Mode=OneWay}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="1"
-                                       Grid.ColumnSpan="2"
-                                       Style="{StaticResource SmoothCaptionTextBlockStyle}"
-                                       Text="{x:Bind Description, Mode=OneWay}" />
-                            <!--<TextBlock Grid.Column="2"
-                                       FontSize="12"
-                                       Style="{StaticResource FluentIconsItemTextBlockStyle}"
-                                       Text="&#xE8A7;" />-->
-                            <Border Grid.Column="2"
-                                    Padding="12,2"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Background="{ThemeResource CardBackgroundFillColorTertiaryBrush}"
-                                    CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
-                                    Visibility="{x:Bind HasCaption, Mode=OneWay}">
-                                <TextBlock Foreground="{ThemeResource ItemsContentDialogCaptionForegroundBrush}"
+                            <Grid Grid.Column="1"
+                                  VerticalAlignment="Top"
+                                  ColumnSpacing="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock HorizontalAlignment="Left"
+                                           Style="{StaticResource SmoothItemTitleTextBlockStyle}"
+                                           Text="{x:Bind Title, Mode=OneWay}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.ColumnSpan="2"
                                            Style="{StaticResource SmoothCaptionTextBlockStyle}"
-                                           Text="{x:Bind Caption, Mode=OneWay}" />
-                            </Border>
+                                           Text="{x:Bind Description, Mode=OneWay}" />
+                                <Border Grid.Column="1"
+                                        Padding="12,2"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Background="{ThemeResource CardBackgroundFillColorTertiaryBrush}"
+                                        CornerRadius="{StaticResource ItemsContentDialogHighlightCornerRadius}"
+                                        Visibility="{x:Bind HasCaption, Mode=OneWay}">
+                                    <TextBlock Foreground="{ThemeResource ItemsContentDialogCaptionForegroundBrush}"
+                                               Style="{StaticResource SmoothCaptionTextBlockStyle}"
+                                               Text="{x:Bind Caption, Mode=OneWay}" />
+                                </Border>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Button>

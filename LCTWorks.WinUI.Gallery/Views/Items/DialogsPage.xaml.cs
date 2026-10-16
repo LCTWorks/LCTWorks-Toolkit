@@ -17,7 +17,7 @@ public sealed partial class DialogsPage : ObservablePage
             IconUri = "",
             IconType = ItemsContentDialogIconType.FluentIcon,
             Title = "Highlighted item",
-            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            Description = "Lorem ipsum dolor sit amet.",
             Caption = "HIGHLIGHT",
             IsHighlighted = true,
             ShowOpenExternalIcon = true,
@@ -28,11 +28,10 @@ public sealed partial class DialogsPage : ObservablePage
             IconUri = "bolt",
             IconType = ItemsContentDialogIconType.MaterialSymbol,
             Title = "Highlighted item",
-            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            Caption = "PRO FEATURE",
+            Description = "Lorem ipsum dolor sit amet.",
+            Caption = "PRO",
             ShowOpenExternalIcon = true,
             Command = new RelayCommand(() => { }),
-            //IsHighlighted = true,
         },
         new ItemsContentDialogItem
         {
