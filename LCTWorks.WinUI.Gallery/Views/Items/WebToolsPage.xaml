@@ -62,14 +62,14 @@
                     Click="SampleLinkClick"
                     Tag="{x:Bind Url}"
                     ToolTipService.ToolTip="{x:Bind ToolTip}">
-                <StackPanel Orientation="Vertical"
-                            Spacing="6">
-                    <c:AdaptiveImage Width="32"
-                                     Height="32"
+                <StackPanel Orientation="Vertical">
+                    <c:AdaptiveImage Width="24"
+                                     Height="24"
                                      HorizontalAlignment="Center"
                                      Source="{x:Bind Icon}" />
-                    <TextBlock MaxWidth="72"
+                    <TextBlock MaxWidth="82"
                                HorizontalAlignment="Center"
+                               MaxLines="1"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Text="{x:Bind Name}"
                                TextTrimming="CharacterEllipsis" />
@@ -255,7 +255,7 @@
                                     <ItemsRepeater.Layout>
                                         <UniformGridLayout ItemsStretch="Fill"
                                                            MinColumnSpacing="8"
-                                                           MinItemHeight="80"
+                                                           MinItemHeight="56"
                                                            MinItemWidth="80"
                                                            MinRowSpacing="8" />
                                     </ItemsRepeater.Layout>
