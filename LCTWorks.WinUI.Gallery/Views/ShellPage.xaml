@@ -14,7 +14,8 @@
         <DataTemplate x:Key="DocItemTemplate"
                       x:DataType="models:DocItem">
             <NavigationViewItem n:NavigationHelper.NavigateTo="{x:Bind NavigationKey}"
-                                Content="{x:Bind Title}">
+                                Content="{x:Bind Title}"
+                                Tag="{x:Bind NavigationKey}">
                 <NavigationViewItem.Icon>
                     <ImageIcon Source="{x:Bind IconPath}" />
                 </NavigationViewItem.Icon>
