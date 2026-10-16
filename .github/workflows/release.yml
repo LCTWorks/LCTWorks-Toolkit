@@ -13,7 +13,8 @@ name: Release NuGet packages
 # at the version committed in Directory.Packages.props.
 #
 # When everything succeeds, Directory.Packages.props is updated with the newly released internal versions,
-# committed to the branch the workflow ran on, and that commit is tagged.
+# committed to the branch the workflow ran on, and that commit is tagged. If that branch isn't the default
+# branch (i.e. a release/* branch), a PR back to the default branch is opened automatically.
 
 on:
   push:
@@ -225,6 +226,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       # Check out the exact commit that was built, so the tag never lands on unbuilt code.
@@ -271,3 +273,44 @@ jobs:
           fi
 
           echo "Tagged $(git rev-parse --short HEAD): $TAGS" >> "$GITHUB_STEP_SUMMARY"
+
+      # Release branches are merged back through a PR. Skipped when the run started from the default branch.
+      # Requires Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests".
+      - name: Open PR to ${{ github.event.repository.default_branch }}
+        if: ${{ github.ref_name != github.event.repository.default_branch }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.event.repository.default_branch }}
+          BRANCH: ${{ github.ref_name }}
+          VERSION: ${{ needs.plan.outputs.version }}
+          RELEASED: ${{ needs.plan.outputs.released }}
+          TAGS: ${{ needs.plan.outputs.tags }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          existing="$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json url --jq '.[0].url')"
+          if [ -n "$existing" ]; then
+            echo "PR already open: $existing" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          ahead="$(gh api "repos/$GITHUB_REPOSITORY/compare/$BASE...$BRANCH" --jq '.ahead_by')"
+          if [ "$ahead" = "0" ]; then
+            echo "$BRANCH has no commits ahead of $BASE; no PR needed." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          body="$(
+            echo "Automated PR from the [release run]($RUN_URL)."
+            echo ""
+            echo "**Published to NuGet**"
+            echo ""
+            echo "$RELEASED" | tr ',' '\n' | sed 's/^\(.*\)=\(.*\)$/- `\1` \2/'
+            echo ""
+            echo "**Tags:** \`$TAGS\`"
+          )"
+
+          url="$(gh pr create --base "$BASE" --head "$BRANCH" --title "Release $VERSION ($BRANCH)" --body "$body")"
+          echo "Opened PR: $url" | tee -a "$GITHUB_STEP_SUMMARY"
