@@ -27,7 +27,7 @@ public sealed partial class AdaptiveImagePage : ObservablePage
 
     public object? S1ImageSource
     {
-        get => field;
+        get;
         set
         {
             if (SetProperty(ref field, value))
@@ -39,13 +39,13 @@ public sealed partial class AdaptiveImagePage : ObservablePage
 
     public string? S1ImageSourceString
     {
-        get => field;
+        get;
         set => SetProperty(ref field, value);
     }
 
     public bool ShowPlaceholder
     {
-        get => field;
+        get;
         set
         {
             if (SetProperty(ref field, value))
@@ -57,7 +57,7 @@ public sealed partial class AdaptiveImagePage : ObservablePage
 
     public bool SVGThemeAware
     {
-        get => field;
+        get;
         set
         {
             if (SetProperty(ref field, value))

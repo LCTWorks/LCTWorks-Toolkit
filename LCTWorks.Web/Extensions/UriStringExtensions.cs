@@ -36,7 +36,7 @@ public static class UriStringExtensions
         {
             var url = uri.Value;
 
-            var response = await HttpTools.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await HttpTools.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             if (!response.IsSuccessStatusCode)
             {

@@ -293,7 +293,7 @@ public static class HtmlExtensions
     #endregion Html5 entities table
 
     /// <summary>
-    /// Adds common headers to the HttpRequestHeaders.
+    /// Adds common browser headers (User-Agent, Accept, language) to the HttpRequestHeaders.
     /// </summary>
     public static void AddBrowserHeaders(this HttpRequestHeaders headers)
     {
@@ -301,10 +301,30 @@ public static class HtmlExtensions
         {
             return;
         }
-        headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0");
-        headers.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
-        headers.Add("Accept-Language", "en-US,en;q=0.9");
-        headers.Add("Upgrade-Insecure-Requests", "1");
+        headers.TryAddWithoutValidation("User-Agent", Constants.BrowserUserAgent);
+        headers.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+        headers.TryAddWithoutValidation("Accept-Language", "en-US,en;q=0.9");
+    }
+
+    /// <summary>
+    /// Adds the headers a Chromium browser sends on a top-level, user-initiated navigation (typing a URL / clicking a link),
+    /// including client hints. Apply per request to browser-profile document fetches only. Client hints are kept out of the
+    /// client defaults so that requests using a different User-Agent (e.g. the preview-bot retry) stay self-consistent.
+    /// </summary>
+    public static void AddNavigationHeaders(this HttpRequestHeaders headers)
+    {
+        if (headers == null)
+        {
+            return;
+        }
+        headers.TryAddWithoutValidation("sec-ch-ua", Constants.BrowserClientHints);
+        headers.TryAddWithoutValidation("sec-ch-ua-mobile", "?0");
+        headers.TryAddWithoutValidation("sec-ch-ua-platform", "\"Windows\"");
+        headers.TryAddWithoutValidation("Upgrade-Insecure-Requests", "1");
+        headers.TryAddWithoutValidation("Sec-Fetch-Dest", "document");
+        headers.TryAddWithoutValidation("Sec-Fetch-Mode", "navigate");
+        headers.TryAddWithoutValidation("Sec-Fetch-Site", "none");
+        headers.TryAddWithoutValidation("Sec-Fetch-User", "?1");
     }
 
     /// <summary>
@@ -376,7 +396,7 @@ public static class HtmlExtensions
         return null;
     }
 
-    public static async Task<bool> IsValidImageDataUrlAsync(this string? url)
+    public static async Task<bool> IsValidImageDataUrlAsync(this string? url, HttpClient? client = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(url))
         {
@@ -385,7 +405,13 @@ public static class HtmlExtensions
 
         try
         {
-            var response = await HttpTools.Client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            using var request = HttpTools.CreateGetRequest(url);
+            request.Headers.Accept.ParseAdd("image/avif,image/webp,image/apng,image/*,*/*;q=0.8");
+            request.Headers.TryAddWithoutValidation("Sec-Fetch-Dest", "image");
+            request.Headers.TryAddWithoutValidation("Sec-Fetch-Mode", "no-cors");
+            using var response = await (client ?? HttpTools.Client)
+                .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+                .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -396,9 +422,9 @@ public static class HtmlExtensions
             if (contentType != null && contentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
             {
                 //Magic bytes check
-                using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+                using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
                 var buffer = new byte[12];
-                var bytesRead = stream.ReadAsync(buffer, 0, buffer.Length).GetAwaiter().GetResult();
+                var bytesRead = await stream.ReadAtLeastAsync(buffer, buffer.Length, throwOnEndOfStream: false, cancellationToken).ConfigureAwait(false);
 
                 if (bytesRead >= 2)
                 {
@@ -425,6 +451,11 @@ public static class HtmlExtensions
                     // WebP: 52 49 46 46 ... 57 45 42 50
                     if (bytesRead >= 12 && buffer[0] == 0x52 && buffer[1] == 0x49 && buffer[2] == 0x46 && buffer[3] == 0x46 &&
                         buffer[8] == 0x57 && buffer[9] == 0x45 && buffer[10] == 0x42 && buffer[11] == 0x50)
+                    {
+                        return true;
+                    }
+                    // AVIF/HEIF (ISO BMFF): bytes 4-7 = "ftyp"
+                    if (bytesRead >= 12 && buffer[4] == 0x66 && buffer[5] == 0x74 && buffer[6] == 0x79 && buffer[7] == 0x70)
                     {
                         return true;
                     }

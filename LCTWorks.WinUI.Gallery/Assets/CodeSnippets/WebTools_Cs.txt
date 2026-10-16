@@ -1,0 +1,55 @@
+﻿using LCTWorks.Web.Previews;
+using LCTWorks.Web.Tools;
+
+// 1. Link preview (providers → HTML crawl → fallbacks), cached.
+var preview = await WebPreviewer.Default.GetPreviewAsync("https://www.youtube.com/watch?v=dQw4w9WgXcQ", cancellationToken);
+
+if (preview.IsBlocked)
+{
+    // Only site name + icon are available.
+    Debug.WriteLine($"Blocked: {preview.BlockReason}");
+}
+
+Title = preview.Title;
+Description = preview.Description;
+SiteName = preview.SiteName;
+ThumbnailSource = preview.ImageUrl;
+IconSource = preview.IconUrl;
+
+// 2. Custom configuration.
+var options = new WebPreviewerOptions
+{
+    RetryAsPreviewBot = true,
+    CacheDuration = TimeSpan.FromHours(1),
+    FallbackIconUrlTemplate = null, // don't send domains to Google's favicon service
+    // Optional last resort for bot-protected pages (e.g. Playwright):
+    BlockedPageFetcher = async (uri, ct) => await headlessBrowser.GetHtmlAsync(uri, ct),
+};
+
+// Reddit asks for a unique, descriptive User-Agent.
+options.Providers.Remove(options.Providers.OfType<RedditPreviewProvider>().First());
+options.Providers.Insert(0, new RedditPreviewProvider("windows:MyApp:1.0 (by /u/myuser)"));
+
+// Extra oEmbed endpoint.
+options.Providers.OfType<OEmbedPreviewProvider>().First()
+    .AddEndpoint(["giphy.com"], "https://giphy.com/services/oembed?url={0}", "GIPHY");
+
+var previewer = new WebPreviewer(options);
+var custom = await previewer.GetPreviewAsync("reddit.com/r/dotnet", cancellationToken);
+
+// 3. Raw crawler: meta tags, JSON-LD, images.
+var crawler = await WebCrawler.FromUrlAsync("https://github.com/dotnet/runtime", cancellationToken);
+if (crawler.IsLoaded)
+{
+    var title = crawler.GetTitle();
+    var image = crawler.GetPreviewImage();
+    var icon = crawler.GetIconUrl();
+    var oembed = crawler.GetOEmbedUrl();
+    var themeColor = crawler.GetMeta("theme-color");
+    var meta = crawler.GetMetaTags();
+    var images = await crawler.GetAllImagesAsync([".svg", ".ico"], validateImages: true, cancellationToken);
+}
+
+// Parse HTML you already have.
+var fromHtml = WebCrawler.FromHtml(html, sourceUrl: "https://example.com/blog/post");
+var thumbnail = fromHtml.GetPreviewImage(); // relative URLs resolved against the source URL

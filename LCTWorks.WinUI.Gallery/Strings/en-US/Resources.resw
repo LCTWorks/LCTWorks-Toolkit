@@ -183,4 +183,13 @@
   <data name="Dialogs_Description" xml:space="preserve">
     <value>Test the dialogs in the library</value>
   </data>
+  <data name="WebTools_Title" xml:space="preserve">
+    <value>Web tools</value>
+  </data>
+  <data name="WebTools_Description" xml:space="preserve">
+    <value>Library's web tools</value>
+  </data>
+  <data name="ToolsHeader_Title" xml:space="preserve">
+    <value>Tools</value>
+  </data>
 </root>

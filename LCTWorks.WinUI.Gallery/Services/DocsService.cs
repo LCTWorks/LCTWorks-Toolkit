@@ -28,6 +28,8 @@ public class DocsService
             { typeof(SentryPage).ToString(), typeof(SentryPage) },
             { typeof(ThemedButtonPage).ToString(), typeof(ThemedButtonPage) },
             { typeof(DialogsPage).ToString(), typeof(DialogsPage) },
+            { $"ToolsHeader", null },
+             { typeof(WebToolsPage).ToString(), typeof(WebToolsPage) },
             { $"ResourcesHeader", null },
             { typeof(TextResourcesPage).ToString(), typeof(TextResourcesPage) },
         };

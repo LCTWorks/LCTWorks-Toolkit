@@ -1,0 +1,98 @@
+﻿# Web tools
+
+`LCTWorks.Web` generates link previews (title, description, site name, icon and thumbnail) from a URL. It has two layers:
+
+- **`WebPreviewer`** (`LCTWorks.Web.Previews`) — the high‑level API. Tries site‑specific providers first, then crawls the HTML, then fills in fallbacks so a card can always be rendered.
+- **`WebCrawler`** (`LCTWorks.Web.Tools`) — the low‑level HTML fetcher/parser used by the previewer. Use it directly when you need raw meta tags, JSON‑LD data or every image on a page.
+
+---
+
+## How a preview is built
+
+1. **Providers** — the first `IPreviewProvider` whose `CanHandle(uri)` returns `true` runs. If it's *authoritative*, or its result already has a title **and** an image, the preview is returned.
+2. **HTML crawl** — `WebCrawler.FromUrlAsync` downloads the page (browser‑like headers, HTTP/2, up to 2 MB) and reads Open Graph, Twitter Card, `<title>`, JSON‑LD, `image_src`, `itemprop` and e‑commerce image attributes.
+3. **Blocked pages** — Cloudflare challenges, captchas (Amazon, DataDome, PerimeterX), WAF blocks and consent walls are detected and never used as content. The request is retried once as a preview bot, then `BlockedPageFetcher` runs if configured.
+4. **oEmbed discovery** — if title or image is still missing, the page's `<link rel="alternate" type="application/json+oembed">` is followed.
+5. **Fallbacks** — `SiteName` defaults to the domain and `IconUrl` to `FallbackIconUrlTemplate`.
+
+Results are cached per URL (`CacheDuration`, or `FailedCacheDuration` for blocked/empty results).
+
+---
+
+## WebPreview
+
+| Property | Type | Description |
+|---|---|---|
+| `Url` | `string` | The requested URL. |
+| `FinalUrl` | `string?` | Canonical/final URL after redirects or provider normalization. |
+| `Title` | `string?` | Page title. |
+| `Description` | `string?` | Page description. |
+| `SiteName` | `string?` | Site name; falls back to the domain. |
+| `Author` | `string?` | Author, channel or user, when available. |
+| `ImageUrl` | `string?` | Thumbnail (absolute URL). |
+| `IconUrl` | `string?` | Site icon (absolute URL). |
+| `VideoUrl` | `string?` | Embeddable video URL. |
+| `IsNsfw` | `bool` | Flagged as adult content by the source (e.g. Reddit). |
+| `Provider` | `string?` | What produced the data: `YouTube`, `Reddit`, `Amazon`, `oEmbed` or `html`. |
+| `IsBlocked` / `BlockReason` | `bool` / `string?` | The site served a challenge and only fallback data is available. |
+| `IsComplete` | `bool` | Has both a title and an image. |
+| `IsEmpty` | `bool` | Has no title, image or description. |
+
+---
+
+## WebPreviewerOptions
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `Client` | `HttpClient?` | `HttpTools.Client` | Client used for every request. |
+| `Providers` | `IList<IPreviewProvider>` | YouTube, Reddit, Amazon, oEmbed | Site‑specific providers, tried in order. |
+| `RetryAsPreviewBot` | `bool` | `true` | Retry blocked pages once with an honest preview‑bot User‑Agent. |
+| `UseDiscoveredOEmbed` | `bool` | `true` | Follow the page's oEmbed link when data is missing. |
+| `BlockedPageFetcher` | `Func<Uri, CancellationToken, Task<string?>>?` | `null` | Last‑resort fetcher for blocked pages, e.g. a headless browser. Return the rendered HTML. |
+| `FallbackIconUrlTemplate` | `string?` | Google s2 favicons | `{0}` is the host. Set to `null` to disable (the default sends the domain to Google). |
+| `CacheDuration` | `TimeSpan` | 30 min | Cache lifetime for successful previews. |
+| `FailedCacheDuration` | `TimeSpan` | 5 min | Cache lifetime for blocked/empty previews. |
+| `MaxCacheEntries` | `int` | `500` | Cache size limit. |
+
+---
+
+## Built‑in providers
+
+| Provider | Handles | Source | Authoritative |
+|---|---|---|---|
+| `YouTubePreviewProvider` | youtube.com, youtu.be, shorts, embeds | `i.ytimg.com` thumbnails (maxres → hq) + YouTube oEmbed | No |
+| `RedditPreviewProvider` | reddit.com, redd.it, share links | JSON API (posts, galleries, subreddits) → old.reddit.com HTML | Yes |
+| `AmazonPreviewProvider` | amazon.* product pages, amzn.to, a.co | `/dp/{ASIN}` page DOM → legacy ASIN image endpoint | Yes |
+| `OEmbedPreviewProvider` | X/Twitter, Vimeo, TikTok, Spotify, SoundCloud, Flickr, Dailymotion | Public oEmbed endpoints; extend with `AddEndpoint` | No |
+
+Implement `IPreviewProvider` (`Name`, `IsAuthoritative`, `CanHandle`, `GetPreviewAsync`) to add your own, and insert it into `Providers`.
+
+> **Note:** Reddit's API rules require a unique User‑Agent (`<platform>:<app id>:<version> (by /u/<username>)`), and requests from cloud/datacenter IPs are often refused. Amazon's legacy image endpoint is undocumented and best‑effort; for reliable product data use the Product Advertising API.
+
+---
+
+## WebCrawler
+
+| Member | Description |
+|---|---|
+| `FromUrlAsync(url, [client], [retryAsPreviewBot], [ct])` | Downloads and parses a page. Never throws for HTTP errors; check `IsLoaded` / `IsBlocked`. |
+| `FromHtml(html, [sourceUrl])` | Parses HTML you already have; `sourceUrl` is used to resolve relative URLs. |
+| `IsLoaded` | An HTML document was downloaded and parsed. |
+| `IsBlocked` / `BlockReason` | A bot challenge, captcha or consent wall was returned instead of the page. |
+| `StatusCode` / `ContentType` | Response status and media type (a direct image link has `image/*`). |
+| `SourceUrl` / `BaseUri` | Final URL after redirects / base used to resolve relative URLs (`<base href>` aware). |
+| `GetTitle()` / `GetDescription()` / `GetSiteName()` | OG → Twitter → HTML → JSON‑LD fallbacks. |
+| `GetPreviewImage()` | Best thumbnail: OG/Twitter, `image_src`, `itemprop`, JSON‑LD, `data-old-hires` / `data-a-dynamic-image`, preloaded images. |
+| `GetIconUrl()` | Largest declared icon / apple‑touch‑icon, otherwise `/favicon.ico`. |
+| `GetOEmbedUrl()` | The oEmbed JSON endpoint advertised by the page. |
+| `GetMeta(params keys)` | First non‑empty, entity‑decoded value of a `property`/`name`/`itemprop` meta tag (case‑insensitive). |
+| `GetMetaTags()` | Every common meta tag as an `HtmlMetaTags` record. |
+| `GetAllImagesAsync([exclude], [validate], [ct])` | `<img>` (including lazy‑loaded `data-src` and `srcset`), `<picture><source>` and CSS background images, sorted by width. `validate` checks each image's bytes (4 in parallel). |
+| `ResolveUrl(url)` | Resolves a relative or protocol‑relative URL against `BaseUri`. |
+
+---
+
+## Limitations
+
+- Sites that fingerprint the TLS/HTTP2 connection (Cloudflare Bot Management, Akamai) can still block .NET's `HttpClient` regardless of headers. Use `BlockedPageFetcher` or rely on the fallback card.
+- JavaScript‑only pages (e.g. X/Twitter) expose little HTML metadata; providers cover the most common ones.
