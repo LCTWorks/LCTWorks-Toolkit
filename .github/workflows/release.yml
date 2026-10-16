@@ -229,7 +229,7 @@ jobs:
     steps:
       # Check out the exact commit that was built, so the tag never lands on unbuilt code.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
 
